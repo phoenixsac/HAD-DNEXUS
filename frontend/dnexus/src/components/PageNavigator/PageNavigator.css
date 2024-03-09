@@ -1,0 +1,26 @@
+.page-navigator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-navigator p {
+  margin-right: 20px;
+}
+
+.page-navigator .pagination {
+  display: flex;
+  gap: 5px;
+}
+
+.page-navigator button {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-navigator button.active {
+  background-color: #007bff;
+  color: white;
+}

@@ -1,0 +1,78 @@
+/* login-as.css */
+
+.heading{
+ 
+  padding: 20px 10px;
+  margin: 10px;
+}
+
+.heading h2{
+  font-size: 42px;
+}
+
+.login-card {
+  height: 256px;
+  position: relative;
+  width: 200px;
+
+  padding: 30px;
+  margin: 30px;
+}
+
+.login-card .placeholder {
+  
+  color: #110505;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 31px;
+  position: absolute;
+  text-align: center;
+  top: 212px;
+  width: 200px;
+  margin-top: 10px;
+  padding-top: 20px;
+}
+
+.login-card .rectangle {
+  background-color: #d9d9d9;
+  height: 200px;
+  position: absolute;
+  width: 200px;
+}
+
+.persona-buttons {
+  /* Style the button group */
+  display: flex;
+  /* Or use grid if preferred */
+  justify-content: space-around;
+  /* Or other alignment */
+}
+
+.persona-button {
+  /* Style individual buttons */
+  padding: 1rem 2rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  /* ... other styles */
+}
+
+
+  .login-container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px 20px;
+    margin: 10px 10px;
+  }
+  
+
+
+.section{
+  display: inline-block;
+  justify-content: space-between;
+}
