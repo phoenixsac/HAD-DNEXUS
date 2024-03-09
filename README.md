@@ -8,3 +8,4 @@ All changes should be made your own custom branches which should be forked from 
 Then after verifying on DEV, another PR must be created from DEV to MASTER.
 
 Also, there will be a specific branch for each of the milestone following from milestone-2.
+TESTING
