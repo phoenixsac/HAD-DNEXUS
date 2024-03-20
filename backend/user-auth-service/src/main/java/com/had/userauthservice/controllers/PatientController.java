@@ -16,7 +16,7 @@ public class PatientController {
     @Autowired
     PatientService patientService;
 
-    @PostMapping("/patient-signup")
+    @PostMapping("/auth/patient-signup")
     public ResponseEntity<String> patientSignup(@RequestBody PatientSignupReqBody request) {
         String registrationResult = patientService.registerPatient(request);
         if (registrationResult.equals("success")) {

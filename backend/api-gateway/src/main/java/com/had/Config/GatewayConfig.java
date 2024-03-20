@@ -1,22 +1,26 @@
-package com.had.Config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.cloud.gateway.route.RouteLocator;
-import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
-
-@Configuration
-public class GatewayConfig {
-
+//package com.had.Config;
+//
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.cloud.gateway.route.RouteLocator;
+//import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+//
+//@Configuration
+//public class GatewayConfig {
+//
 //    @Bean
 //    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 //        return builder.routes()
-//                .route("service1", r -> r.path("/service1/**")
-//                        .uri("lb://service1"))
-//                .route("service2", r -> r.path("/service2/**")
-//                        .uri("lb://service2"))
-//                .route("service3", r -> r.path("/service3/**")
-//                        .uri("lb://service3"))
+//                .route("admin-route", r -> r.path("/admin/**")
+//                        .uri("http://localhost:8081/admin"))
+//                .route("patient-route", r -> r.path("/patient/**")
+//                        .uri("http://localhost:8082/patient"))
+////                .route("user-auth-route", r -> r.path("/auth/**")
+////                        .uri("http://localhost:8081/auth"))
+//                .route("user-auth-login", r -> r.path("/login/**")
+//                        .uri("http://localhost:8081/"))
+//                .route("user-auth-patient-signup", r -> r.path("/patient-signup/**")
+//                        .uri("http://localhost:8081/"))
 //                .build();
 //    }
-}
+//}

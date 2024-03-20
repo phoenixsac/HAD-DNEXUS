@@ -15,6 +15,7 @@ public class AdminController {
     AdminService adminService;
 
     //ufid : UNIQUE FACILITY ID
+    //for role based access role and tasks and action validation can be done here, or in the service class
     @PostMapping("/admin/add-hospital")
     public ResponseEntity<String> addHospitalFromUfid(@RequestParam String ufid) {
         try{
