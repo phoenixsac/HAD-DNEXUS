@@ -36,6 +36,8 @@ public class SecurityConfig {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+
     public SecurityConfig(AuthenticationConfiguration authConfiguration) {
         this.authConfiguration = authConfiguration;
     }
