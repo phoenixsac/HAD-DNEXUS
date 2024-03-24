@@ -30,14 +30,13 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint point;
 
-//    @Autowired
-//    private JwtAuthenticationFilter filter;
-
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+
 
     public SecurityConfig(AuthenticationConfiguration authConfiguration) {
         this.authConfiguration = authConfiguration;
@@ -69,10 +68,10 @@ public class SecurityConfig {
                     cors.configurationSource(corsConfigurationSource());
                 })
                 .authorizeHttpRequests((authorize)-> authorize
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/patient-signup").permitAll()
-                        .requestMatchers("/send-otp").permitAll()
-                        .requestMatchers("/validate-otp").permitAll()
+                        .requestMatchers("/auth/issue-jwt").permitAll()
+                        .requestMatchers("/auth/patient-signup").permitAll()
+                        .requestMatchers("/auth/send-otp").permitAll()
+                        .requestMatchers("/auth/validate-otp").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Permit pre-flight requests
                         .anyRequest().authenticated()
                 )

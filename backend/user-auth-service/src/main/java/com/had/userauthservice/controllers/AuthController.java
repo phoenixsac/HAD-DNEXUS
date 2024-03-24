@@ -42,7 +42,7 @@ public class AuthController {
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 
-    @PostMapping("/login")
+    @PostMapping("/auth/issue-jwt")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws UserUnauthorizedException, UserNotFoundException {
         try {
             User user;
@@ -51,7 +51,7 @@ public class AuthController {
 
             if(userService.validateByType(user, request.getType())) {
                 logger.info("checking get with jwt");
-                String token = this.helper.generateToken(user);
+                String token = this.helper.generateToken(user, user.getType(), user.getEmail());
 
                 LoginResponse response = LoginResponse.builder()
                         .jwtToken(token)

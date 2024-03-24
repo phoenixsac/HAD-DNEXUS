@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class JwtHelper{
 
     //requirement :
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 1 * 60;
 
     private String secret = "$ecredjhgbfdiusflsdhliugsdgasgadfbaberabebdsfgsudifguiefgevlfdbfdvaduivuoagvuadbvjerghregaregiuaergjabrgkhraeigbakjbrgaeruighakekrhguiahreogoaoigaregareygdluaerarsdsit";
 
@@ -46,8 +46,10 @@ public class JwtHelper{
     }
 
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, String type, String email) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("type",type);
+        claims.put("email",email);
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

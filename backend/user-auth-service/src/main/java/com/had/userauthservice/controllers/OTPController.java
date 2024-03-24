@@ -27,7 +27,7 @@ public class OTPController {
     private Common common;
 
 
-    @PostMapping("/send-otp")
+    @PostMapping("/auth/send-otp")
     public ResponseEntity<String> sendOTP(@RequestParam String email) {
 
         if (email == null || email.isEmpty()) {
@@ -53,7 +53,7 @@ public class OTPController {
     }
 
 
-    @PostMapping("/validate-otp")
+    @PostMapping("/auth/validate-otp")
     public ResponseEntity<String> validateOTP(@RequestParam String email, @RequestParam String userEnteredOTP) {
 
         if (userEnteredOTP == null || userEnteredOTP.isEmpty()) {

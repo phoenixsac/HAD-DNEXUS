@@ -13,7 +13,7 @@ function AdminDashboard() {
   };
 
   const handleViewDoctorsClick = () => {
-    navigate("/view-doctors"); // Replace with your actual view doctors route
+    navigate("/view-doctorlist"); // Replace with your actual view doctors route
   };
 
   const handleAddRadiologistClick = () => {
