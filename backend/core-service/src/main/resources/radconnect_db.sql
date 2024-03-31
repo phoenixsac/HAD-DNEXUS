@@ -113,6 +113,19 @@ create table thread (
 
 );
 
+create table lab (
+                    id bigint primary key auto_increment,
+                    UFID varchar(255),
+                    name varchar(255),
+                    contact varchar(255),
+                    sub_district varchar(255),
+                    district varchar(255),
+                    state varchar(255),
+                    country varchar(255),
+                    email varchar(255)
+
+);
+
 
 create table admin (
                        id bigint primary key,
@@ -123,7 +136,9 @@ create table admin (
 );
 
 ###-------------------------------------------------------------------------ALTER STATEMENTS----------------------------------------------------------------------###
-
+ALTER TABLE thread
+    ADD CONSTRAINT fk_lab_id
+        FOREIGN KEY (lab_id) REFERENCES lab(id);
 
 
 

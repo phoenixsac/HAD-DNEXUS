@@ -44,4 +44,3 @@ public class ChatThread {
     // Constructors, getters, and setters
 
 }
-
