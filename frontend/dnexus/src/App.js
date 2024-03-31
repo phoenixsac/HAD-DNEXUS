@@ -40,6 +40,9 @@ function App() {
               }
             /> */}
 
+            {/* for now */}
+            <Route path="/AdminDashboard" element={<AdminDashboard />} />
+
             <Route path="/view-doctorlist" element={<DoctorList />} />
             <Route path="/add-doctor" element={<DoctorAdd />} />
             <Route path="/doctors/:id" element={<DoctorDetails />} /> 

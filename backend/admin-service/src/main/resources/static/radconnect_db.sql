@@ -92,6 +92,7 @@ create table doctor (
     license_number varchar(50),
     experience integer,
     affiliated_hosp_id bigint,
+    affiliated_hosp_name varchar(255),
     specialization varchar(255),
     isactive boolean default true,
     foreign key (affiliated_hosp_id) references hospital(id)

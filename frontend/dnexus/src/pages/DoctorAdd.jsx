@@ -14,14 +14,37 @@ function DoctorRegistrationForm() {
   const [otp, setOtp] = useState('');
   const [isAddButtonEnabled, setIsAddButtonEnabled] = useState(false);
 
+  // const handleVerifyRegistrationNumber = async () => {
+  //   // Send an API request to verify the registration number
+  //   const response = await fetch('http://localhost:8080/admin/add-doctor', {
+  //     method: 'POST',
+  //     body: JSON.stringify({ uniqueRegistrationNumber }),
+  //   });
+
+  //   const data = await response.json();
+
   const handleVerifyRegistrationNumber = async () => {
-    // Send an API request to verify the registration number
-    const response = await fetch('/api/verify-registration-number', {
-      method: 'POST',
-      body: JSON.stringify({ uniqueRegistrationNumber }),
+    // Assuming your JWT token is stored in localStorage under the key 'jwtToken'
+    // const jwtToken = localStorage.getItem('jwtToken');
+
+    const jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWRtaW4iLCJlbWFpbCI6IkFuamFsaS5LdW1hckBpaWl0Yi5hYy5pbiIsInN1YiI6IkFuamFsaSIsImlhdCI6MTcxMTU0NzQxMCwiZXhwIjoxNzExNTUxMDEwfQ.GZ47xjax8IOYoNj8UeU822bU97bWDCNXbCelJ-HBNWjZFFWsGKLoOLC7PiTzO6gNsmAcbHmvVQyaePUYuDJvCA";
+
+    // Create headers object with Authorization header containing the JWT token
+    const headers = {
+        'Authorization': `Bearer ${jwtToken}`,
+        'Content-Type': 'application/json' // Assuming your backend expects JSON data
+    };
+
+    // Send an API request to verify the registration number with JWT token in headers
+    const response = await fetch(`http://localhost:8080/admin/add-doctor?upid=${uniqueRegistrationNumber}`, {
+        method: 'POST',
+        headers: headers
     });
 
     const data = await response.json();
+
+    console.log("response after verifying UPID:", data);
+
 
     if (data.isValid) {
       setIsRegistrationNumberValid(true);

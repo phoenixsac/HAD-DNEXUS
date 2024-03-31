@@ -4,10 +4,14 @@ import com.had.adminservice.entity.Doctor;
 import com.had.adminservice.entity.HealthcareFacilityRegistry;
 import com.had.adminservice.entity.HealthcareProfessionalsRegistry;
 import com.had.adminservice.entity.Hospital;
+import com.had.adminservice.exception.DoctorNotFoundException;
 import com.had.adminservice.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,11 +98,11 @@ public class AdminService {
 //        return "Hospital added successfully";
 //    }
 
-    public String addDoctor(String upid) {
+    public String addDoctor(Long upid) {
         HealthcareProfessionalsRegistry hpr;
         Doctor doctor;
 
-        if (upid == null || upid.isEmpty()) {
+        if (upid == null) {
             throw new IllegalArgumentException("UPID cannot be empty");
         } else if (doctorRepo.findByUpid(upid) != null) {
             return "Doctor with the provided UPID already exists!";
@@ -108,12 +112,14 @@ public class AdminService {
                 return "Hospital does not exist in Healthcare Professionals Registry!";
             else {
                 doctor = Doctor.builder()
-                        .id(hpr.getHealthcareProfessionalId())
+                        //.id(hpr.getHealthcareProfessionalId())
                         .contact(hpr.getContactNumber())
                         .name(hpr.getName())
+                        .email_id(hpr.getEmailId())
                         .experience(hpr.getYearsOfExperience())
                         .licenseNumber(hpr.getHealthcareProfessionalId())
                         .specialization(hpr.getSpecialization())
+                        .affiliatesHospitalName(hpr.getPlaceOfWork())
                         .isActive(true)
                         .build();
                 doctorRepo.save(doctor);
@@ -122,9 +128,27 @@ public class AdminService {
         return "Doctor added successfully";
     }
 
+    public ResponseEntity<List<Doctor>> getAllDoctors() {
+        List<Doctor> doctors = doctorRepo.findAll();
+        if (doctors.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(doctors, HttpStatus.OK);
+        }
+    }
 
-    private HealthcareProfessionalsRegistry validateFromHPR(String ufid){
-        return hprRepo.getByProfessionalId(ufid);
+    public Doctor getDoctorById(Long id) throws DoctorNotFoundException {
+        Optional<Doctor> optionalDoctor = doctorRepo.findById(id);
+        if (optionalDoctor.isPresent()) {
+            return optionalDoctor.get();
+        } else {
+            throw new DoctorNotFoundException("Doctor not found with ID: " + id);
+        }
+    }
+
+
+    private HealthcareProfessionalsRegistry validateFromHPR(Long upid){
+        return hprRepo.getByProfessionalId(upid);
     }
 
 
@@ -139,14 +163,29 @@ public class AdminService {
         }
     }
 
-    public ResponseEntity<String> removeDoctor(String upid) {
-        Doctor doctor = doctorRepo.findByUpid(upid);
-        if (doctor!=null) {
-            doctorRepo.delete(doctor);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<String> removeDoctor(Long id) {
+        try {
+            Doctor doctor = doctorRepo.findByDocId(id);
+            if (doctor != null) {
+                // Update is_active flag to false
+                doctor.setIsActive(false);
+                doctorRepo.save(doctor);
+
+                // Set credentials of the doctor in the user table as NULL
+//                doctorRepo.updateDoctorCredentialsToNull(id);
+
+                return ResponseEntity.noContent().build();
+            } else {
+                String message = "Doctor with ID " + id + " does not exist.";
+                System.out.println(message);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+            }
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            // logger.error("An error occurred while removing doctor with ID: " + id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while removing doctor with ID: " + id);
         }
     }
+
 
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import "./Style/DoctorList.css"
@@ -8,6 +9,8 @@ import Navbar from "../components/Navbar/ConditionalNavbar";
 
 
 const DoctorsList = () => {
+  const navigate = useNavigate();
+
   const [doctors, setDoctors] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [doctorsPerPage] = useState(3);
@@ -20,7 +23,7 @@ const DoctorsList = () => {
 
     // const fetchDoctors = async () => {
     //   try {
-    //     const response = await axios.get('http://localhost:8080/api/doctors');
+    //     const response = await axios.get('http://localhost:8080/admin/view-doctor-list');
     //     setDoctors(response.data);
     //     setAllDoctors(response.data);
     //   } catch (error) {
@@ -69,6 +72,10 @@ const DoctorsList = () => {
     setSearchTerm(event.target.value.toLowerCase()); // Lowercase for case-insensitive search
   };
 
+  const handleBack = () => {
+    navigate("/AdminDashboard");
+  }
+
 
   // Change page handler for Pagination component
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -91,6 +98,11 @@ const DoctorsList = () => {
                 value={searchTerm} // Set input value to search term
               />
             </div>
+
+            <div>
+              <button onClick={handleBack}>Back</button>
+            </div>
+            
           </div>
 
           <div className='table-container'>

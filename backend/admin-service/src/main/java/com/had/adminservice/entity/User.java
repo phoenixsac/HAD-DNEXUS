@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private String name;
 
     @Column(name = "login_id")
-    private String contact;
+    private String login_id;
 
     @Id
     @Column(name = "email")

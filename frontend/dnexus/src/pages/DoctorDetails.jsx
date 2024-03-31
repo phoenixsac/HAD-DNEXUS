@@ -17,7 +17,7 @@ const DoctorDetails = () => {
 
   // useEffect(() => {
   //   const fetchDoctorDetails = async () => {
-  //     const response = await axios.get(`http://localhost:8080/api/doctors/${doctorId}`);
+  //     const response = await axios.get(`http://localhost:8080/admin/view-doctor-details/${doctorId}`);
   //     setDoctor(response.data);
   //   };
 
