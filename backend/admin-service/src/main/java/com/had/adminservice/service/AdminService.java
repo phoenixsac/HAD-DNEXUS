@@ -4,6 +4,7 @@ import com.had.adminservice.entity.Doctor;
 import com.had.adminservice.entity.HealthcareFacilityRegistry;
 import com.had.adminservice.entity.HealthcareProfessionalsRegistry;
 import com.had.adminservice.entity.Hospital;
+
 import com.had.adminservice.exception.DoctorNotFoundException;
 import com.had.adminservice.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -98,11 +100,13 @@ public class AdminService {
 //        return "Hospital added successfully";
 //    }
 
+
     public String addDoctor(Long upid) {
         HealthcareProfessionalsRegistry hpr;
         Doctor doctor;
 
         if (upid == null) {
+
             throw new IllegalArgumentException("UPID cannot be empty");
         } else if (doctorRepo.findByUpid(upid) != null) {
             return "Doctor with the provided UPID already exists!";
@@ -112,6 +116,7 @@ public class AdminService {
                 return "Hospital does not exist in Healthcare Professionals Registry!";
             else {
                 doctor = Doctor.builder()
+
                         //.id(hpr.getHealthcareProfessionalId())
                         .contact(hpr.getContactNumber())
                         .name(hpr.getName())
@@ -120,6 +125,7 @@ public class AdminService {
                         .licenseNumber(hpr.getHealthcareProfessionalId())
                         .specialization(hpr.getSpecialization())
                         .affiliatesHospitalName(hpr.getPlaceOfWork())
+
                         .isActive(true)
                         .build();
                 doctorRepo.save(doctor);
@@ -127,6 +133,7 @@ public class AdminService {
         }
         return "Doctor added successfully";
     }
+
 
     public ResponseEntity<List<Doctor>> getAllDoctors() {
         List<Doctor> doctors = doctorRepo.findAll();
@@ -149,6 +156,7 @@ public class AdminService {
 
     private HealthcareProfessionalsRegistry validateFromHPR(Long upid){
         return hprRepo.getByProfessionalId(upid);
+
     }
 
 
@@ -186,6 +194,7 @@ public class AdminService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while removing doctor with ID: " + id);
         }
     }
+
 
 
 }

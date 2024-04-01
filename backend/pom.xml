@@ -20,6 +20,8 @@
         <module>admin-service</module>
         <module>discovery-server</module>
         <module>api-gateway</module>
+        <module>core-service</module>
+
         <!--    <module>patient-service</module>-->
     </modules>
 

@@ -1,5 +1,6 @@
 package com.had.adminservice.controllers;
 
+
 import com.had.adminservice.entity.Doctor;
 import com.had.adminservice.exception.DoctorNotFoundException;
 import com.had.adminservice.repository.DoctorRepository;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 public class AdminController {
@@ -25,17 +27,20 @@ public class AdminController {
     //for role based access role and tasks and action validation can be done here, or in the service class
     @PostMapping("/admin/add-hospital")
     public ResponseEntity<String> addHospitalFromUfid(@RequestParam String ufid) {
+
         try {
             String message = adminService.addHospital(ufid);
             if (message.equals("Hospital with the provided UFID already exists!")) {
                 return ResponseEntity.badRequest().body(message);
             } else {
+
                 return ResponseEntity.ok(message);
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/admin/remove-hospital")
     public ResponseEntity<String> removeHospitalFromUfid(@RequestParam String ufid) {
@@ -52,6 +57,7 @@ public class AdminController {
     //upid : UNIQUE PROFESSIONALS ID
     @PostMapping("/admin/add-doctor")
     public ResponseEntity<String> addDoctorFromUpid(@RequestParam Long upid) {
+
         try {
             String message = adminService.addDoctor(upid);
             if (message.equals("Doctor with the provided UPID already exists!")) {
@@ -63,6 +69,7 @@ public class AdminController {
             return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/admin/view-doctor-list")
     public ResponseEntity<?> viewDoctorList() {
@@ -113,6 +120,7 @@ public class AdminController {
     //RADIOLOGIST
 
     //LABORATORY
+
 
 
 
