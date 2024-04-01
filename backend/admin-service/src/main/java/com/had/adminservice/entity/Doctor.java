@@ -20,6 +20,10 @@ public class Doctor {
     @Column(name = "name", length = 255)
     private String name;
 
+
+    @Column(name = "email_id", length = 255)
+    private String email_id;
+
     @Column(name = "contact", length = 20)
     private Long contact;
 
@@ -35,9 +39,14 @@ public class Doctor {
     @Column(name = "isactive")
     private Boolean isActive = true;
 
+
+    @Column(name = "affiliated_hosp_name")
+    private String affiliatesHospitalName;
+
     @OneToOne
     @JoinColumn(name = "affiliated_hosp_id", referencedColumnName = "id")
     private Hospital affiliatedHospital;
+
 
     // Constructors, getters, and setters
 }

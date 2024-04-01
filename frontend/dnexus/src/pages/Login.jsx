@@ -45,7 +45,7 @@ function Login() {
       
       try {
         const response = await axios.post(
-          "http://localhost:8081/login",
+          "http://localhost:8080/auth/issue-jwt",
           {
             email: email,
             password: password,
@@ -53,7 +53,7 @@ function Login() {
           }
           );
 
-        // const response = await axios.post("http://localhost:8081/login", data);
+        // const response = await axios.post("http://localhost:8081/auth/issue-jwt", data);
   
   
         if (response.status !== 200) {

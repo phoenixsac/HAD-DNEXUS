@@ -16,6 +16,8 @@ import PatientDash from "./pages/PatientDash";
 import PatientReport from "./pages/PatientReport"
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
+import DoctorAdd from "./pages/DoctorAdd"
+import SuccessPage from "./pages/SuccessPage";
 
 
 function App() {
@@ -26,24 +28,26 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/LoginAs" element={<LoginAs />} />
-
             <Route path="/Login" element={<Login />} /> 
-
-
             <Route path="/unauthorized" element={<Unauthorized />} /> 
             
-
-            <Route
+            {/* <Route
               path="/AdminDashboard"
               element={
                 <ProtectedRoute userType="admin">
-                  <AdminDashboard /> {/* Child route for authorized users */}
+                  <AdminDashboard /> 
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
-            <Route path="/view-doctors" element={<ProtectedRoute />} />
-            <Route path="/doctors/:id" element={<DoctorDetails />} />
+            {/* for now */}
+            <Route path="/AdminDashboard" element={<AdminDashboard />} />
+
+            <Route path="/view-doctorlist" element={<DoctorList />} />
+            <Route path="/add-doctor" element={<DoctorAdd />} />
+            <Route path="/doctors/:id" element={<DoctorDetails />} /> 
+            <Route path="/success-page" element={<SuccessPage />} />
+
             <Route path="/PLogin" element={<PLogin />} />
             <Route path="/PRegistration" element={<PRegistration />} />
             <Route path="/PatientReport" element={<PatientReport />} />

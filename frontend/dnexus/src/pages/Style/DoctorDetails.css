@@ -1,13 +1,121 @@
-.doctor-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+.doctordetails-container{
+    padding: 22px;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
 }
 
-.doctor-details img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  margin-bottom: 20px;
+.doctor-details{
+    padding: 12px 0;
+    margin: 10px;
+
+    border: 1px solid rgb(149, 181, 201);
+    border-radius: 0.5rem;
+
+    width: 1000px;
+    height: 500px;
+
+    /* background: rgb(229, 231, 252); */
+}
+
+.hosp-name{
+    padding: 15px 0;
+
+    background-color: #7696D2;
+}
+
+.hosp-name h2{
+    font-size: 50px;
+    color: white;
+}
+
+.doctor-info{
+    padding: 20px;
+
+    display: flex;
+    /* justify-content: space-evenly; */
+    align-items: center;
+
+}
+
+.doc-image{
+    background: rgb(204, 199, 199);
+
+    height: 200px;
+    width: 170px;
+
+    border-radius: 5px;
+
+    padding: 10px;
+    margin: 10px 25px;
+}
+
+.doc-data{
+    padding: 10px;
+    margin: 10px 25px;
+
+    text-align: left;
+}
+
+.doc-data h3{
+    font-size: 35px;
+}
+
+.doc{
+    padding: 8px;
+}
+
+.doc p{
+    font-size: 20px;
+    padding: 2px;
+}
+
+.doc-spec{
+    font-weight: 800;
+    color: #3D6ABC;
+}
+
+.title{
+    color: #3D6ABC;
+}
+
+.buttons{
+    padding: 10px;
+    margin: 5px;   
+}
+
+.back{
+    color: #20315E;
+    border:1px solid #20315E;
+    background-color: white;
+}
+
+.edit{
+    border: 1px solid #3D6ABC;
+    color: #3D6ABC;
+    background-color: white;
+}
+
+.delete{
+    color: red;
+    background-color: white;
+
+    border: 1px solid red;
+}
+
+.back:hover{
+    background-color: #98b0f2;
+}
+
+.edit:hover{
+    background-color: #d5e1f7;
+    /* color: white; */
+}
+
+.delete:hover{
+    background-color: rgb(248, 179, 179);
 }
