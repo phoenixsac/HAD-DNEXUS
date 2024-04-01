@@ -6,32 +6,18 @@ DROP TABLE IF EXISTS
 healthcare_professionals_registry,
 health_facility_registry,
 otp_validation,
-admin,
 user,
 patient,
 professional,
 facility,
 professional_patient,
-case_table,
+`case`,
+patient_to_case,
+professional_case
 ;
-	
-
-create table healthcare_professionals_registry (
-    healthcare_professional_id bigint primary key,
-    first_name varchar(255),
-	last_name varchar(255),
-    specialization varchar(255),
-    system_of_medicine varchar(255),
-    contact_number bigint,
-    email_id varchar(255),
-    qualification varchar(255),
-    years_of_experience integer,
-    status varchar(255),
-	affiliated_facility_id bigint DEFAULT NULL,
-    place_of_work varchar(255)
-);
 
 
+----------- CREATE STATEMENTS --------------------------
 create table health_facility_registry (
     facility_id varchar(255) primary key,
     facility_name varchar(255),
@@ -47,6 +33,23 @@ create table health_facility_registry (
     facility_region varchar(10)
 );
 
+
+create table healthcare_professionals_registry (
+    healthcare_professional_id bigint primary key,
+    first_name varchar(255),
+	last_name varchar(255),
+    specialization varchar(255),
+    system_of_medicine varchar(255),
+    contact_number bigint,
+    email_id varchar(255),
+    qualification varchar(255),
+    years_of_experience integer,
+    status varchar(255),
+	affiliated_facility_id varchar(255) DEFAULT NULL,
+    place_of_work varchar(255)
+);
+
+
 CREATE TABLE `otp_validation` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
@@ -54,8 +57,6 @@ CREATE TABLE `otp_validation` (
   `expiration_time` timestamp NOT NULL,
   PRIMARY KEY (`id`)
 );
-
-
 
 CREATE TABLE `user` (
   `email` varchar(255) NOT NULL,
@@ -67,7 +68,6 @@ CREATE TABLE `user` (
   `type` varchar(255) NOT NULL,
   PRIMARY KEY (`email`) 
 );
-
 
 CREATE TABLE `patient` (
   `email` varchar(255) NOT NULL, 
@@ -83,6 +83,18 @@ CREATE TABLE `patient` (
 );
 
 
+-- for both hospital and lab
+CREATE TABLE `facility` (
+  `email` varchar(255) NOT NULL, 
+  `ufid` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `district` varchar(255) DEFAULT NULL,
+  `sub_district` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `type` varchar(50),
+  PRIMARY KEY (`email`) 
+);
+
 -- for both doctor and radiologist
 CREATE TABLE `professional` (
   `email` varchar(255) NOT NULL,
@@ -96,79 +108,15 @@ CREATE TABLE `professional` (
 );
 
 
-
--- for both hospital and lab
-CREATE TABLE `facility` (
-  `email` varchar(255) NOT NULL, 
-  `ufid` varchar(255) DEFAULT NULL,
-  `state` varchar(255) DEFAULT NULL,
-  `district` varchar(255) DEFAULT NULL,
-  `sub_district` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `type` varchar(50),
-  PRIMARY KEY (`email`) 
-);
-
-
-
--- Alter statements
-ALTER TABLE `patient`
-ADD CONSTRAINT `fk_patient_user_email`
-FOREIGN KEY (`email`)
-REFERENCES `user` (`email`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
-
-
-ALTER TABLE `professional`
-ADD CONSTRAINT `fk_professional_user_email`
-FOREIGN KEY (`email`)
-REFERENCES `user` (`email`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
-
-ALTER TABLE `facility`
-ADD CONSTRAINT `fk_facility_user_email`
-FOREIGN KEY (`email`)
-REFERENCES `user` (`email`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
-
-
-ALTER TABLE `professional`
-ADD CONSTRAINT `fk_professional_facility_email`
-FOREIGN KEY (`affiliated_facility_email`)
-REFERENCES `facility` (`email`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
 -- Doctor to patient
-CREATE TABLE `professional_to_patient` (
+CREATE TABLE `professional_patient` (
   `professional_email` varchar(255) NOT NULL,
   `patient_email` varchar(255) NOT NULL,
   PRIMARY KEY (`professional_email`, `patient_email`)
 );
 
-ALTER TABLE `professional_to_patient`
-ADD CONSTRAINT `fk_professional_to_patient_professional_email`
-FOREIGN KEY (`professional_email`) REFERENCES `professional` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `fk_professional_to_patient_patient_email`
-FOREIGN KEY (`patient_email`) REFERENCES `patient` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-
--- we need this, beacause there are so many dicoms in one upload
-
-
-
-
-
-
-
-
-CREATE TABLE `case_table` (
+CREATE TABLE `case` (
   `case_id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `patient_email` varchar(255) NOT NULL,
   `date_created` datetime NOT NULL,
@@ -182,7 +130,58 @@ CREATE TABLE `case_table` (
   PRIMARY KEY (`case_id`)
 );
 
-ALTER TABLE `case_table`
+
+CREATE TABLE `patient_to_case` (
+  `patient_email` varchar(255) NOT NULL,
+  `case_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`patient_email`, `case_id`)
+);
+
+-- many to many,case to radiologist
+CREATE TABLE `professional_case` (
+  `professional_email` varchar(255) NOT NULL,
+  `case_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`professional_email`, `case_id`)
+);
+
+------------ ALTER STATEMENTS -------------------
+
+ALTER TABLE `patient`
+ADD CONSTRAINT `fk_patient_user_email`
+FOREIGN KEY (`email`)
+REFERENCES `user` (`email`)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE `professional`
+ADD CONSTRAINT `fk_professional_user_email`
+FOREIGN KEY (`email`)
+REFERENCES `user` (`email`)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE `facility`
+ADD CONSTRAINT `fk_facility_user_email`
+FOREIGN KEY (`email`)
+REFERENCES `user` (`email`)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE `professional`
+ADD CONSTRAINT `fk_professional_facility_email`
+FOREIGN KEY (`affiliated_facility_email`)
+REFERENCES `facility` (`email`)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE `professional_patient`
+ADD CONSTRAINT `fk_professional_patient_professional_email`
+FOREIGN KEY (`professional_email`) REFERENCES `professional` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `fk_professional_patient_patient_email`
+FOREIGN KEY (`patient_email`) REFERENCES `patient` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+ALTER TABLE `case`
 ADD CONSTRAINT `fk_case_patient_email`
 FOREIGN KEY (`patient_email`) REFERENCES `patient` (`email`)
 ON DELETE CASCADE
@@ -197,28 +196,15 @@ ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 
-CREATE TABLE `patient_case` (
-  `patient_email` varchar(255) NOT NULL,
-  `case_id` bigint unsigned NOT NULL,
-  PRIMARY KEY (`patient_email`, `case_id`)
-);
-
-ALTER TABLE `patient_case`
-ADD CONSTRAINT `fk_patient_case_patient_email`
+ALTER TABLE `patient_to_case`
+ADD CONSTRAINT `fk_patient_to_case_patient_email`
 FOREIGN KEY (`patient_email`) REFERENCES `patient` (`email`)
 ON DELETE CASCADE
 ON UPDATE CASCADE,
-ADD CONSTRAINT `fk_patient_case_case_id`
-FOREIGN KEY (`case_id`) REFERENCES `case_table` (`case_id`)
+ADD CONSTRAINT `fk_patient_to_case_case_id`
+FOREIGN KEY (`case_id`) REFERENCES `case` (`case_id`)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
-
-
-CREATE TABLE `professional_case` (
-  `professional_email` varchar(255) NOT NULL,
-  `case_id` bigint unsigned NOT NULL,
-  PRIMARY KEY (`professional_email`, `case_id`)
-);
 
 
 ALTER TABLE `professional_case`
@@ -227,7 +213,94 @@ FOREIGN KEY (`professional_email`) REFERENCES `professional` (`email`)
 ON DELETE CASCADE
 ON UPDATE CASCADE,
 ADD CONSTRAINT `fk_professional_case_case_id`
-FOREIGN KEY (`case_id`) REFERENCES `case_table` (`case_id`)
+FOREIGN KEY (`case_id`) REFERENCES `case` (`case_id`)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
+
+---------------- INSERT STATEMENTS -------------------------------------
+
+insert into health_facility_registry values
+('hospitalpuduchery@ch.ndhm', 'city general hospital', 'allopathic', 'info@cityhospital.com', 'statea', 'subdista', 'private', 'hospital', '+91 1234567890', 'countryx', 'district1', 'urban'),
+('rurallab001@ch.ndhm', 'rural diagnostics lab 1', 'radiology', 'info@rurallab1.com', 'stateb', 'subdistb', 'public', 'diagnostics lab', '+91 9876543210', 'countryy', 'district2', 'rural'),
+('coastalcenter@ch.ndhm', 'coastal medical center', 'homeopathic', 'info@coastalcenter.com', 'statec', 'subdistc', 'private', 'hospital', '+91 5647382910', 'countryz', 'district3', 'urban'),
+('healthscan002@ch.ndhm', 'health scan diagnostics 2', 'radiology', 'info@healthscan2.com', 'stated', 'subdistd', 'public', 'diagnostics lab', '+91 8765432109', 'countryw', 'district4', 'rural'),
+('metrocare003@ch.ndhm', 'metro care hospital 3', 'allopathic', 'info@metrocare3.com', 'statee', 'subdiste', 'private', 'hospital', '+91 6543210987', 'countryv', 'district5', 'urban'),
+('techdiagnostics004@ch.ndhm', 'tech diagnostic services 4', 'radiology', 'info@techdiagnostics4.com', 'statef', 'subdistf', 'public', 'diagnostics lab', '+91 2345678901', 'countryu', 'district6', 'rural'),
+('highlandcenter@ch.ndhm', 'highland medical center', 'homeopathic', 'info@highlandcenter.com', 'stateg', 'subdistg', 'private', 'hospital', '+91 1098765432', 'countryt', 'district7', 'urban'),
+('countrysidediagnostics006@ch.ndhm', 'countryside diagnostics 6', 'radiology', 'info@countrysidediagnostics6.com', 'stateh', 'subdisth', 'public', 'diagnostics lab', '+91 7654321098', 'countrys', 'district8', 'rural'),
+('sunrisehospital007@ch.ndhm', 'sunrise hospital 7', 'allopathic', 'info@sunrisehospital7.com', 'statei', 'subdisti', 'private', 'hospital', '+91 8901234567', 'countryr', 'district9', 'urban'),
+('greenvalleycenter@ch.ndhm', 'green valley medical center', 'radiology', 'info@greenvalleycenter.com', 'statej', 'subdistj', 'public', 'hospital', '+91 5432109876', 'countryq', 'district10', 'rural'),
+('rurallab011@ch.ndhm', 'rural diagnostics lab 11', 'radiology', 'info@rurallab11.com', 'statek', 'subdistk', 'public', 'diagnostics lab', '+91 1122334455', 'countryp', 'district11', 'rural'),
+('modernmedicalcenter@ch.ndhm', 'modern medical center', 'ayurvedic', 'info@modernmedicalcenter.com', 'statel', 'subdistl', 'private', 'hospital', '+91 9988776655', 'countryo', 'district12', 'urban'),
+('techdiagnostics013@ch.ndhm', 'tech diagnostic services 13', 'radiology', 'info@techdiagnostics13.com', 'statem', 'subdistm', 'public', 'diagnostics lab', '+91 1212121212', 'countryn', 'district13', 'rural'),
+('communityhospital014@ch.ndhm', 'community hospital 14', 'radiology', 'info@communityhospital14.com', 'stateo', 'subdisto', 'private', 'hospital', '+91 3434343434', 'countrym', 'district14', 'urban'),
+('healthscan015@ch.ndhm', 'health scan diagnostics 15', 'radiology', 'info@healthscan15.com', 'statep', 'subdistp', 'public', 'diagnostics lab', '+91 5656565656', 'countryl', 'district15', 'rural');
+INSERT INTO health_facility_registry VALUES
+('rurallab016@ch.ndhm', 'rural diagnostics lab 16', 'pathology', 'info@rurallab16.com', 'stateq', 'subdistq', 'public', 'diagnostics lab', '+91 7878787878', 'countryk', 'district16', 'rural'),
+('medicenter017@ch.ndhm', 'medicenter 17', 'allopathic', 'info@medicenter17.com', 'stater', 'subdistr', 'private', 'hospital', '+91 2323232323', 'countryj', 'district17', 'urban'),
+('advancedlab018@ch.ndhm', 'advanced diagnostics lab 18', 'radiology', 'info@advancedlab18.com', 'states', 'subdists', 'public', 'diagnostics lab', '+91 9494949494', 'countryi', 'district18', 'rural'),
+('cityhospital019@ch.ndhm', 'city hospital 19', 'allopathic', 'info@cityhospital19.com', 'statet', 'subdistt', 'private', 'hospital', '+91 6565656565', 'countryh', 'district19', 'urban'),
+('greendiagnostics020@ch.ndhm', 'green diagnostics center 20', 'radiology', 'info@greendiagnostics20.com', 'stateu', 'subdistu', 'public', 'diagnostics lab', '+91 5757575757', 'countryg', 'district20', 'rural');
+
+
+
+INSERT INTO healthcare_professionals_registry VALUES
+(12345678901234, 'john', 'doe', 'doctor', 'allopathic', 1234567890, 'john.doe@example.com', 'md', 10, 'teaching', 'hospitalpuduchery@ch.ndhm', 'city general hospital'),
+(23456789012345, 'jane', 'smith', 'doctor', 'allopathic', 2345678901, 'jane.smith@example.com', 'md', 15, 'research', 'techdiagnostics004@ch.ndhm', 'tech diagnostic services 4'),
+(34567890123456, 'david', 'johnson', 'doctor', 'allopathic', 3456789012, 'david.johnson@example.com', 'md', 12, 'research', 'communityhospital014@ch.ndhm', 'community hospital 14'),
+(45678901234567, 'emily', 'brown', 'doctor', 'allopathic', 4567890123, 'emily.brown@example.com', 'md', 8, 'teaching', 'rurallab001@ch.ndhm', 'rural diagnostics lab 1'),
+(56789012345678, 'michael', 'wilson', 'radiologist', 'radiology', 5678901234, 'michael.wilson@example.com', 'md', 20, 'research', 'healthscan002@ch.ndhm', 'health scan diagnostics 2'),
+(67890123456789, 'sarah', 'martinez', 'doctor', 'allopathic', 6789012345, 'sarah.martinez@example.com', 'md', 18, 'teaching', 'countrysidediagnostics006@ch.ndhm', 'countryside diagnostics 6'),
+(78901234567890, 'christopher', 'taylor', 'doctor', 'allopathic', 7890123456, 'christopher.taylor@example.com', 'md', 14, 'research', 'sunrisehospital007@ch.ndhm', 'sunrise hospital 7'),
+(89012345678901, 'amanda', 'anderson', 'doctor', 'allopathic', 8901234567, 'amanda.anderson@example.com', 'md', 11, 'teaching', 'healthscan015@ch.ndhm', 'health scan diagnostics 15'),
+(90123456789012, 'daniel', 'thomas', 'doctor', 'allopathic', 9012345678, 'daniel.thomas@example.com', 'md', 9, 'research', 'rurallab011@ch.ndhm', 'rural diagnostics lab 11'),
+(10123456789012, 'jennifer', 'rodriguez', 'radiologist', 'radiology', 1012345678, 'jennifer.rodriguez@example.com', 'md', 16, 'teaching', 'techdiagnostics013@ch.ndhm', 'tech diagnostic services 13'),
+(11123456789012, 'james', 'garcia', 'radiologist', 'radiology', 1112345678, 'james.garcia@example.com', 'md', 13, 'research', 'greenvalleycenter@ch.ndhm', 'green valley medical center'),
+(12123456789012, 'mary', 'wilson', 'doctor', 'allopathic', 1212345678, 'mary.wilson@example.com', 'md', 7, 'teaching', 'metrocare003@ch.ndhm', 'metro care hospital 3'),
+(13123456789012, 'robert', 'lopez', 'doctor', 'allopathic', 1312345678, 'robert.lopez@example.com', 'md', 19, 'research', 'hospitalpuduchery@ch.ndhm', 'city general hospital'),
+(14123456789012, 'jessica', 'perez', 'doctor', 'allopathic', 1412345678, 'jessica.perez@example.com', 'md', 17, 'teaching', 'highlandcenter@ch.ndhm', 'highland medical center'),
+(15123456789012, 'john', 'miller', 'radiologist', 'radiology', 1512345678, 'john.miller@example.com', 'md', 10, 'research', 'coastalcenter@ch.ndhm', 'coastal medical center');
+
+
+----- User Table -----------
+
+-- Admin users
+INSERT INTO `user` (`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`) VALUES
+('Sachin.Nair@iiitb.ac.in', 'Sachin', 'Nair', '+918149734360', 'Sachin.Nair@iiitb.ac.in', 'password', 'admin'),
+('Anjali.Kumar@iiitb.ac.in', 'Anjali', 'Kumar', '+916282693806', 'Anjali.Kumar@iiitb.ac.in', 'password', 'admin'),
+('Srishti.Yadav@iiitb.ac.in', 'Srishti', 'Yadav', '+919917316461', 'Srishti.Yadav@iiitb.ac.in', 'password', 'admin'),
+('Sambhu.SS@iiitb.ac.in', 'Sambhu', 'SS', '+919562758206', 'Sambhu.SS@iiitb.ac.in', 'password', 'admin');
+-- Patients
+INSERT INTO `user` (`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`) VALUES
+('Aromal@gmail.com', 'Aromal', 'A', '+919876543210', 'Aromal@gmail.com', 'patient123', 'patient'),
+('Sunny@gmail.com', 'Sunny', 'L', '+918765432109', 'Sunny@gmail.com', 'patient123', 'patient'),
+('Prabhas@gmail.com', 'Prabhas', 'S', '+917654321098', 'Prabhas@gmail.com', 'patient123', 'patient');
+-- Healthcare professionals
+INSERT INTO `user` (`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`) VALUES
+('jennifer.rodriguez@example.com','jennifer','rodriguez','1012345678','jennifer.rodriguez@example.com','radi123','radiologist'),
+('mary.wilson@example.com','mary','wilson','1212345678','mary.wilson@example.com','doc123','doctor');
+-- healthcare facility
+INSERT INTO `user` (`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`) VALUES
+('info@techdiagnostics13.com','tech diagnostic services 13','','+91 1212121212','info@techdiagnostics13.com','lab123','lab'),
+('info@metrocare3.com','metro care hospital 3','','+91 6543210987','info@metrocare3.com','hospital123','hospital');
+
+
+
+INSERT INTO `patient` (`email`, `dob`, `age`, `gender`, `address`, `blood_grp`, `guardian_first_name`, `guardian_last_name`, `guardian_contact`)
+VALUES
+('Aromal@gmail.com', '1990-05-15', 32, 'male', 'Flat No. 101, Sunshine Apartments, MG Road, Bengaluru, Karnataka, India', 'A+', 'Rajesh', 'Kumar', '+91 9876543210'),
+('Prabhas@gmail.com', '1985-07-25', 36, 'male', 'House No. 123, Park Street, Kolkata, West Bengal, India', 'O-', 'Amit', 'Sharma', '+91 8765432109'),
+('Sunny@gmail.com', '1992-11-08', 29, 'female', 'Plot No. 45, Rose Avenue, Pune, Maharashtra, India', 'B+', 'Priya', 'Patel', '+91 7654321098');
+
+
+INSERT INTO `facility` (`email`, `ufid`, `state`, `district`, `sub_district`, `country`, `type`)
+VALUES
+('info@techdiagnostics13.com', 'techdiagnostics013@ch.ndhm', 'statem', 'district13', 'subdistm', 'countryn', 'radiology'),
+('info@metrocare3.com', 'metrocare003@ch.ndhm', 'statee', 'district5', 'subdiste', 'countryv', 'allopathic');
+
+
+INSERT INTO `professional` (`email`, `license_number`, `experience`, `affiliated_facility_email`, `specialization`, `isactive`, `type`)
+VALUES
+('jennifer.rodriguez@example.com', '10123456789012', 16, 'info@techdiagnostics13.com', 'radiology', 1, 'radiologist'),
+('mary.wilson@example.com', '12123456789012', 7, 'info@metrocare3.com', 'doctor', 1, 'doctor');
 
