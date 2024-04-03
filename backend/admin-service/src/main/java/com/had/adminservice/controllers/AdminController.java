@@ -1,18 +1,14 @@
 package com.had.adminservice.controllers;
 
-
-import com.had.adminservice.entity.Doctor;
-import com.had.adminservice.exception.DoctorNotFoundException;
-import com.had.adminservice.repository.DoctorRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.had.adminservice.exception.ResourceNotFoundException;
+import com.had.adminservice.responseBody.FacilityResponseBody;
 import com.had.adminservice.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 public class AdminController {
@@ -20,17 +16,12 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @Autowired
-    DoctorRepository doctorRepository;
-
-    //ufid : UNIQUE FACILITY ID
-    //for role based access role and tasks and action validation can be done here, or in the service class
-    @PostMapping("/admin/add-hospital")
-    public ResponseEntity<String> addHospitalFromUfid(@RequestParam String ufid) {
+    @PostMapping("/admin/add-facility")
+    public ResponseEntity<String> addFacilityByFacilityId(@RequestParam("facilityId") String facilityId) {
 
         try {
-            String message = adminService.addHospital(ufid);
-            if (message.equals("Hospital with the provided UFID already exists!")) {
+            String message = adminService.addFacility(facilityId);
+            if (message.equals("Facility with the provided facility id already exists!")) {
                 return ResponseEntity.badRequest().body(message);
             } else {
 
@@ -41,85 +32,74 @@ public class AdminController {
         }
     }
 
-
-    @DeleteMapping("/admin/remove-hospital")
-    public ResponseEntity<String> removeHospitalFromUfid(@RequestParam String ufid) {
+    @GetMapping("/admin/all-facilities")
+    public ResponseEntity<List<FacilityResponseBody>> getAllFacilities() {
         try {
-            adminService.removeHospital(ufid);
-            return ResponseEntity.ok("Hospital with " + ufid + " deleted!.");
+            List<FacilityResponseBody> responseBodies = adminService.getAllFacilities();
+            return ResponseEntity.ok(responseBodies);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    //-----------------------------------------------DOCTOR----------------------------------------------------
-
-    //upid : UNIQUE PROFESSIONALS ID
-    @PostMapping("/admin/add-doctor")
-    public ResponseEntity<String> addDoctorFromUpid(@RequestParam Long upid) {
-
+    @GetMapping("/admin/all-facilities-by-type")
+    public ResponseEntity<List<FacilityResponseBody>> getAllFacilitiesByType(@RequestParam String type) {
         try {
-            String message = adminService.addDoctor(upid);
-            if (message.equals("Doctor with the provided UPID already exists!")) {
-                return ResponseEntity.badRequest().body(message);
-            } else {
-                return ResponseEntity.ok(message);
-            }
+            List<FacilityResponseBody> responseBodies = adminService.getAllFacilitiesByType(type);
+            return ResponseEntity.ok(responseBodies);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-
-    @GetMapping("/admin/view-doctor-list")
-    public ResponseEntity<?> viewDoctorList() {
+    @GetMapping("/admin/facility-by-id")
+    public ResponseEntity<String> getAllFacilityById(@RequestParam Long id) {
         try {
-            List<Doctor> doctors = adminService.getAllDoctors().getBody();
-            if (doctors.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No doctors found");
-            } else {
-                return ResponseEntity.ok(doctors);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching doctors");
-        }
-    }
-
-    @GetMapping("/admin/view-doctor-details/{id}")
-    public ResponseEntity<?> getDoctorById(@PathVariable Long id) {
-        try {
-            Doctor doctor = adminService.getDoctorById(id);
-            return ResponseEntity.ok(doctor);
-        } catch (DoctorNotFoundException e) {
+            FacilityResponseBody responseBody = adminService.getFacilityById(id);
+            // Convert the FacilityResponseBody to JSON string
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(responseBody);
+            return ResponseEntity.ok(jsonString);
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching doctor details");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
 
-    @DeleteMapping("/admin/remove-doctor/{id}")
-    public ResponseEntity<String> removeDoctorFromUpid(@RequestParam Long id) {
+    @DeleteMapping("/admin/remove-facility")
+    public ResponseEntity<String> removeFacility(@RequestParam String facilityId) {
         try {
-            ResponseEntity<String> response = adminService.removeDoctor(id);
-            if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
-                // Doctor successfully deleted
-                return ResponseEntity.ok("Doctor with ID " + id + " deleted!");
-            } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-                // Doctor with the given ID doesn't exist
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doctor with ID " + id + " does not exist.");
-            } else {
-                // Other errors
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing data.");
-            }
+            adminService.removeFacility(facilityId);
+            return ResponseEntity.ok("Facility with ID " + facilityId + " deleted successfully.");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Facility not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete facility: " + e.getMessage());
         } catch (Exception e) {
-            // Handle unexpected exceptions
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing data: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
         }
     }
 
-    //RADIOLOGIST
+    //-----------------------------------------------PROFESSIONAL----------------------------------------------------
 
-    //LABORATORY
+//    @PostMapping("/admin/add-professional")
+//    public ResponseEntity<String> addProfessionalByFacilityId(@RequestParam("hpId") String hpId) {
+//
+//        try {
+//            String message = adminService.addProfessional(hpId);
+//            if (message.equals("Professional with the provided facility id already exists!")) {
+//                return ResponseEntity.badRequest().body(message);
+//            } else {
+//
+//                return ResponseEntity.ok(message);
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
+//        }
+//    }
 
 
 

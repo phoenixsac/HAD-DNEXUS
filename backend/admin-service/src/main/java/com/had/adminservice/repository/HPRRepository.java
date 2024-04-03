@@ -1,6 +1,5 @@
 package com.had.adminservice.repository;
 
-import com.had.adminservice.entity.HealthcareFacilityRegistry;
 import com.had.adminservice.entity.HealthcareProfessionalsRegistry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

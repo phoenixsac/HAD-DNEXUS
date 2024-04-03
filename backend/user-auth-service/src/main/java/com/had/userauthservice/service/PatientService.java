@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.had.userauthservice.constants.Constants.PATIENT;
+
 @Service
 public class PatientService {
 
@@ -34,48 +36,45 @@ public class PatientService {
 
     public String registerPatient(PatientSignupReqBody request) {
         try {
-            // Check if a user with the same email already exists
-            Optional<Patient> existingPatient = patientRepo.findByEmail(request.getEmail());
+            User existingUser = userRepo.findByEmail(request.getEmail());
 
-            if (existingPatient.isPresent()) {
-                return "User already exists.";
+            if (existingUser != null) {
+                return "Patient is already registered.";
             } else {
-                // Generate random login ID and password
                 String loginId = generateRandomLoginId(6);
                 String password = generateRandomPassword(8);
-
                 String hashedPassword = bcryptPwdEncoder.encode(password);
 
-                // Save the patient entry to the User table
-                User user = new User(
-                        request.getFirstName() + " " + request.getLastName(),
-                        loginId,
-                        request.getEmail(),
-                        hashedPassword,
-                        "pat"
-                );
-                userRepo.save(user);
-
-                Patient patient = new Patient.Builder()
-                        .withFirstName(request.getFirstName())
-                        .withLastName(request.getLastName())
-                        .withDob(request.getDob())
-                        .withGender(request.getGender())
-                        .withContact(request.getContact())
-                        .withEmail(request.getEmail())
-                        .withAddress(request.getAddress())
-                        .withBloodGrp(request.getBloodGrp())
-                        .withGuardianFirstName(request.getGuardianFirstName())
-                        .withGuardianLastName(request.getGuardianLastName())
-                        .withGuardianContact(request.getGuardianContact())
+                // Create a new user entity
+                User user = User.builder()
+                        .email(request.getEmail())
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .contact(request.getContact())
+                        .loginId(loginId)
+                        .isActive(true)
+                        .password(hashedPassword)
+                        .type(PATIENT)
                         .build();
 
-                // Additional processing or validation if needed
-                patientRepo.save(patient);
+                // Create a new patient entity and associate it with the user
+                Patient patient = Patient.builder()
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .dob(request.getDob())
+                        .gender(request.getGender())
+                        .address(request.getAddress())
+                        .bloodGrp(request.getBloodGrp())
+                        .guardianFirstName(request.getGuardianFirstName())
+                        .guardianLastName(request.getGuardianLastName())
+                        .guardianContact(request.getGuardianContact())
+                        .user(user) // Associate patient with the user
+                        .build();
 
-                // Send an email to the user with login credentials
-//                String emailContent = "Thank you for registering on DNexus. Here are the credentials for future access. You can change the password" +
-//                        " after you login with the initial credentials.\nYour login ID: " + loginId + "\nYour password: " + password;
+                // Save the user along with associated patient
+
+                patientRepo.save(patient);
+                //userRepo.save(user);
 
                 String emailContent = Constants.getPatientSignupCredEmail(loginId, password);
                 emailService.sendEmail(request.getEmail(), "Login Credentials for DNexus", emailContent);
@@ -87,6 +86,7 @@ public class PatientService {
             return "error";
         }
     }
+
 
 
 
