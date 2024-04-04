@@ -15,9 +15,10 @@ public class PatientController {
     PatientService patientService;
 
 
-    @GetMapping("/patient/get-profile/{email}")
-    public ResponseEntity<Object> getPatientDetails(@PathVariable String email) {
-        Object result = patientService.getDetailsFromMailId(email);
+    @GetMapping("/patient/get-profile/{id}")
+    public ResponseEntity<Object> getDetailsFromId(@PathVariable Long id) {
+
+        Object result = patientService.getDetailsFromId(id);
 
         if (result instanceof String) {
             // Handle error case

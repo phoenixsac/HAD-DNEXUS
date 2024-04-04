@@ -28,8 +28,8 @@ public class PatientService
 
     private static final Logger logger = LoggerFactory.getLogger(PatientService.class);
 
-    public Object getDetailsFromMailId(String email) {
-        Patient patient = patientRepo.findByEmailId(email);
+    public Object getDetailsFromId(Long id) {
+        Patient patient = patientRepo.findByPatientId(id);
         if (patient == null)
             return "Invalid!!!";
         else {
@@ -39,25 +39,25 @@ public class PatientService
                     .address(patient.getAddress())
                     .bloodGrp(patient.getBloodGrp())
                     .contact(patient.getContact())
-                    .firstName(patient.getFirstName())
-                    .lastName(patient.getLastName())
+                    .firstName(patient.getUser().getFirstName())
+                    .lastName(patient.getUser().getLastName())
                     .guardianFirstName(patient.getGuardianFirstName())
                     .guardianLastName(patient.getGuardianLastName())
-                    .email(email)
+                    .email(patient.getUser().getEmail())
                     .gender(patient.getGender()).build();
         }
     }
 
     @Transactional
     public UpdatePatientRespBody updatePatientDetails(UpdatePatientReqBody requestBody) {
-        logger.info("Updating patient details for email: {}", requestBody.getEmail());
+        logger.info("Updating patient details for id: {}", requestBody.getId());
         // Fetch the existing patient from the database
-        Patient existingPatient = patientRepo.findByEmailId(requestBody.getEmail());
+        Patient existingPatient = patientRepo.findByPatientId(requestBody.getId());
 
         if (existingPatient!=null) {
             // Update fields of the existing patient
-            existingPatient.setFirstName(requestBody.getFirstName());
-            existingPatient.setLastName(requestBody.getLastName());
+//            existingPatient.setFirstName(requestBody.getFirstName());
+//            existingPatient.setLastName(requestBody.getLastName());
             existingPatient.setDob(requestBody.getDob());
             existingPatient.setGender(requestBody.getGender());
             existingPatient.setContact(requestBody.getContact());
@@ -68,13 +68,13 @@ public class PatientService
             existingPatient.setGuardianLastName(requestBody.getGuardianLastName());
             existingPatient.setGuardianContact(requestBody.getGuardianContact());
 
-            User existingUser = userRepo.findByEmail(requestBody.getEmail());
+            User existingUser = userRepo.findByUserId(requestBody.getId());
             if (existingUser != null) {
-                logger.info("Modified first name and last name : ", requestBody.getEmail(), existingUser.getName());
-                existingUser.setName(requestBody.getFirstName() + " " + requestBody.getLastName());
+                logger.info("Modified first name and last name : ", requestBody.getEmail(), existingUser.getFirstName());
+                existingUser.setFirstName(requestBody.getFirstName() + " " + requestBody.getLastName());
                 userRepo.save(existingUser);
 
-                logger.info("User details updated successfully for email: {}, New Name: {}", requestBody.getEmail(), existingUser.getName());
+                logger.info("User details updated successfully for email: {}, New Name: {}", requestBody.getEmail(), existingUser.getFirstName());
             }
 
             logger.debug("Patient details updated for email: {}", requestBody.getEmail());
@@ -84,8 +84,8 @@ public class PatientService
 
             // Construct the response body from the updated patient details
             UpdatePatientRespBody responseBody = new UpdatePatientRespBody();
-            responseBody.setFirstName(updatedPatient.getFirstName());
-            responseBody.setLastName(updatedPatient.getLastName());
+//            responseBody.setFirstName(updatedPatient.getFirstName());
+//            responseBody.setLastName(updatedPatient.getLastName());
             responseBody.setDob(updatedPatient.getDob());
             responseBody.setGender(updatedPatient.getGender());
             responseBody.setContact(updatedPatient.getContact());
