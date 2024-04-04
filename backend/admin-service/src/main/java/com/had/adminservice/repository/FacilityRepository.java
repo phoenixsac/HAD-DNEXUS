@@ -17,7 +17,9 @@ public interface FacilityRepository extends JpaRepository<Facility, Long> {
     @Query(value = "SELECT * FROM facility WHERE ufid = :facilityId", nativeQuery = true)
     Optional<Facility> findFacilityById(String facilityId);
 
+    @Query(value = "SELECT ufid FROM facility WHERE ufid = :affiliatedFacilityId", nativeQuery = true)
+    String findUfidFromFacility(String affiliatedFacilityId);
+
     @Query(value = "SELECT * FROM facility", nativeQuery = true)
     List<Facility> findAllFacilities();
-
 }

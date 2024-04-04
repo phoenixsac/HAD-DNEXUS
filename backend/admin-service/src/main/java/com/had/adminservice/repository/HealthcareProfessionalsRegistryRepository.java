@@ -9,5 +9,7 @@ public interface HealthcareProfessionalsRegistryRepository extends JpaRepository
     @Query(value = "SELECT * FROM healthcare_professionals_registry WHERE healthcare_professional_id = :hpId", nativeQuery = true)
     HealthcareProfessionalsRegistry validateProessionalWithHPR(Long hpId);
 
+    @Query(value = "SELECT affiliated_facility_id FROM healthcare_professionals_registry WHERE healthcare_professional_id = :hpId", nativeQuery = true)
+    String getAffiliatedFacilityId(Long hpId);
 
 }

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "SELECT * FROM user WHERE email = :email", nativeQuery = true)
+    @Query(value = "SELECT * FROM user WHERE LOWER(email) = LOWER(:email)", nativeQuery = true)
     User findByEmail(String email);
 
 }

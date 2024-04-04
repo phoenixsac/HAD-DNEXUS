@@ -91,13 +91,15 @@ public class AdminService {
                 .user(user) // Associate the Facility with the User
                 .build();
 
-        logger.info("Creating facility: {}", facilityId);
+        Facility savedFacility = facilityRepository.save(facility);
 
-        facilityRepository.save(facility);
-
-        logger.info("Facility added successfully with id: {}", facilityId);
-
-        return "Facility added successfully";
+        if (savedFacility != null) {
+            logger.info("Facility added successfully with id: {}", facilityId);
+            return "Facility added successfully";
+        } else {
+            logger.error("Failed to add facility {}", facilityId);
+            return "Failed to add facility";
+        }
     }
 
 
@@ -194,7 +196,6 @@ public class AdminService {
     }
 
 
-
     //SOFT-DELETE
     public String removeFacility(String facId) {
         // Check if the facility with the given ID exists
@@ -231,7 +232,7 @@ public class AdminService {
         Optional<Professional> existingProfessional = professionalRepository.findProfessionalExists(hpId);
         if (existingProfessional.isPresent()) {
             logger.warn("Professional with hpId {} already exists", hpId);
-            return "Facility with the provided id already exists!";
+            return "Professional with the provided id already exists!";
         }
 
         HealthcareProfessionalsRegistry healthcareProfessionalsRegistry = hprRepository.validateProessionalWithHPR(hpId);
@@ -241,48 +242,68 @@ public class AdminService {
             return "Given facility does not exist in Health Facility Registry!";
         }
 
-        String loginId = generateRandomLoginId(6);
-        String password = generateRandomPassword(8);
-        String hashedPassword = bcryptPwdEncoder.encode(password);
+        String affiliatedFacilityId = hprRepository.getAffiliatedFacilityId(hpId);
 
-        // Creating and saving the User
-        User user = User.builder()
-                .contact(healthcareProfessionalsRegistry.getContactNumber())
-                .email(healthcareProfessionalsRegistry.getEmailId())
-                .firstName(healthcareProfessionalsRegistry.getFirstName())
-                .lastName(healthcareProfessionalsRegistry.getLastName())
-                .type(healthcareProfessionalsRegistry.getSpecialization())
-                .password(hashedPassword)
-                .isActive(true)
-                .loginId(loginId)
-                .build();
+        if (affiliatedFacilityId.equalsIgnoreCase(facilityRepository.findUfidFromFacility(affiliatedFacilityId))) {
+            logger.info("Professional associated facility id {} exists in Facility table.", affiliatedFacilityId);
+        } else if (affiliatedFacilityId.equalsIgnoreCase(hfrRepository.checkIFFacilityExistsInHFR(affiliatedFacilityId))) {
+            logger.info("Professional associated facility id {} does not exist in Facility table, but exists in HFR table", affiliatedFacilityId);
+            //addFacility(affiliatedFacilityId);
+        } else {
+            logger.warn("Professional associated facility id {} does not exist in Facility table, and in HFR table", affiliatedFacilityId);
+            return "Professional associated facility id does not exist in Facility and HFR tables.";
+        }
+        if ("Facility added successfully".equalsIgnoreCase(addFacility(affiliatedFacilityId)) ||
+                "Facility with the provided id already exists!".equalsIgnoreCase(addFacility(affiliatedFacilityId))) {
+            String loginId = generateRandomLoginId(6);
+            String password = generateRandomPassword(8);
+            String hashedPassword = bcryptPwdEncoder.encode(password);
 
-//        User facUser = userRepository.findAffiliatedFacilityId();
+            // Creating and saving the User
+            User user = User.builder()
+                    .contact(healthcareProfessionalsRegistry.getContactNumber())
+                    .email(healthcareProfessionalsRegistry.getEmailId())
+                    .firstName(healthcareProfessionalsRegistry.getFirstName())
+                    .lastName(healthcareProfessionalsRegistry.getLastName())
+                    .type(healthcareProfessionalsRegistry.getSpecialization())
+                    .password(hashedPassword)
+                    .isActive(true)
+                    .loginId(loginId)
+                    .build();
 
-        logger.info("Creating user entry for professional: {}", healthcareProfessionalsRegistry.getFirstName()+healthcareProfessionalsRegistry.getLastName());
 
-        // Creating the Facility and associating it with the User
-//        Professional professional = Professional.builder()
-//                .licenseNumber(healthcareProfessionalsRegistry.getHealthcareProfessionalId())
-//                .experience(healthcareProfessionalsRegistry.getYearsOfExperience())
-//                .affiliatedFacilityId(healthcareProfessionalsRegistry.getAffiliatedFacilityId())
-//                .specialization(healthcareProfessionalsRegistry.getSpecialization())
-//                .user(user)
-//                .build();
+            logger.info("Creating user entry for professional: {}", healthcareProfessionalsRegistry.getFirstName() + healthcareProfessionalsRegistry.getLastName());
 
-        logger.info("Creating facility: {}", hpId);
+            // Creating the Facility and associating it with the User
+            Professional professional = Professional.builder()
+                    .licenseNumber(String.valueOf(healthcareProfessionalsRegistry.getHealthcareProfessionalId()))
+                    .experience(healthcareProfessionalsRegistry.getYearsOfExperience())
+                    .affiliatedFacilityId(healthcareProfessionalsRegistry.getAffiliatedFacilityId())
+                    .specialization(healthcareProfessionalsRegistry.getSpecialization())
+                    .systemOfMedicine(healthcareProfessionalsRegistry.getSystemOfMedicine())
+                    .qualification(healthcareProfessionalsRegistry.getQualification())
+                    .status(healthcareProfessionalsRegistry.getStatus())
+                    .placeOfWork(healthcareProfessionalsRegistry.getPlaceOfWork())
+                    .user(user)
+                    .build();
 
-      //  professionalRepository.save(professional);
+            logger.info("Creating facility: {}", hpId);
 
-        logger.info("Professional added successfully with license/id: {}", hpId);
+            professionalRepository.save(professional);
 
-        return "Professional added successfully";
+            logger.info("Professional added successfully with license/id: {}", hpId);
+
+            return "Professional added successfully";
+        } else {
+            return "Error creating professional due to facility addition issues";
+        }
+
     }
 
     //SOFT-DELETE
-    public String removeProfessional(Long upId) {
+    public String removeProfessional(Long id) {
 
-        Optional<Professional> professionalOptional = professionalRepository.findProfessionalExists(upId);
+        Optional<Professional> professionalOptional = professionalRepository.findProfessionalExists(id);
         if (professionalOptional.isPresent()) {
             Professional professional = professionalOptional.get();
 
@@ -294,17 +315,17 @@ public class AdminService {
             userRepository.save(user);
 
             // Facility soft deletion successful
-            return "Professional with ID " + upId + " soft deleted successfully";
+            return "Professional with ID " + id + " soft deleted successfully";
         } else {
             // Handle the case where the facility with the specified ID is not found
-            throw new ResourceNotFoundException("Professional with ID " + upId + " not found");
+            throw new ResourceNotFoundException("Professional with ID " + id + " not found");
         }
     }
 
 
     public static ProfessionalResponseBody mapProfessionalToResponse(Professional professional) {
         return ProfessionalResponseBody.builder()
-                .healthcareProfessionalId(professional.getId())
+                .professionalId(professional.getId())
                 .firstName(professional.getUser().getFirstName())
                 .lastName(professional.getUser().getLastName())
                 .specialization(professional.getSpecialization())
@@ -352,7 +373,7 @@ public class AdminService {
 
 
     public List<ProfessionalResponseBody> getAllProfessionalsByType(String type) {
-        List<Professional> professionals = professionalRepository.findByType(type);
+        List<Professional> professionals = professionalRepository.findByTypeOrSpecialization(type);
         return mapProfessionalsToResponse(professionals);
     }
 }

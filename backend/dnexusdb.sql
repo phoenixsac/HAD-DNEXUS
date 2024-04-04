@@ -89,10 +89,9 @@ CREATE TABLE professional (
                               id INT AUTO_INCREMENT PRIMARY KEY,
                               license_number VARCHAR(50) NOT NULL,
                               experience INT DEFAULT NULL,
-                              affiliated_facility_id INT DEFAULT NULL,
+                              affiliated_facility_id varchar(255) DEFAULT NULL,
                               specialization VARCHAR(255) DEFAULT NULL,
                               system_of_medicine VARCHAR(255) DEFAULT NULL,
-                              type VARCHAR(50),
                               user_id INT NOT NULL,
                               qualification VARCHAR(255) DEFAULT NULL,
                               status VARCHAR(255) DEFAULT NULL,
@@ -101,7 +100,7 @@ CREATE TABLE professional (
 
 CREATE TABLE `facility` (
                             `id` INT AUTO_INCREMENT PRIMARY KEY,
-                            `ufid` varchar(255) NOT NULL,
+                            `ufid` varchar(255) UNIQUE NOT NULL,
                             `state` varchar(255) DEFAULT NULL,
                             `district` varchar(255) DEFAULT NULL,
                             `sub_district` varchar(255) DEFAULT NULL,
@@ -136,7 +135,7 @@ ALTER TABLE `facility`
 ALTER TABLE `professional`
     ADD CONSTRAINT `fk_professional_facility_email`
         FOREIGN KEY (`affiliated_facility_id`)
-            REFERENCES `facility` (`id`)
+            REFERENCES `facility` (`ufid`)
             ON DELETE CASCADE
             ON UPDATE CASCADE;
 
@@ -221,10 +220,10 @@ VALUES
     (1, 'techdiagnostics013@ch.ndhm', 'statem', 'district13', 'subdistm', 'countryn', 'hospital',8),
     (2, 'metrocare003@ch.ndhm', 'statee', 'district5', 'subdiste', 'countryv', 'lab',10);
 
-INSERT INTO professional (id, license_number, experience, affiliated_facility_id, specialization, type, user_id, system_of_medicine, qualification, status, place_of_work)
+INSERT INTO professional (id, license_number, experience, affiliated_facility_id, specialization, user_id, system_of_medicine, qualification, status, place_of_work)
 VALUES
-    (1, '10123456789012', 16, 1, 'radiology', 'radiologist', 12, 'radiology', 'Dummy Qualification 1', 'Active', 'Hospital A'),
-    (2, '12123456789012', 7, 2, 'doctor', 'doctor', 14, 'allopathy', 'Dummy Qualification 2', 'Inactive', 'Clinic B');
+    (1, '10123456789012', 16, 'techdiagnostics013@ch.ndhm', 'radiology', 12, 'radiology', 'Dummy Qualification 1', 'Active', 'Hospital A'),
+    (2, '12123456789012', 7, 'metrocare003@ch.ndhm', 'doctor', 14, 'allopathy', 'Dummy Qualification 2', 'Inactive', 'Clinic B');
 
 
 

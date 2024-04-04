@@ -1,15 +1,13 @@
 package com.had.adminservice.responseBody;
 
 import lombok.*;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 public class ProfessionalResponseBody {
-
-    private Long healthcareProfessionalId;
+    private Long professionalId;
     private String firstName;
     private String lastName;
     private String specialization;
