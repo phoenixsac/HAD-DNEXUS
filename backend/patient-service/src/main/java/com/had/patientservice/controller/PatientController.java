@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PatientController {
+
     @Autowired
     PatientService patientService;
-
 
     @GetMapping("/patient/get-profile/{email}")
     public ResponseEntity<Object> getPatientDetails(@PathVariable String email) {
@@ -41,12 +41,9 @@ public class PatientController {
             // If no exception occurred, return the updated patient details
             return ResponseEntity.ok(updatedPatientDetails);
         } catch (Exception e) {
-            // Handle any exceptions and return appropriate response
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to update patient details: " + e.getMessage());
         }
     }
-
-
-    //edit-profile
 }
