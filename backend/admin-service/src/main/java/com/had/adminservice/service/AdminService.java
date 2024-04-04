@@ -6,6 +6,7 @@ import com.had.adminservice.entity.*;
 import com.had.adminservice.exception.ResourceNotFoundException;
 import com.had.adminservice.repository.*;
 import com.had.adminservice.responseBody.FacilityResponseBody;
+import com.had.adminservice.responseBody.ProfessionalResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,16 @@ public class AdminService {
     private FacilityRepository facilityRepository;
 
     @Autowired
+    private ProfessionalRepository professionalRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private HealthFacilityRegistryRepository hfrRepository;
+
+    @Autowired
+    private HealthcareProfessionalsRegistryRepository hprRepository;
 
 
     public String addFacility(String facilityId) {
@@ -187,6 +194,8 @@ public class AdminService {
     }
 
 
+
+    //SOFT-DELETE
     public String removeFacility(String facId) {
         // Check if the facility with the given ID exists
         Optional<Facility> facilityOptional = facilityRepository.findFacilityById(facId);
@@ -209,4 +218,141 @@ public class AdminService {
     }
 
 
+    //////////////////////////////////////////////////////////PROFESSIONAL////////////////////////////////////////////////////
+    public String addProfessional(Long hpId) {
+        Logger logger = LoggerFactory.getLogger(getClass());
+
+        if (hpId == null) {
+            throw new IllegalArgumentException("Facility id cannot be empty");
+        }
+
+        logger.info("Received request to add professional with id: {}", hpId);
+
+        Optional<Professional> existingProfessional = professionalRepository.findProfessionalExists(hpId);
+        if (existingProfessional.isPresent()) {
+            logger.warn("Professional with hpId {} already exists", hpId);
+            return "Facility with the provided id already exists!";
+        }
+
+        HealthcareProfessionalsRegistry healthcareProfessionalsRegistry = hprRepository.validateProessionalWithHPR(hpId);
+
+        if (healthcareProfessionalsRegistry == null) {
+            logger.warn("Professional with id {} does not exist in Health Facility Registry", hpId);
+            return "Given facility does not exist in Health Facility Registry!";
+        }
+
+        String loginId = generateRandomLoginId(6);
+        String password = generateRandomPassword(8);
+        String hashedPassword = bcryptPwdEncoder.encode(password);
+
+        // Creating and saving the User
+        User user = User.builder()
+                .contact(healthcareProfessionalsRegistry.getContactNumber())
+                .email(healthcareProfessionalsRegistry.getEmailId())
+                .firstName(healthcareProfessionalsRegistry.getFirstName())
+                .lastName(healthcareProfessionalsRegistry.getLastName())
+                .type(healthcareProfessionalsRegistry.getSpecialization())
+                .password(hashedPassword)
+                .isActive(true)
+                .loginId(loginId)
+                .build();
+
+//        User facUser = userRepository.findAffiliatedFacilityId();
+
+        logger.info("Creating user entry for professional: {}", healthcareProfessionalsRegistry.getFirstName()+healthcareProfessionalsRegistry.getLastName());
+
+        // Creating the Facility and associating it with the User
+//        Professional professional = Professional.builder()
+//                .licenseNumber(healthcareProfessionalsRegistry.getHealthcareProfessionalId())
+//                .experience(healthcareProfessionalsRegistry.getYearsOfExperience())
+//                .affiliatedFacilityId(healthcareProfessionalsRegistry.getAffiliatedFacilityId())
+//                .specialization(healthcareProfessionalsRegistry.getSpecialization())
+//                .user(user)
+//                .build();
+
+        logger.info("Creating facility: {}", hpId);
+
+      //  professionalRepository.save(professional);
+
+        logger.info("Professional added successfully with license/id: {}", hpId);
+
+        return "Professional added successfully";
+    }
+
+    //SOFT-DELETE
+    public String removeProfessional(Long upId) {
+
+        Optional<Professional> professionalOptional = professionalRepository.findProfessionalExists(upId);
+        if (professionalOptional.isPresent()) {
+            Professional professional = professionalOptional.get();
+
+            // Remove the facility from its associated user
+            User user = professional.getUser();
+            user.setActive(false);
+
+            // Save the updated user
+            userRepository.save(user);
+
+            // Facility soft deletion successful
+            return "Professional with ID " + upId + " soft deleted successfully";
+        } else {
+            // Handle the case where the facility with the specified ID is not found
+            throw new ResourceNotFoundException("Professional with ID " + upId + " not found");
+        }
+    }
+
+
+    public static ProfessionalResponseBody mapProfessionalToResponse(Professional professional) {
+        return ProfessionalResponseBody.builder()
+                .healthcareProfessionalId(professional.getId())
+                .firstName(professional.getUser().getFirstName())
+                .lastName(professional.getUser().getLastName())
+                .specialization(professional.getSpecialization())
+                .systemOfMedicine(professional.getSystemOfMedicine())
+                .contactNumber(professional.getUser().getContact())
+                .emailId(professional.getUser().getEmail())
+                .qualification(professional.getQualification())
+                .yearsOfExperience(professional.getExperience())
+                .status(professional.getStatus())
+                .affiliatedFacilityId(professional.getAffiliatedFacilityId())
+                .placeOfWork(professional.getPlaceOfWork())
+                .build();
+    }
+
+    private List<ProfessionalResponseBody> mapProfessionalsToResponse(List<Professional> facilities) {
+        List<ProfessionalResponseBody> responseBodies = new ArrayList<>();
+        for (Professional professional : facilities) {
+            if (professional.getUser().isActive()) {
+                ProfessionalResponseBody responseBody = mapProfessionalToResponse(professional);
+                responseBodies.add(responseBody);
+            }
+        }
+        return responseBodies;
+    }
+
+    public ProfessionalResponseBody getProfessionalById(Long id) {
+        Optional<Professional> professionalOptional = professionalRepository.findById(id);
+
+        if (professionalOptional.isPresent()) {
+            Professional professional = professionalOptional.get();
+            if (!professional.getUser().isActive()) {
+                throw new IllegalStateException("Professional with ID " + id + " is not active");
+            }
+            return mapProfessionalToResponse(professional);
+        } else {
+            // Handle the case where the facility with the specified ID is not found
+            throw new ResourceNotFoundException("Professional with ID " + id + " not found");
+        }
+    }
+
+    public List<ProfessionalResponseBody> getAllProfessionals() {
+        List<Professional> professionals = professionalRepository.findAll();
+        return mapProfessionalsToResponse(professionals);
+    }
+
+
+    public List<ProfessionalResponseBody> getAllProfessionalsByType(String type) {
+        List<Professional> professionals = professionalRepository.findByType(type);
+        return mapProfessionalsToResponse(professionals);
+    }
 }

@@ -85,21 +85,35 @@ public class AdminController {
 
     //-----------------------------------------------PROFESSIONAL----------------------------------------------------
 
-//    @PostMapping("/admin/add-professional")
-//    public ResponseEntity<String> addProfessionalByFacilityId(@RequestParam("hpId") String hpId) {
-//
-//        try {
-//            String message = adminService.addProfessional(hpId);
-//            if (message.equals("Professional with the provided facility id already exists!")) {
-//                return ResponseEntity.badRequest().body(message);
-//            } else {
-//
-//                return ResponseEntity.ok(message);
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
-//        }
-//    }
+    @PostMapping("/admin/add-professional")
+    public ResponseEntity<String> addProfessionalByFacilityId(@RequestParam("hpId") Long hpId) {
+
+        try {
+            String message = adminService.addProfessional(hpId);
+            if (message.equals("Professional with the provided facility id already exists!")) {
+                return ResponseEntity.badRequest().body(message);
+            } else {
+
+                return ResponseEntity.ok(message);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/admin/remove-professional")
+    public ResponseEntity<String> removeProfessional(@RequestParam Long upId) {
+        try {
+            adminService.removeProfessional(upId);
+            return ResponseEntity.ok("Professional with ID " + upId + " deleted successfully.");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Professional not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete professional: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
+        }
+    }
 
 
 

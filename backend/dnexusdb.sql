@@ -38,7 +38,7 @@ create table healthcare_professionals_registry (
                                                    last_name varchar(255),
                                                    specialization varchar(255),
                                                    system_of_medicine varchar(255),
-                                                   contact_number bigint,
+                                                   contact_number varchar(20),
                                                    email_id varchar(255),
                                                    qualification varchar(255),
                                                    years_of_experience integer,
@@ -85,14 +85,18 @@ CREATE TABLE `patient` (
 
 
 
-CREATE TABLE `professional` (
-                                `id` INT AUTO_INCREMENT PRIMARY KEY,
-                                `license_number` varchar(50) NOT NULL,
-                                `experience` int DEFAULT NULL,
-                                `affiliated_facility_id` INT DEFAULT NULL,
-                                `specialization` varchar(255) DEFAULT NULL,
-                                `type` varchar(50),
-                                `user_id` INT NOT NULL
+CREATE TABLE professional (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              license_number VARCHAR(50) NOT NULL,
+                              experience INT DEFAULT NULL,
+                              affiliated_facility_id INT DEFAULT NULL,
+                              specialization VARCHAR(255) DEFAULT NULL,
+                              system_of_medicine VARCHAR(255) DEFAULT NULL,
+                              type VARCHAR(50),
+                              user_id INT NOT NULL,
+                              qualification VARCHAR(255) DEFAULT NULL,
+                              status VARCHAR(255) DEFAULT NULL,
+                              place_of_work VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE `facility` (
@@ -217,9 +221,10 @@ VALUES
     (1, 'techdiagnostics013@ch.ndhm', 'statem', 'district13', 'subdistm', 'countryn', 'hospital',8),
     (2, 'metrocare003@ch.ndhm', 'statee', 'district5', 'subdiste', 'countryv', 'lab',10);
 
-INSERT INTO `professional` (`id`, `license_number`, `experience`, `affiliated_facility_id`, `specialization`,`type`,`user_id`)
+INSERT INTO professional (id, license_number, experience, affiliated_facility_id, specialization, type, user_id, system_of_medicine, qualification, status, place_of_work)
 VALUES
-    (1,'10123456789012', 16, 1, 'radiology', 'radiologist',12),
-    (2, '12123456789012', 7, 2, 'doctor', 'doctor',14);
+    (1, '10123456789012', 16, 1, 'radiology', 'radiologist', 12, 'radiology', 'Dummy Qualification 1', 'Active', 'Hospital A'),
+    (2, '12123456789012', 7, 2, 'doctor', 'doctor', 14, 'allopathy', 'Dummy Qualification 2', 'Inactive', 'Clinic B');
+
 
 

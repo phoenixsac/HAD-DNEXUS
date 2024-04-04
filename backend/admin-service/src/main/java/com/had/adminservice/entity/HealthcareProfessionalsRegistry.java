@@ -1,12 +1,10 @@
 package com.had.adminservice.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +19,11 @@ public class HealthcareProfessionalsRegistry {
     @Column(name = "healthcare_professional_id")
     private Long healthcareProfessionalId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "specialization")
     private String specialization;
@@ -31,7 +32,7 @@ public class HealthcareProfessionalsRegistry {
     private String systemOfMedicine;
 
     @Column(name = "contact_number")
-    private Long contactNumber;
+    private String contactNumber;
 
     @Column(name = "email_id")
     private String emailId;
@@ -45,8 +46,9 @@ public class HealthcareProfessionalsRegistry {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "affiliated_facility_id")
+    private String affiliatedFacilityId;
+
     @Column(name = "place_of_work")
     private String placeOfWork;
-
-    // Constructors, getters, and setters
 }

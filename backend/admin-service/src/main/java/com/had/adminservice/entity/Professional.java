@@ -1,6 +1,5 @@
 package com.had.adminservice.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +18,7 @@ public class Professional {
     private Long id;
 
     @Column(name = "license_number", length = 50)
-    private Long licenseNumber;
+    private String licenseNumber;
 
     @Column(name = "experience")
     private Integer experience;
@@ -30,9 +29,17 @@ public class Professional {
     @Column(name = "specialization", length = 255)
     private String specialization;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "system_of_medicine", length = 255)
+    private String systemOfMedicine;
 
+    @Column(name = "qualification", length = 255) // Added qualification field
+    private String qualification;
+
+    @Column(name = "status", length = 255) // Added status field
+    private String status;
+
+    @Column(name = "place_of_work", length = 255) // Added place_of_work field
+    private String placeOfWork;
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
