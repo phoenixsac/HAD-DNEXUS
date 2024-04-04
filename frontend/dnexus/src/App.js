@@ -16,6 +16,7 @@ import PatientDash from "./pages/PatientDash";
 import PatientReport from "./pages/PatientReport"
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
+import TestCase from "./pages/TestCase";
 
 
 function App() {
@@ -48,6 +49,8 @@ function App() {
             <Route path="/PRegistration" element={<PRegistration />} />
             <Route path="/PatientReport" element={<PatientReport />} />
             <Route path="/PatientDash" element={<PatientDash />} />
+            <Route path="/TestCase" element={<TestCase />} />
+
           </Routes>
         </BrowserRouter>
       </AuthProvider>
