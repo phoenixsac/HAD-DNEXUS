@@ -10,6 +10,9 @@ import LabDetails from '../components/TestCase/LabDetails';
 import Button from '../components/TestCase/Button';
 import ChatList from '../components/TestCase/ChatList';
 import LabUpload from '../components/TestCase/LabUpload';
+import MessageInput from "../components/TestCase/MessageInput";
+import MessagingPage from '../components/TestCase/MessagingPage';
+import RadDetails from '../components/TestCase/RadDetails';
 
 function TestCase() {
 
@@ -25,6 +28,10 @@ const [isPopupOpen, setIsPopupOpen] = useState(false);
 const togglePopup = () => {
         setIsPopupOpen(!isPopupOpen);
       };
+
+      // const handleMessageSubmit = (newMessage) => {
+      //   // Handle message submission logic here
+      // };
   return (
     <>
     <Navbar />
@@ -32,7 +39,7 @@ const togglePopup = () => {
     <DoctorDetails/>
 
     <div className="custom-button-container">
-      <Button className="custom-button-container" onClick={togglePopup}>Open Popup</Button>
+      <Button className="custom-button-container" onClick={togglePopup}>Upload Lab Images</Button>
       {isPopupOpen && <LabUpload onClose={togglePopup} />}
     </div>
 
@@ -43,15 +50,23 @@ const togglePopup = () => {
     </div>
     <LabDetails/>
 
-    <div className="custom-button-container">
+    <RadDetails/>
+
+    {/* <div className="custom-button-container">
       <Button onClick={handleClick}>CREATE ROOM</Button>
-    </div>
+    </div> */}
 
-    <div className='rad-recommend'>
+    {/* <div className='rad-recommend'>
         Patient has recommended a radiologist!
-    </div>
+    </div> */}
 
-    <ChatList/>
+    {/* <ChatList/> */}
+
+    <MessagingPage/>
+    
+    
+
+
 
     <div className='rad-recommend'>
         Write Final Report
