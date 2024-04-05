@@ -59,8 +59,8 @@ public class PatientService {
 
                 // Create a new patient entity and associate it with the user
                 Patient patient = Patient.builder()
-                        .firstName(request.getFirstName())
-                        .lastName(request.getLastName())
+//                        .firstName(request.getFirstName())
+//                        .lastName(request.getLastName())
                         .dob(request.getDob())
                         .gender(request.getGender())
                         .address(request.getAddress())
