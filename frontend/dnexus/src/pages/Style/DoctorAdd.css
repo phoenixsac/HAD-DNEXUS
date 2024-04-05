@@ -1,102 +1,22 @@
-.registration-form {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .registration-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .registration-number-section {
-    margin-bottom: 20px;
-  }
-  
-  .registration-number-section label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .registration-number-section button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
-  }
-  
-  .registration-number-section button:hover {
-    background-color: #0062cc;
-  }
-  
-  .success {
-    color: green;
-  }
-  
-  .error {
-    color: red;
-  }
-  
-  .doctor-details-section {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  
-  .doctor-details-section label {
-    width: 120px;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .doctor-details-section input,
-  .doctor-details-section button {
-    width: calc(100% - 130px);
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .gender-radio-buttons {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .gender-radio-buttons label {
-    margin-right: 10px;
-  }
-  
-  .otp-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .otp-section button {
-    margin-left: 10px;
-    /* Style based on verification state (green for verified, default for not verified) */
-  }
-  
-  .add-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    margin: 0 auto;
-    width: 100%; /* Adjust width as needed */
-  }
-  
-  .add-button:disabled {
-    background-color: #ccc;
-    cursor: default;
-  }
-  
+.doctor-verification-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.upid-field{
+  padding: 10px;
+  margin: 5px;
+
+}
+
+.upid-field input{
+  font-size: 22px;
+  padding: 10px;
+}
+
+.verify-button{
+  margin: 5px;
+}

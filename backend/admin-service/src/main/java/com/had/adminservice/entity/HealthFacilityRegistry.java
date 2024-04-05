@@ -5,15 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Component
 @Entity
 @Table(name = "health_facility_registry")
-public class HealthcareFacilityRegistry {
+public class HealthFacilityRegistry {
 
     @Id
     @Column(name = "facility_id", length = 255)
@@ -52,5 +54,4 @@ public class HealthcareFacilityRegistry {
     @Column(name = "facility_region", length = 10)
     private String facilityRegion;
 
-    // Constructors, getters, and setters
 }

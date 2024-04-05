@@ -9,27 +9,31 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const handleAddDoctorClick = () => {
-    navigate("/add-doctor"); // Replace with your actual add doctor route
+    navigate("/admin/add-doctor"); 
   };
 
   const handleViewDoctorsClick = () => {
-    navigate("/view-doctorlist"); // Replace with your actual view doctors route
+    navigate("/admin/view-doctorlist"); 
   };
 
   const handleAddRadiologistClick = () => {
-    navigate("/add-radiologist"); // Replace with your actual add radiologist route
+    navigate("/admin/add-radiologist"); 
   };
 
   const handleViewRadiologistsClick = () => {
-    navigate("/view-radiologists"); // Replace with your actual view radiologists route
+    navigate("/admin/view-radiologistlist"); 
   };
 
   const handleAddLabTechnicianClick = () => {
-    navigate("/add-lab-technician"); // Replace with your actual add lab technician route
+    navigate("/admin/add-lab"); 
   };
 
   const handleViewLabTechniciansClick = () => {
-    navigate("/view-lab-technicians"); // Replace with your actual view lab technicians route
+    navigate("/admin/add-lab"); 
+  };
+
+  const handleViewPatientsClick = () => {
+    navigate("/admin/view-patientlist"); 
   };
 
   return (
@@ -46,22 +50,21 @@ function AdminDashboard() {
         <div className="button-container">
           <h2>Radiologist</h2>
           <div className="buttons">
-            <button onClick={handleAddDoctorClick}>Add</button>
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button onClick={handleAddRadiologistClick}>Add</button>
+            <button onClick={handleViewRadiologistsClick}>View</button>
           </div>
         </div>
         <div className="button-container">
           <h2>Laboratory</h2>
           <div className="buttons">
-            <button onClick={handleAddDoctorClick}>Add</button>
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button onClick={handleAddLabTechnicianClick}>Add</button>
+            <button onClick={handleViewLabTechniciansClick}>View</button>
           </div>
         </div>
         <div className="button-container">
           <h2>Patient</h2>
           <div className="buttons">
-            {/* <button onClick={handleAddDoctorClick}>Remove</button> */}
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button onClick={handleViewPatientsClick}>View</button>
           </div>
         </div>
       </div>

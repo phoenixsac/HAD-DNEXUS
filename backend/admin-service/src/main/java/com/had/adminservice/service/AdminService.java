@@ -1,200 +1,379 @@
 package com.had.adminservice.service;
 
-import com.had.adminservice.entity.Doctor;
-import com.had.adminservice.entity.HealthcareFacilityRegistry;
-import com.had.adminservice.entity.HealthcareProfessionalsRegistry;
-import com.had.adminservice.entity.Hospital;
+import com.had.adminservice.entity.*;
 
-import com.had.adminservice.exception.DoctorNotFoundException;
+
+import com.had.adminservice.exception.ResourceNotFoundException;
 import com.had.adminservice.repository.*;
+import com.had.adminservice.responseBody.FacilityResponseBody;
+import com.had.adminservice.responseBody.ProfessionalResponseBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AdminService {
 
     @Autowired
-    AdminRepository adminRepo;
+    private BCryptPasswordEncoder bcryptPwdEncoder;
 
     @Autowired
-    HFRRepository hfrRepo;
+    private FacilityRepository facilityRepository;
 
     @Autowired
-    HPRRepository hprRepo;
+    private ProfessionalRepository professionalRepository;
 
     @Autowired
-    HospitalRepository hospitalRepo;
+    private UserRepository userRepository;
 
     @Autowired
-    DoctorRepository doctorRepo;
+    private HealthFacilityRegistryRepository hfrRepository;
 
-    public String addHospital(String ufid){
-        HealthcareFacilityRegistry hfr;
-        Hospital hospital;
-
-            if (ufid == null || ufid.isEmpty()) {
-                throw new IllegalArgumentException("UFID cannot be empty");
-            }
-            else if (hospitalRepo.findHospitalByUfid(ufid) != null) {
-                return "Hospital with the provided UFID already exists!";
-            }
-            else{
-                hfr=validateFromHFR(ufid);
-                if(hfr==null)
-                    return "Given hospital does not exist in Health Facility Registry!";
-                else {
-                    hospital=Hospital.builder().ufid(hfr.getFacilityId())
-                            .name(hfr.getFacilityName())
-                            .country(hfr.getCountry())
-                            .district(hfr.getDistrict())
-                            .subDistrict(hfr.getSubDistrict())
-                            .contact(hfr.getContactNumber())
-                            .state(hfr.getStateOrUt())
-                            .build();
-                    hospitalRepo.save(hospital);
-                    return "Hospital added successfully";
-                }
-            }
-
-    }
+    @Autowired
+    private HealthcareProfessionalsRegistryRepository hprRepository;
 
 
-    private HealthcareFacilityRegistry validateFromHFR(String ufid){
-        return hfrRepo.getByFacilityId(ufid);
-    }
+    public String addFacility(String facilityId) {
+        Logger logger = LoggerFactory.getLogger(getClass());
 
+        if (facilityId == null || facilityId.isEmpty()) {
+            throw new IllegalArgumentException("Facility id cannot be empty");
+        }
 
-//    public String addDoctor(String upid){
-//        HealthcareProfessionalsRegistry hpr;
-//        Doctor doctor;
-//
-//        if (upid == null || upid.isEmpty()) {
-//            throw new IllegalArgumentException("UFID cannot be empty");
-//        }
-//        else if(doctorRepo.findByUpid(upid) != null){
-//                return "Added doctor already exists!";
-//        }
-//        else{
-//            hpr=validateFromHPR(upid);
-//            if(hpr==null)
-//                return "Added hospital does not exist in Health Facility Registry!";
-//            else {
-//                doctor=Doctor.builder()
-//                                .id(hpr.getHealthcareProfessionalId())
-//                                        .contact(hpr.getContactNumber())
-//                                                .name(hpr.getName())
-//                                                        .experience(hpr.getYearsOfExperience())
-//                                                                .licenseNumber(hpr.getHealthcareProfessionalId())
-//                                                                        .specialization(hpr.getSpecialization())
-//                                                                                .isActive(true)
-//                                                                                        .build();
-//                doctorRepo.save(doctor);
-//            }
-//        }
-//        return "Hospital added successfully";
-//    }
+        logger.info("Received request to add facility with id: {}", facilityId);
 
+        Optional<Facility> existingFacility = facilityRepository.findFacilityById(facilityId);
+        if (existingFacility.isPresent()) {
+            logger.warn("Facility with id {} already exists", facilityId);
+            return "Facility with the provided id already exists!";
+        }
 
-    public String addDoctor(Long upid) {
-        HealthcareProfessionalsRegistry hpr;
-        Doctor doctor;
+        HealthFacilityRegistry healthFacilityRegistry = hfrRepository.getByFacilityId(facilityId);
 
-        if (upid == null) {
+        if (healthFacilityRegistry == null) {
+            logger.warn("Facility with id {} does not exist in Health Facility Registry", facilityId);
+            return "Given facility does not exist in Health Facility Registry!";
+        }
 
-            throw new IllegalArgumentException("UPID cannot be empty");
-        } else if (doctorRepo.findByUpid(upid) != null) {
-            return "Doctor with the provided UPID already exists!";
+        String loginId = generateRandomLoginId(6);
+        String password = generateRandomPassword(8);
+        String hashedPassword = bcryptPwdEncoder.encode(password);
+
+        // Creating and saving the User
+        User user = User.builder()
+                .contact(healthFacilityRegistry.getContactNumber())
+                .email(healthFacilityRegistry.getEmailId())
+                .firstName(healthFacilityRegistry.getFacilityName())
+                .type(healthFacilityRegistry.getFacilityType())
+                .password(hashedPassword)
+                .isActive(true)
+                .loginId(loginId)
+                .build();
+
+        logger.info("Creating user for facility: {}", healthFacilityRegistry.getFacilityName());
+
+        // Creating the Facility and associating it with the User
+        Facility facility = Facility.builder()
+                .ufid(healthFacilityRegistry.getFacilityId())
+                .country(healthFacilityRegistry.getCountry())
+                .district(healthFacilityRegistry.getDistrict())
+                .subDistrict(healthFacilityRegistry.getSubDistrict())
+                .state(healthFacilityRegistry.getStateOrUt())
+                .type(healthFacilityRegistry.getFacilityType())
+                .user(user) // Associate the Facility with the User
+                .build();
+
+        Facility savedFacility = facilityRepository.save(facility);
+
+        if (savedFacility != null) {
+            logger.info("Facility added successfully with id: {}", facilityId);
+            return "Facility added successfully";
         } else {
-            hpr = validateFromHPR(upid);
-            if (hpr == null)
-                return "Hospital does not exist in Healthcare Professionals Registry!";
-            else {
-                doctor = Doctor.builder()
+            logger.error("Failed to add facility {}", facilityId);
+            return "Failed to add facility";
+        }
+    }
 
-                        //.id(hpr.getHealthcareProfessionalId())
-                        .contact(hpr.getContactNumber())
-                        .name(hpr.getName())
-                        .email_id(hpr.getEmailId())
-                        .experience(hpr.getYearsOfExperience())
-                        .licenseNumber(hpr.getHealthcareProfessionalId())
-                        .specialization(hpr.getSpecialization())
-                        .affiliatesHospitalName(hpr.getPlaceOfWork())
 
-                        .isActive(true)
-                        .build();
-                doctorRepo.save(doctor);
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    private String generateRandomLoginId(int length) {
+        StringBuilder loginId = new StringBuilder();
+        Random random = new Random();
+
+        // Generate random login ID by appending random characters from the CHARACTERS string
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            loginId.append(CHARACTERS.charAt(index));
+        }
+
+        return loginId.toString();
+    }
+
+    private String generateRandomPassword(int length) {
+        // Define the character set for generating the password
+        String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$";
+
+        // Initialize StringBuilder to store the password
+        StringBuilder password = new StringBuilder();
+
+        // Generate random password by appending random characters from charset
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * charset.length());
+            password.append(charset.charAt(index));
+        }
+
+        return password.toString();
+    }
+
+    public List<FacilityResponseBody> getAllFacilities() {
+        List<Facility> facilities = facilityRepository.findAll();
+        return mapFacilitiesToResponse(facilities);
+    }
+
+
+    public List<FacilityResponseBody> getAllFacilitiesByType(String type) {
+        List<Facility> facilities = facilityRepository.findByType(type);
+        return mapFacilitiesToResponse(facilities);
+    }
+
+
+    public FacilityResponseBody getFacilityById(Long id) {
+        Optional<Facility> facilityOptional = facilityRepository.findById(id);
+
+        if (facilityOptional.isPresent()) {
+            Facility facility = facilityOptional.get();
+            if (!facility.getUser().isActive()) {
+                throw new IllegalStateException("Facility with ID " + id + " is not active");
+            }
+            return mapFacilityToResponse(facility);
+        } else {
+            // Handle the case where the facility with the specified ID is not found
+            throw new ResourceNotFoundException("Facility with ID " + id + " not found");
+        }
+    }
+
+    private List<FacilityResponseBody> mapFacilitiesToResponse(List<Facility> facilities) {
+        List<FacilityResponseBody> responseBodies = new ArrayList<>();
+        for (Facility facility : facilities) {
+            if (facility.getUser().isActive()) {
+                FacilityResponseBody responseBody = mapFacilityToResponse(facility);
+                responseBodies.add(responseBody);
             }
         }
-        return "Doctor added successfully";
+        return responseBodies;
+    }
+
+    private FacilityResponseBody mapFacilityToResponse(Facility facility) {
+        return FacilityResponseBody.builder()
+                .facilityId(facility.getId())
+                .facilityUFID(facility.getUfid())
+                .facilityState(facility.getState())
+                .facilityDistrict(facility.getDistrict())
+                .facilitySubDistrict(facility.getSubDistrict())
+                .facilityCountry(facility.getCountry())
+                .facilityType(facility.getType())
+                .isFacilityActive(facility.getUser().isActive())
+                .userId(facility.getUser().getId())
+                .facilityEmail(facility.getUser().getEmail())
+                .facilityName(facility.getUser().getFirstName())
+                .facilityLastName(facility.getUser().getLastName())
+                .facilityContact(facility.getUser().getContact())
+                .facilityLoginId(facility.getUser().getLoginId())
+                .build();
+    }
+
+    private HealthFacilityRegistry validateFromHFR(String ufid) {
+        return hfrRepository.getByFacilityId(ufid);
     }
 
 
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
-        List<Doctor> doctors = doctorRepo.findAll();
-        if (doctors.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    //SOFT-DELETE
+    public String removeFacility(String facId) {
+        // Check if the facility with the given ID exists
+        Optional<Facility> facilityOptional = facilityRepository.findFacilityById(facId);
+        if (facilityOptional.isPresent()) {
+            Facility facility = facilityOptional.get();
+
+            // Remove the facility from its associated user
+            User user = facility.getUser();
+            user.setActive(false);
+
+            // Save the updated user
+            userRepository.save(user);
+
+            // Facility soft deletion successful
+            return "Facility with ID " + facId + " soft deleted successfully";
         } else {
-            return new ResponseEntity<>(doctors, HttpStatus.OK);
+            // Handle the case where the facility with the specified ID is not found
+            throw new ResourceNotFoundException("Facility with ID " + facId + " not found");
         }
     }
 
-    public Doctor getDoctorById(Long id) throws DoctorNotFoundException {
-        Optional<Doctor> optionalDoctor = doctorRepo.findById(id);
-        if (optionalDoctor.isPresent()) {
-            return optionalDoctor.get();
+
+    //////////////////////////////////////////////////////////PROFESSIONAL////////////////////////////////////////////////////
+    public String addProfessional(Long hpId) {
+        Logger logger = LoggerFactory.getLogger(getClass());
+
+        if (hpId == null) {
+            throw new IllegalArgumentException("Facility id cannot be empty");
+        }
+
+        logger.info("Received request to add professional with id: {}", hpId);
+
+        Optional<Professional> existingProfessional = professionalRepository.findProfessionalExists(hpId);
+        if (existingProfessional.isPresent()) {
+            logger.warn("Professional with hpId {} already exists", hpId);
+            return "Professional with the provided id already exists!";
+        }
+
+        HealthcareProfessionalsRegistry healthcareProfessionalsRegistry = hprRepository.validateProessionalWithHPR(hpId);
+
+        if (healthcareProfessionalsRegistry == null) {
+            logger.warn("Professional with id {} does not exist in Health Facility Registry", hpId);
+            return "Given facility does not exist in Health Facility Registry!";
+        }
+
+        String affiliatedFacilityId = hprRepository.getAffiliatedFacilityId(hpId);
+
+        if (affiliatedFacilityId.equalsIgnoreCase(facilityRepository.findUfidFromFacility(affiliatedFacilityId))) {
+            logger.info("Professional associated facility id {} exists in Facility table.", affiliatedFacilityId);
+        } else if (affiliatedFacilityId.equalsIgnoreCase(hfrRepository.checkIFFacilityExistsInHFR(affiliatedFacilityId))) {
+            logger.info("Professional associated facility id {} does not exist in Facility table, but exists in HFR table", affiliatedFacilityId);
+            //addFacility(affiliatedFacilityId);
         } else {
-            throw new DoctorNotFoundException("Doctor not found with ID: " + id);
+            logger.warn("Professional associated facility id {} does not exist in Facility table, and in HFR table", affiliatedFacilityId);
+            return "Professional associated facility id does not exist in Facility and HFR tables.";
+        }
+        if ("Facility added successfully".equalsIgnoreCase(addFacility(affiliatedFacilityId)) ||
+                "Facility with the provided id already exists!".equalsIgnoreCase(addFacility(affiliatedFacilityId))) {
+            String loginId = generateRandomLoginId(6);
+            String password = generateRandomPassword(8);
+            String hashedPassword = bcryptPwdEncoder.encode(password);
+
+            // Creating and saving the User
+            User user = User.builder()
+                    .contact(healthcareProfessionalsRegistry.getContactNumber())
+                    .email(healthcareProfessionalsRegistry.getEmailId())
+                    .firstName(healthcareProfessionalsRegistry.getFirstName())
+                    .lastName(healthcareProfessionalsRegistry.getLastName())
+                    .type(healthcareProfessionalsRegistry.getSpecialization())
+                    .password(hashedPassword)
+                    .isActive(true)
+                    .loginId(loginId)
+                    .build();
+
+
+            logger.info("Creating user entry for professional: {}", healthcareProfessionalsRegistry.getFirstName() + healthcareProfessionalsRegistry.getLastName());
+
+            // Creating the Facility and associating it with the User
+            Professional professional = Professional.builder()
+                    .licenseNumber(String.valueOf(healthcareProfessionalsRegistry.getHealthcareProfessionalId()))
+                    .experience(healthcareProfessionalsRegistry.getYearsOfExperience())
+                    .affiliatedFacilityId(healthcareProfessionalsRegistry.getAffiliatedFacilityId())
+                    .specialization(healthcareProfessionalsRegistry.getSpecialization())
+                    .systemOfMedicine(healthcareProfessionalsRegistry.getSystemOfMedicine())
+                    .qualification(healthcareProfessionalsRegistry.getQualification())
+                    .status(healthcareProfessionalsRegistry.getStatus())
+                    .placeOfWork(healthcareProfessionalsRegistry.getPlaceOfWork())
+                    .user(user)
+                    .build();
+
+            logger.info("Creating facility: {}", hpId);
+
+            professionalRepository.save(professional);
+
+            logger.info("Professional added successfully with license/id: {}", hpId);
+
+            return "Professional added successfully";
+        } else {
+            return "Error creating professional due to facility addition issues";
+        }
+
+    }
+
+    //SOFT-DELETE
+    public String removeProfessional(Long id) {
+
+        Optional<Professional> professionalOptional = professionalRepository.findProfessionalExists(id);
+        if (professionalOptional.isPresent()) {
+            Professional professional = professionalOptional.get();
+
+            // Remove the facility from its associated user
+            User user = professional.getUser();
+            user.setActive(false);
+
+            // Save the updated user
+            userRepository.save(user);
+
+            // Facility soft deletion successful
+            return "Professional with ID " + id + " soft deleted successfully";
+        } else {
+            // Handle the case where the facility with the specified ID is not found
+            throw new ResourceNotFoundException("Professional with ID " + id + " not found");
         }
     }
 
 
-    private HealthcareProfessionalsRegistry validateFromHPR(Long upid){
-        return hprRepo.getByProfessionalId(upid);
-
+    public static ProfessionalResponseBody mapProfessionalToResponse(Professional professional) {
+        return ProfessionalResponseBody.builder()
+                .professionalId(professional.getId())
+                .firstName(professional.getUser().getFirstName())
+                .lastName(professional.getUser().getLastName())
+                .specialization(professional.getSpecialization())
+                .systemOfMedicine(professional.getSystemOfMedicine())
+                .contactNumber(professional.getUser().getContact())
+                .emailId(professional.getUser().getEmail())
+                .qualification(professional.getQualification())
+                .yearsOfExperience(professional.getExperience())
+                .status(professional.getStatus())
+                .affiliatedFacilityId(professional.getAffiliatedFacilityId())
+                .placeOfWork(professional.getPlaceOfWork())
+                .build();
     }
 
-
-
-    public ResponseEntity<String> removeHospital(String ufid) {
-        Hospital hospital = hospitalRepo.findHospitalByUfid(ufid);
-        if (hospital!=null) {
-            hospitalRepo.delete(hospital);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    public ResponseEntity<String> removeDoctor(Long id) {
-        try {
-            Doctor doctor = doctorRepo.findByDocId(id);
-            if (doctor != null) {
-                // Update is_active flag to false
-                doctor.setIsActive(false);
-                doctorRepo.save(doctor);
-
-                // Set credentials of the doctor in the user table as NULL
-//                doctorRepo.updateDoctorCredentialsToNull(id);
-
-                return ResponseEntity.noContent().build();
-            } else {
-                String message = "Doctor with ID " + id + " does not exist.";
-                System.out.println(message);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    private List<ProfessionalResponseBody> mapProfessionalsToResponse(List<Professional> facilities) {
+        List<ProfessionalResponseBody> responseBodies = new ArrayList<>();
+        for (Professional professional : facilities) {
+            if (professional.getUser().isActive()) {
+                ProfessionalResponseBody responseBody = mapProfessionalToResponse(professional);
+                responseBodies.add(responseBody);
             }
-        } catch (Exception e) {
-            // Log the exception for debugging purposes
-            // logger.error("An error occurred while removing doctor with ID: " + id, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while removing doctor with ID: " + id);
+        }
+        return responseBodies;
+    }
+
+    public ProfessionalResponseBody getProfessionalById(Long id) {
+        Optional<Professional> professionalOptional = professionalRepository.findById(id);
+
+        if (professionalOptional.isPresent()) {
+            Professional professional = professionalOptional.get();
+            if (!professional.getUser().isActive()) {
+                throw new IllegalStateException("Professional with ID " + id + " is not active");
+            }
+            return mapProfessionalToResponse(professional);
+        } else {
+            // Handle the case where the facility with the specified ID is not found
+            throw new ResourceNotFoundException("Professional with ID " + id + " not found");
         }
     }
 
+    public List<ProfessionalResponseBody> getAllProfessionals() {
+        List<Professional> professionals = professionalRepository.findAll();
+        return mapProfessionalsToResponse(professionals);
+    }
 
 
+    public List<ProfessionalResponseBody> getAllProfessionalsByType(String type) {
+        List<Professional> professionals = professionalRepository.findByTypeOrSpecialization(type);
+        return mapProfessionalsToResponse(professionals);
+    }
 }

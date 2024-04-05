@@ -73,7 +73,7 @@ const DoctorsList = () => {
   };
 
   const handleBack = () => {
-    navigate("/AdminDashboard");
+    navigate("/admin/dashboard");
   }
 
 
@@ -89,7 +89,7 @@ const DoctorsList = () => {
         <Navbar/>
         <div className="doctors-list">
           
-          <div className='search'>
+          <div className='search-back'>
             <div className='search-field'>
               <input
                 type="text"
@@ -124,7 +124,7 @@ const DoctorsList = () => {
                     <td>{doctor.hospital}</td>
                     <td>{doctor.specialization}</td>
                     <td>
-                      <Link className='view-link' to={`/doctors/${doctor.id}`}>View</Link> {/* Route to doctor details page */}
+                      <Link className='view-link' to={`/admin/doctor/${doctor.id}`}>View</Link> {/* Route to doctor details page */}
                     </td>
                   </tr>
                 ))}
@@ -135,7 +135,7 @@ const DoctorsList = () => {
           <div className='pagination'>
             <Pagination
               doctorsPerPage={doctorsPerPage}
-              totalDoctors={filteredDoctors.length} // Use total doctors even after filtering
+              totalDoctors={filteredDoctors.length} 
               paginate={paginate}
             />
           </div>

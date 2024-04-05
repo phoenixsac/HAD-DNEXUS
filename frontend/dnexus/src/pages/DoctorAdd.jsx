@@ -1,201 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from "../components/Navbar/ConditionalNavbar"
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar/ConditionalNavbar'
 
-function DoctorRegistrationForm() {
-  const [uniqueRegistrationNumber, setUniqueRegistrationNumber] = useState('');
-  const [isRegistrationNumberValid, setIsRegistrationNumberValid] = useState(false);
-  const [verificationMessage, setVerificationMessage] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [specialization, setSpecialization] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [isAddButtonEnabled, setIsAddButtonEnabled] = useState(false);
+import "./Style/LabAdd.css"
 
-  // const handleVerifyRegistrationNumber = async () => {
-  //   // Send an API request to verify the registration number
-  //   const response = await fetch('http://localhost:8080/admin/add-doctor', {
+const DoctorAdd = () => {
+  const [isVerified, setIsVerified] = useState(false);
+  const [upid, setUpid] = useState('');
+  const [message, setMessage] = useState('');
+
+  // const handleVerify = async () => {
+  //   const response = await fetch('/api/verify-doctor', {
   //     method: 'POST',
-  //     body: JSON.stringify({ uniqueRegistrationNumber }),
+  //     body: JSON.stringify({ upid }),
   //   });
 
-  //   const data = await response.json();
+  //dummy
+  const doctorData = {
+    "123456": "Doctor John Doe", // Valid UPID with doctor details
+    "987654": "Doctor Already Added" // Existing UPID message
+  };
 
-  const handleVerifyRegistrationNumber = async () => {
-    // Assuming your JWT token is stored in localStorage under the key 'jwtToken'
-    // const jwtToken = localStorage.getItem('jwtToken');
+  //reolace this with success/failure component
+  const handleVerify = () => {
+    const verificationResult = doctorData[upid];
 
-    const jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiYWRtaW4iLCJlbWFpbCI6IkFuamFsaS5LdW1hckBpaWl0Yi5hYy5pbiIsInN1YiI6IkFuamFsaSIsImlhdCI6MTcxMTU0NzQxMCwiZXhwIjoxNzExNTUxMDEwfQ.GZ47xjax8IOYoNj8UeU822bU97bWDCNXbCelJ-HBNWjZFFWsGKLoOLC7PiTzO6gNsmAcbHmvVQyaePUYuDJvCA";
-
-    // Create headers object with Authorization header containing the JWT token
-    const headers = {
-        'Authorization': `Bearer ${jwtToken}`,
-        'Content-Type': 'application/json' // Assuming your backend expects JSON data
-    };
-
-    // Send an API request to verify the registration number with JWT token in headers
-    const response = await fetch(`http://localhost:8080/admin/add-doctor?upid=${uniqueRegistrationNumber}`, {
-        method: 'POST',
-        headers: headers
-    });
-
-    const data = await response.json();
-
-    console.log("response after verifying UPID:", data);
-
-
-    if (data.isValid) {
-      setIsRegistrationNumberValid(true);
-      setVerificationMessage('Registration number is valid');
+    if (!verificationResult) {
+      setMessage('Invalid UPID');
+      setIsVerified(false);
+    } else if (verificationResult === 'Doctor Already Added') {
+      setMessage(verificationResult);
+      setIsVerified(false);
     } else {
-      setIsRegistrationNumberValid(false);
-      setVerificationMessage('Registration number is invalid');
+      setMessage('Doctor added successfully.');
+      setIsVerified(true);
     }
+  
+
+    // const data = await response.json();
+    // setMessage(data.message);
+    // setIsVerified(data.isVerified);
+
+        // Clear input fieldafter displaying message
+        setUpid('');
   };
 
-  const handleGetOtp = async () => {
-    // Send an API request to get OTP
-    const response = await fetch('/api/send-otp', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-    });
-
-    const data = await response.json();
-
-    console.log('OTP sent:', data.otp); // Remove this line in production
-  };
-
-  const handleVerifyOtp = async () => {
-    // Send an API request to verify OTP
-    const response = await fetch('/api/verify-otp', {
-      method: 'POST',
-      body: JSON.stringify({ email, otp }),
-    });
-
-    const data = await response.json();
-
-    if (data.isValid) {
-      setIsAddButtonEnabled(true);
-    } else {
-      console.error('Invalid OTP');
-    }
-  };
-
-  const handleAddDoctor = async () => {
-    // Send an API request to add doctor with auto-generated username and password
-    const response = await fetch('/api/add-doctor', {
-      method: 'POST',
-      body: JSON.stringify({ fullName, age, gender, specialization, phoneNumber, email }),
-    });
-
-    const data = await response.json();
-
-    console.log('Doctor added:', data); // Remove this line in production
-
-    // Navigate to doctor success page with auto-generated username and password
+  const handleChange = (event) => {
+    setUpid(event.target.value);
   };
 
   return (
     <div>
-        <Navbar/>
-        <div className="registration-form">
-            <h2>Registration Form</h2>
-
-            <div className="registration-number-section">
-                <label htmlFor="uniqueRegistrationNumber">Unique Registration Number</label>
-                <input
+      <Navbar/>
+      <div>
+        <div className="doctor-verification-container">          
+          <div className='upid-field'>
+            <input
                 type="text"
-                id="uniqueRegistrationNumber"
-                value={uniqueRegistrationNumber}
-                onChange={(e) => setUniqueRegistrationNumber(e.target.value)}
-                />
-                <button onClick={handleVerifyRegistrationNumber}>Verify</button>
-                {verificationMessage && (
-                <span className={isRegistrationNumberValid ? 'success' : 'error'}>{verificationMessage}</span>
-                )}
-            </div>
+                placeholder="Enter Unique Professional ID"
+                value={upid}
+                onChange={handleChange}
+            />
+          </div>
+          <div className='verify-button'>
+            <button onClick={handleVerify}>
+                Verify
+            </button>
+          </div>
 
-            {isRegistrationNumberValid && (
-                <>
-                <div className="doctor-details-section">
-                        <label htmlFor="fullName">Full Name</label>
-                        <input type="text" id="fullName" value={fullName} required onChange={(e) => setFullName(e.target.value)} />
-
-                        <label htmlFor="age">Age</label>
-                        <input type="number" id="age" value={age} required onChange={(e) => setAge(e.target.value)} />
-
-                        <label htmlFor="gender">Gender</label>
-                        <div className="gender-radio-buttons">
-                        <input
-                            type="radio"
-                            id="male"
-                            value="male"
-                            checked={gender === 'male'}
-                            onChange={(e) => setGender(e.target.value)}
-                        />
-                        <label htmlFor="male">Male</label>
-                        <input
-                            type="radio"
-                            id="female"
-                            value="female"
-                            checked={gender === 'female'}
-                            onChange={(e) => setGender(e.target.value)}
-                        />
-                        <label htmlFor="female">Female</label>
-                        </div>
-
-                        <label htmlFor="specialization">Specialization</label>
-                        <input
-                            type="text"
-                            id="specialization"
-                            value={specialization}
-                            onChange={(e) => setSpecialization(e.target.value)}
-                            required
-                        />
-
-                        <label htmlFor="phoneNumber">Phone Number</label>
-                        <input
-                            type="tel"
-                            id="phoneNumber"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                        />
-
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-
-                        <button onClick={handleGetOtp} disabled={email === ''}>Get OTP</button>
-                        <input
-                            type="text"
-                            id="otp"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
-                            disabled={!isRegistrationNumberValid}
-                        />
-
-                        <button onClick={handleVerifyOtp} disabled={!isRegistrationNumberValid || otp === ''}>
-                            Verify OTP
-                        </button>
-                    </div>
-                </>
-                )}
-
-                <button to={"/success-page"} onClick={handleAddDoctor} disabled={!isAddButtonEnabled}>
-                    Add Doctor
-                </button>
+          {/* replace with success/failure componentS */}
+          <p>{message}</p>
         </div>
+      </div>
     </div>
+  );
+};
 
-    );}
+export default DoctorAdd;
 
-    export default DoctorRegistrationForm;
 

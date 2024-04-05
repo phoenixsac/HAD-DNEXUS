@@ -1,0 +1,22 @@
+.lab-verification-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.ufid-field{
+  padding: 10px;
+  margin: 5px;
+
+}
+
+.ufid-field input{
+  font-size: 22px;
+  padding: 10px;
+}
+
+.verify-button{
+  margin: 5px;
+}

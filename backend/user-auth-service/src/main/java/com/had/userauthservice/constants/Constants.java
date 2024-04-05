@@ -35,6 +35,11 @@ public class Constants {
     }
 
 
+    //USER TYPE CONSTANTS
+    public static final String PATIENT = "Patient";
+    public static final String PROFESSIONAL = "Professional";
+    public static final String FACILITY = "Facility";
+
 
 
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import "./Style/DoctorDetails.css" // Import your CSS file
+import "./Style/DoctorDetails.css" 
 import Navbar from "../components/Navbar/ConditionalNavbar"
 
 import { FaRegEdit } from "react-icons/fa";
@@ -40,7 +40,7 @@ const DoctorDetails = () => {
 
 
   const handleBack = () => {
-    navigate('/view-doctorlist'); // Go back to doctors list
+    navigate('/admin/view-doctorlist'); 
   };
 
   const handleEdit = () => {

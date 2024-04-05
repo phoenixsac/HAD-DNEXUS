@@ -1,37 +1,40 @@
 package com.had.userauthservice.entities;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User implements UserDetails {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Column(name="id")
-//    private UUID id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "login_id")
-    private String contact;
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "email")
     private String email;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "contact")
+    private String contact;
+
+    @Column(name = "login_id")
+    private String loginId;
 
     @Column(name = "password")
     private String password;
@@ -39,46 +42,11 @@ public class User implements UserDetails {
     @Column(name = "type")
     private String type;
 
-//    public UUID getId() {
-//        return id;
-//    }
-//
-//    public void setName(String email) {
-//        this.name = name;
-//    }
+    @Column(name = "is_active", columnDefinition = "TINYINT(1) default 1")
+    private boolean isActive;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String email) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Patient patient;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -87,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return this.firstName + " " + this.lastName;
     }
 
     @Override
@@ -107,6 +75,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }

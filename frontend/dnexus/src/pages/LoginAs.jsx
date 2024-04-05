@@ -16,13 +16,16 @@ function LoginAs() {
       case "admin":
         navigate("/Login", { state: { userType: persona } }); 
         break;
-      // case "Doctor/Radiologist":
-      //   navigate("/DocLogin");
-      //   break;
-      // case "Laboratory":
-      //   navigate("/LabLogin");
-      //   break;
-      case "Patient":
+      case "doctor":
+        navigate("/Login",  { state: { userType: persona } });
+        break;
+        case "radiologist":
+          navigate("/Login",  { state: { userType: persona } });
+          break;
+      case "laboratory":
+        navigate("/Login",  { state: { userType: persona } });
+        break;
+      case "patient":
         navigate("/PLogin", { state: { userType: persona } });
         break;
       default:
@@ -46,20 +49,25 @@ function LoginAs() {
             <div className="placeholder">Admin</div>
           </div>
           <div
-            className="login-card"
-            onClick={() => handleClick("Doctor/Radiologist")}>
+            className="login-card" onClick={() => handleClick("doctor")}>
             <div className="rectangle" />
-            <div className="placeholder">Doctor/Radiologist</div>
+            <div className="placeholder">Doctor</div>
           </div>
+          <div
+            className="login-card" onClick={() => handleClick("radiologist")}>
+            <div className="rectangle" />
+            <div className="placeholder">Radiologist</div>
+          </div>
+
         </div>
       
         
         <div className="section">
-          <div className="login-card" onClick={() => handleClick("Laboratory")}>
+          <div className="login-card" onClick={() => handleClick("laboratory")}>
             <div className="rectangle" />
             <div className="placeholder">Laboratory</div>
           </div>
-          <div className="login-card" onClick={() => handleClick("Patient")}>
+          <div className="login-card" onClick={() => handleClick("patient")}>
             <div className="rectangle" />
             <div className="placeholder">Patient</div>
           </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import "./Style/PatientReport.css";
-import Navbar from "../components/Navbar/LoginNav";
+import Navbar from "../components/Navbar/ConditionalNavbar";
 
 function PatientReport() {
   return (

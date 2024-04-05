@@ -56,10 +56,7 @@ public class AuthorizationFilter implements Filter, WebFilter {
     }
 
     private boolean isAuthorized(String email, String userType) {
-        // Implement your authorization logic here
-        // Check if the user with the given email and type has the necessary permissions
-        // You can query a database or use any other method to determine authorization
-        // Return true if authorized, false otherwise
+
         User user = userRepo.findByEmail(email);
         return user != null && user.getType().equalsIgnoreCase("admin");
     }

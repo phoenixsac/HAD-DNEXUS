@@ -74,6 +74,8 @@ create table patient (
                          guardian_contact VARCHAR(20)
 );
 
+
+
 create table hospital (
     id bigint primary key auto_increment,
     ufid varchar(255),
