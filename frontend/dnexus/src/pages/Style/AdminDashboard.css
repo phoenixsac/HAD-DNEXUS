@@ -1,0 +1,40 @@
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.button-container {
+  margin: 15px;
+  padding: 10px;
+  width: 125vh;
+
+  display: flex;
+
+  border: 1px solid rgb(225, 222, 222);
+  border-radius: 8px;
+  box-shadow: 10px 5px 5px rgb(216, 216, 216);
+
+  color: #033b77;
+  font-size: 28px;
+
+  justify-content: space-between;
+}
+
+
+.buttons {
+  padding: 3px;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #2b8df6;
+  color: white;
+  cursor: pointer;
+  font-size: 22px;
+}
