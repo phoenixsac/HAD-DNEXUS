@@ -44,13 +44,23 @@ function RadDetails() {
     setShowFullPrescription(!showFullPrescription);
   };
 
+  const handleClick = () => {
+    alert("Button clicked!");
+      };
+
   return (
     <div className="mri-info-container">
       <div className="header">
         <span className="rad-name">{radName}</span>
         <br />
         <span className="specialization">{specialization}</span>
+        <br />
+        <span >
+            <button className='lab-button' onClick={handleClick}>View Annotated Images</button>
+        </span>
       </div>
+
+      
       <div className="prescription">
         {prescription.slice(0, 5).map((line, index) => (
           <p key={index}>{line}</p>
