@@ -4,6 +4,7 @@ import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
 import com.had.coreservice.requestBody.FinalReportRequestBody;
+import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
 import com.had.coreservice.service.ConsultationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,28 @@ public class ConsultationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while closing the consultation.");
+        }
+    }
+
+    //get consultation status
+    @GetMapping("/status")
+    public ResponseEntity<String> getConsultationStatus(@RequestParam Long consultationId) {
+        try {
+            String status = consultationService.getConsultationStatus(consultationId);
+            return ResponseEntity.ok(status);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    //get patient details for consultation
+    @GetMapping("/patient-details")
+    public ResponseEntity<?> getPatientDetailsForConsultation(@RequestParam Long consultationId) {
+        try {
+            PatientResponseBodyForConsultation patientDetails = consultationService.getPatientDetailsForConsultation(consultationId);
+            return ResponseEntity.ok(patientDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

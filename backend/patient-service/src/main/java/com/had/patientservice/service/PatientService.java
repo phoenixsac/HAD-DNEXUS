@@ -6,6 +6,7 @@ import com.had.patientservice.repository.PatientRepository;
 import com.had.patientservice.repository.UserRepository;
 import com.had.patientservice.requestBody.UpdatePatientReqBody;
 import com.had.patientservice.requestBody.UpdatePatientRespBody;
+import com.had.patientservice.responseBody.ConsultationCardDetailResponseBody;
 import com.had.patientservice.responseBody.PatientDetailsRespBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService
@@ -102,6 +105,21 @@ public class PatientService
             // Handle case where patient with given ID is not found
             throw new RuntimeException("Patient with email " + requestBody.getEmail() + " not found.");
         }
+    }
+
+    public List<ConsultationCardDetailResponseBody> getConsultationDetailsByPatientId(Long patientId) {
+        List<Object[]> consultationObjects = patientRepo.findConsultationsByPatientId(patientId);
+        return consultationObjects.stream()
+                .map(this::mapToConsultationCardDetail)
+                .collect(Collectors.toList());
+    }
+
+    private ConsultationCardDetailResponseBody mapToConsultationCardDetail(Object[] row) {
+        ConsultationCardDetailResponseBody consultationCardDetail = new ConsultationCardDetailResponseBody();
+        consultationCardDetail.setConsultationId((Long) row[0]);
+        consultationCardDetail.setName((String) row[1]);
+        // Set other properties accordingly
+        return consultationCardDetail;
     }
 
 

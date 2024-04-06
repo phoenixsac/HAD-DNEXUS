@@ -1,5 +1,7 @@
 package com.had.coreservice.controllers;
 
+import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
+import com.had.coreservice.responseBody.PatientCardDetailResponseBody;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ConsultationService;
 import com.had.coreservice.service.ProfessionalService;
@@ -41,5 +43,27 @@ public class ProfessionalController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + ex.getMessage());
         }
+    }
+
+    //get patient card detail list by doc id
+    @GetMapping("/patient-card-detail-list")
+    public List<PatientCardDetailResponseBody> getPatientCardDetailsByDoctor(
+            @RequestParam Long docProffId) {
+        return professionalService.getPatientCardDetailsByDoctor(docProffId);
+    }
+
+    //get consultation card details by doc id and patient id
+    @GetMapping("/consultation-card-details")
+    public List<ConsultationCardDetailResponseBody> getConsultationCardDetails(
+            @RequestParam Long docId,
+            @RequestParam Long patientId) {
+        return professionalService.getConsultationCardDetails(docId, patientId);
+    }
+
+    //get radiologist associated consultation card details
+    @GetMapping("/consultation-card-details-for-radiologist")
+    public List<ConsultationCardDetailResponseBody> getConsultationCardDetailsByRadiologist(
+            @RequestParam Long profRadiologistId) {
+        return professionalService.getConsultationCardDetailsByRadiologist(profRadiologistId);
     }
 }

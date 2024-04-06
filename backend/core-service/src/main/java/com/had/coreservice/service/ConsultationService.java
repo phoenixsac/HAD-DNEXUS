@@ -9,6 +9,7 @@ import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.repository.PatientRepository;
 import com.had.coreservice.repository.ProfessionalRepository;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
+import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -114,5 +115,31 @@ public class ConsultationService {
             throw new ConsultationNotFoundException("Consultation with ID " + consultationId + " not found.");
         }
     }
+
+    public String getConsultationStatus(Long consultationId) {
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new RuntimeException("Consultation not found with ID: " + consultationId));
+        return consultation.getStatus();
+    }
+
+    public PatientResponseBodyForConsultation getPatientDetailsForConsultation(Long consultationId) {
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new RuntimeException("Consultation not found with ID: " + consultationId));
+
+        Patient patient = consultation.getPatient();
+        if (patient == null) {
+            throw new RuntimeException("Patient not found for consultation with ID: " + consultationId);
+        }
+
+        return PatientResponseBodyForConsultation.builder()
+                .id(patient.getId())
+                .name(patient.getUser().getFirstName() + " " + patient.getUser().getLastName())
+                .gender(patient.getGender())
+                .age(patient.getAge())
+                .bloodGroup(patient.getBloodGroup())
+                .contact(patient.getUser().getContact())
+                .build();
+    }
+
 
 }
