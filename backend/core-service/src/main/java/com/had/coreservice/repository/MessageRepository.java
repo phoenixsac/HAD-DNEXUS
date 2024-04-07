@@ -2,6 +2,8 @@ package com.had.coreservice.repository;
 
 import com.had.coreservice.entity.Facility;
 import com.had.coreservice.entity.Message;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-
-
+//    Page<Message> findByConsultationId(Long consultationId, Pageable pageable);
+    @Query("SELECT m FROM Message m WHERE m.consultationId = ?1")
+    Page<Message> findByConsultationId(Long consultationId, Pageable pageable);
 }

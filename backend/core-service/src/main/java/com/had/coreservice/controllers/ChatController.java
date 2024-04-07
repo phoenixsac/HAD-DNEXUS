@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,15 +29,6 @@ public class ChatController {
     @Autowired
     MessageService messageService;
 
-
-//    @MessageMapping("/chat/{consultationId}")
-//    @SendTo("/topic/messages/{consultationId}")
-//    public MessageDTO sendMessage(@DestinationVariable Long consultationId, MessageDTO message) {
-//        // Validate consultationId, sender, and receiver
-//        // Save message to the database
-//        return message;
-//    }
-
     @MessageMapping("/chat/{consultationId}")
     @SendTo("/topic/{consultationId}/messages")
     public MessageDTO sendMessage(@DestinationVariable Long consultationId, MessageDTO messageDTO) {
@@ -44,30 +36,25 @@ public class ChatController {
         System.out.println(messageDTO.getMessageContent());
         MessageDTO savedMessage = messageService.saveMessage(consultationId, messageDTO);
 
-        // Publish the saved message to the corresponding WebSocket topic
-//        messagingTemplate.convertAndSend("/{consultationId}/messages" + consultationId, savedMessage);
-        return messageDTO;
+        return savedMessage;
     }
 
-//    @GetMapping("/consultation/{consultationId}/messages")
-//    public ResponseEntity<List<MessageDTO>> getMessagesForConsultation(@PathVariable Long consultationId) {
-//        List<MessageDTO> messages = messageService.getMessagesForConsultation(consultationId);
+//    @GetMapping("/chat/get-messages/{consultationId}")
+//    public ResponseEntity<List<MessageDTO>> getMessagesByConsultationId(
+//            @PathVariable Long consultationId,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        List<MessageDTO> messages = messageService.getMessagesByConsultationId(consultationId, page, size);
 //        return ResponseEntity.ok(messages);
 //    }
 
-//    @Autowired
-//    private SimpMessagingTemplate simpMessagingTemplate;
-//
-//    @MessageMapping("/message")
-//    @SendTo("/chatroom/public")
-//    public Message receiveMessage(@Payload Message message){
-//        return message;
-//    }
-//
-//    @MessageMapping("/private-message")
-//    public Message recMessage(@Payload Message message){
-//        simpMessagingTemplate.convertAndSendToUser(String.valueOf(message.getReceiverId()),"/private",message);
-//        System.out.println(message.toString());
-//        return message;
-//    }
+    @GetMapping("/chat/get-messages/{consultationId}")
+    public ResponseEntity<List<MessageDTO>> getMessagesByConsultationId(
+            @PathVariable Long consultationId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) { // Change default size to 5
+        List<MessageDTO> messages = messageService.getMessagesByConsultationId(consultationId, page, size);
+        return ResponseEntity.ok(messages);
+    }
+
 }

@@ -2,13 +2,21 @@ package com.had.coreservice.service;
 
 import com.had.coreservice.entity.Consultation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.had.coreservice.entity.Message;
 import com.had.coreservice.repository.MessageRepository;
 import com.had.coreservice.requestBody.MessageDTO;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -28,7 +36,11 @@ public class MessageService {
         message.setSenderId(messageDTO.getSenderId());
         message.setReceiverId(messageDTO.getReceiverId());
         message.setMessageContent(messageDTO.getMessageContent());
-        message.setCreatedAt("new Date()"); // Use parameterless constructor to set the current date and time
+
+        // Set the current date and time in the desired format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = LocalDateTime.now().format(formatter);
+        message.setCreatedAt(formattedDateTime);
 
         // Save the message entity
         Message savedMessage = messageRepository.save(message);
@@ -45,7 +57,29 @@ public class MessageService {
                 .senderId(message.getSenderId())
                 .receiverId(message.getReceiverId())
                 .messageContent(message.getMessageContent())
-//                .createdAt(message.getCreatedAt())
+                .createdAt(message.getCreatedAt())
                 .build();
+    }
+
+//    @Transactional(readOnly = true)
+//    public List<MessageDTO> getMessagesByConsultationId(Long consultationId, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Message> messagePage = messageRepository.findByConsultationId(consultationId, pageable);
+//        List<MessageDTO> messageDTOs = new ArrayList<>();
+//        for (Message message : messagePage.getContent()) {
+//            messageDTOs.add(convertToDTO(message));
+//        }
+//        return messageDTOs;
+//    }
+
+    @Transactional(readOnly = true)
+    public List<MessageDTO> getMessagesByConsultationId(Long consultationId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Message> messagePage = messageRepository.findByConsultationId(consultationId, pageable);
+        List<MessageDTO> messageDTOs = new ArrayList<>();
+        for (Message message : messagePage.getContent()) {
+            messageDTOs.add(convertToDTO(message));
+        }
+        return messageDTOs;
     }
 }

@@ -127,10 +127,7 @@ CREATE TABLE message (
                          sender_id BIGINT,
                          receiver_id BIGINT,
                          message_content TEXT,
-                         created_at DATETIME,
-                         FOREIGN KEY (consultation_id) REFERENCES consultation(id),
-                         FOREIGN KEY (sender_id) REFERENCES professional(id),
-                         FOREIGN KEY (receiver_id) REFERENCES professional(id)
+                         created_at DATETIME
 );
 
 ALTER TABLE `patient`
@@ -173,6 +170,19 @@ ALTER TABLE `consultation`
     ADD CONSTRAINT `fk_consultation_facility_lab_id`
     FOREIGN KEY (`fac_lab_id`) REFERENCES `facility` (`id`)
             ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+ALTER TABLE message
+    ADD CONSTRAINT fk_message_consultation
+        FOREIGN KEY (consultation_id)
+            REFERENCES consultation(id),
+    ADD CONSTRAINT fk_message_sender
+        FOREIGN KEY (sender_id)
+        REFERENCES professional(id),
+    ADD CONSTRAINT fk_message_receiver
+        FOREIGN KEY (receiver_id)
+        REFERENCES professional(id);
+
 
 insert into health_facility_registry values
                                          ('hospitalpuduchery@ch.ndhm', 'city general hospital', 'allopathic', 'info@cityhospital.com', 'statea', 'subdista', 'private', 'hospital', '+91 1234567890', 'countryx', 'district1', 'urban'),
@@ -276,6 +286,6 @@ VALUES
 
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'I need some clarification on the test results.', '2024-04-06 12:10:00');
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Sure, could you please specify?', '2024-04-06 12:15:00');
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'I'm concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Im concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Let me review the scan again and get back to you.', '2024-04-06 12:25:00');
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, I'll wait for your response.', '2024-04-06 12:30:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, Ill wait for your response.', '2024-04-06 12:30:00');
