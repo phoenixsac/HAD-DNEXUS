@@ -121,6 +121,18 @@ CREATE TABLE `consultation` (
                                 `fac_lab_id` BIGINT
 );
 
+CREATE TABLE message (
+                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         consultation_id BIGINT,
+                         sender_id BIGINT,
+                         receiver_id BIGINT,
+                         message_content TEXT,
+                         created_at DATETIME,
+                         FOREIGN KEY (consultation_id) REFERENCES consultation(id),
+                         FOREIGN KEY (sender_id) REFERENCES professional(id),
+                         FOREIGN KEY (receiver_id) REFERENCES professional(id)
+);
+
 ALTER TABLE `patient`
     ADD CONSTRAINT `fk_patient_user`
         FOREIGN KEY (`user_id`)
@@ -262,3 +274,8 @@ VALUES
     (5,'consultancy5',2, '2024-04-05 14:00:00', 2, 'Completed', 'Patient discharged.', 'Rest recommended.', 2);
 
 
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'I need some clarification on the test results.', '2024-04-06 12:10:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Sure, could you please specify?', '2024-04-06 12:15:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'I'm concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Let me review the scan again and get back to you.', '2024-04-06 12:25:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, I'll wait for your response.', '2024-04-06 12:30:00');
