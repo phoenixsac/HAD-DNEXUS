@@ -45,3 +45,26 @@
     font-weight: bold;
   }
   
+  .message-input-form textarea {
+    width: 100%;
+    height: 300px; /* Adjust the height as needed */
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+  }
+
+  .message-text {
+    /* height: 100px; /* Adjust the height of the input field */
+    /* font-size: 14px;
+    width: 100%; */ 
+
+    width: 100%;
+    height: 300px; /* Adjust the height as needed */
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+  }
