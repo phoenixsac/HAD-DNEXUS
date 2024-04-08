@@ -1,0 +1,46 @@
+.patient-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    /* margin: 0 auto; */
+    margin: 20px auto 0; 
+  }
+  
+  .patient-info,
+  .patient-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+  }
+  
+  .patient-info span {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .patient-details span{
+    margin-bottom: 0.5rem;
+  }
+  
+  /* .age-gender,
+  .email {
+    font-style: italic;
+  } */
+  
+  
+
+
+
+
+.email,
+.patient-phone,
+.patient-address {
+    margin-bottom: 0.5rem;
+    /* font-weight: bold; */
+    font-style: italic;
+}

@@ -12,6 +12,7 @@ import PLogin from "./pages/PLogin";
 import PatientReport from "./pages/PatientReport"
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
+import TestCase from "./pages/TestCase";
 
 import DoctorDashboard from "./pages/DoctorDashboard";
 import PatientList from "./components/PatientList/PatientList";
@@ -87,6 +88,8 @@ function App() {
             <Route path="/patient/registration" element={<PatientRegistration />} />
             <Route path="/patient/report" element={<PatientReport />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
+            <Route path="/TestCase" element={<TestCase />} />
+
 
           </Routes>
         </BrowserRouter>

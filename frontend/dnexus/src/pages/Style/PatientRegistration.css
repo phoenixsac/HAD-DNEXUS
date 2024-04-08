@@ -154,11 +154,20 @@
     border-radius: 3px;
     cursor: pointer;
     }
+
+    .SubmitButton button:hover{
+      background-color: #021b36;
+    }
   
     .makerow {
       display: flex;
       
   
+    }
+
+    .SubmitButton button:disabled {
+      background-color: #ccc; /* Change to grey color */
+      cursor: not-allowed; /* Change cursor to not allowed */
     }
 
   
