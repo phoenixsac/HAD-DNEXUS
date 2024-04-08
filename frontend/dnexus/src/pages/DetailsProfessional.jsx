@@ -2,45 +2,50 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import "./Style/DoctorDetails.css" // Import your CSS file
+import "./Style/DetailsProfessional.css" 
 import Navbar from "../components/Navbar/ConditionalNavbar"
 
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-const DoctorDetails = () => {
-  const { doctorId } = useParams(); // Get doctor ID from URL parameter
+const DetailsProfessional = () => {
+  const { id } = useParams(); // Get doctor ID from URL parameter
+  const parsedid = parseInt(id); // Parse doctor ID as an integer
+
+  console.log("id:", id);
+  console.log("parsedid:", parsedid);
+
   const navigate = useNavigate();
 
   const [doctor, setDoctor] = useState({});
 
-  // useEffect(() => {
-  //   const fetchDoctorDetails = async () => {
-  //     const response = await axios.get(`http://localhost:8080/admin/view-doctor-details/${doctorId}`);
-  //     setDoctor(response.data);
-  //   };
-
-  //   fetchDoctorDetails();
-  // }, [doctorId]); // Dependency array: fetch on doctor ID change
-
-
-  // Dummy data for testing
   useEffect(() => {
-    const dummyDoctor = {
-      id: 1,
-      name: 'John Doe',
-      specialization: 'Cardiology',
-      registrationNo: '12345',
-      email: 'johndoe@example.com',
-      phoneNo: '123-456-7890'
+    const fetchDoctorDetails = async () => {
+      try {
+        const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
+  
+        const response = await axios.get('http://localhost:8080/admin/professional-by-id', {
+          params: { id: parsedid }, // Send id as request parameter
+          headers: {
+            'Authorization': `Bearer ${token}` // Include JWT token in headers
+          }
+        });
+  
+        setDoctor(response.data);
+        console.log("response.data:", response.data);
+      } catch (error) {
+        console.error("Error fetching doctor details:", error);
+        // Implement proper error handling here
+      }
     };
-    setDoctor(dummyDoctor);
-  }, []); // Empty dependency array to run once on component mount
+  
+    fetchDoctorDetails();
+  }, [parsedid]); // Dependency array: fetch on doctor ID change
 
 
   const handleBack = () => {
-    navigate('/view-doctorlist'); // Go back to doctors list
+    navigate('/admin/view-professional-list'); 
   };
 
   const handleEdit = () => {
@@ -61,7 +66,7 @@ const DoctorDetails = () => {
         <div className="doctor-details">
 
           <div className='hosp-name'>
-            <h2>Hospital Name</h2> {/* Replace with actual hospital name */}
+            <h2>{doctor.placeOfWork}</h2> {/* Replace with actual hospital name */}
           </div>
 
           <div className='doctor-info'>
@@ -72,23 +77,24 @@ const DoctorDetails = () => {
             <div className="doc-data">
 
               <div className='doc'>
-                <h3>Dr. {doctor.name}</h3>
+                <h3>Dr. {doctor.firstName} {doctor.lastName}</h3>
                 <p className='doc-spec'>{doctor.specialization}</p>
               </div>
 
               <div className='doc'>
                 <p className='title'>Registration No.</p>
-                <p>{doctor.registrationNo}</p>
+                <p>{doctor.professionalId}</p>
               </div>
 
               <div className='doc'>
                 <p className='title'>Email</p>
-                <p>{doctor.email}</p>
+                <p>{doctor.emailId}</p>
               </div>
 
               <div className='doc'>
                 <p className='title'>Phone</p>
-                <p>{doctor.phoneNo}</p>
+                <p>{doctor.contactNumber
+}</p>
               </div>
 
             </div>
@@ -107,4 +113,6 @@ const DoctorDetails = () => {
   );
 };
 
-export default DoctorDetails;
+export default DetailsProfessional;
+
+

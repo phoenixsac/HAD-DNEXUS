@@ -3,9 +3,9 @@ import ConditionalNavbar from "../components/Navbar/ConditionalNavbar";
 import { useNavigate } from "react-router-dom";
 
 
-import "./Style/Dashboard.css";
+import "./Style/LandingPage.css";
 
-function Dashboard() {
+function LandingPage() {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -29,4 +29,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default LandingPage;

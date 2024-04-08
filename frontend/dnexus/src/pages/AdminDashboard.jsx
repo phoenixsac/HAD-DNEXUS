@@ -5,66 +5,89 @@ import { useNavigate } from "react-router-dom";
 import "./Style/AdminDashboard.css";
 import ConditionalNavbar from "../components/Navbar/ConditionalNavbar";
 
+import { FaUserDoctor } from "react-icons/fa6";
+import { HiUsers } from "react-icons/hi";
+import { RiBodyScanFill } from "react-icons/ri";
+
 function AdminDashboard() {
   const navigate = useNavigate();
 
-  const handleAddDoctorClick = () => {
-    navigate("/add-doctor"); // Replace with your actual add doctor route
+  const handleAddProfesssionalClick = () => {
+    navigate("/admin/add-professional"); 
   };
 
-  const handleViewDoctorsClick = () => {
-    navigate("/view-doctorlist"); // Replace with your actual view doctors route
+  const handleViewProfessionalClick = () => {
+    navigate("/admin/view-professional-list"); 
   };
 
-  const handleAddRadiologistClick = () => {
-    navigate("/add-radiologist"); // Replace with your actual add radiologist route
+  // const handleAddRadiologistClick = () => {
+  //   navigate("/admin/add-radiologist"); 
+  // };
+
+  // const handleViewRadiologistsClick = () => {
+  //   navigate("/admin/view-radiologistlist"); 
+  // };
+
+  const handleAddFaicilityClick = () => {
+    navigate("/admin/add-facility"); 
   };
 
-  const handleViewRadiologistsClick = () => {
-    navigate("/view-radiologists"); // Replace with your actual view radiologists route
+  const handleViewFacilityClick = () => {
+    navigate("/admin/view-facility-list"); 
   };
 
-  const handleAddLabTechnicianClick = () => {
-    navigate("/add-lab-technician"); // Replace with your actual add lab technician route
-  };
-
-  const handleViewLabTechniciansClick = () => {
-    navigate("/view-lab-technicians"); // Replace with your actual view lab technicians route
+  const handleViewPatientsClick = () => {
+    navigate("/admin/view-patient-list"); 
   };
 
   return (
     <div>
       <ConditionalNavbar />
+
       <div className="admin-dashboard">
+
         <div className="button-container">
-          <h2>Doctor</h2>
+          <h2>Professional</h2>
+          <div className='dash-icon'>
+            <FaUserDoctor />
+          </div>
           <div className="buttons">
-            <button onClick={handleAddDoctorClick}>Add</button>
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button className="btn" onClick={handleAddProfesssionalClick}>Add</button>
+            <button className="btn" onClick={handleViewProfessionalClick}>View</button>
           </div>
         </div>
-        <div className="button-container">
+
+        {/* <div className="button-container">
           <h2>Radiologist</h2>
           <div className="buttons">
-            <button onClick={handleAddDoctorClick}>Add</button>
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button onClick={handleAddRadiologistClick}>Add</button>
+            <button onClick={handleViewRadiologistsClick}>View</button>
           </div>
-        </div>
+        </div> */}
+
         <div className="button-container">
-          <h2>Laboratory</h2>
+          <h2>Facility</h2>
+          <div className='dash-icon'>
+            <RiBodyScanFill />
+          </div>
           <div className="buttons">
-            <button onClick={handleAddDoctorClick}>Add</button>
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button className="btn" onClick={handleAddFaicilityClick}>Add</button>
+            <button className="btn" onClick={handleViewFacilityClick}>View</button>
           </div>
         </div>
+
         <div className="button-container">
           <h2>Patient</h2>
+          <div className='dash-icon'>
+            <HiUsers />
+          </div>
           <div className="buttons">
-            {/* <button onClick={handleAddDoctorClick}>Remove</button> */}
-            <button onClick={handleViewDoctorsClick}>View</button>
+            <button className="btn" onClick={handleViewPatientsClick}>View</button>
           </div>
         </div>
+
       </div>
+
     </div>
   );
 }

@@ -1,0 +1,70 @@
+.professional-list {
+    display: flex;
+    /* flex-wrap: wrap; */
+    flex-direction: column;
+    justify-content: center; /* Distribute cards evenly */
+    align-items: center;
+    width: 100%;
+
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .professional-card-link{
+    /* width: 85vw; */
+
+    text-decoration: none;
+  }
+
+  .professional-card-link.professional-card{
+    display: flex;
+    justify-content: space-between;
+
+    padding: 1rem;
+    margin-bottom: 1rem;
+    /* Adjust width for 4 columns with some spacing */
+    /* width: calc(25% - 1.5rem);  */
+    cursor: pointer; 
+  }
+  
+  .professional-card {
+    display: flex;
+    justify-content: space-between;
+    
+
+    width: 85vw;
+    padding: 1rem;
+    border-radius: 0.8rem;
+    margin-bottom: 1rem;
+    
+  }
+
+.heading-bg{
+  background-color: #3B5865;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+
+  /* margin-left: 28px; */
+}
+
+.list-bg{
+  background-color: #D3E1EB;
+  color: black;
+  font-size: 18px;
+
+}
+
+.list-bg:hover{
+  background-color: #c2d8e7;
+
+}
+  
+ .field{
+  padding: 5px;
+  /* text-align: left; */
+
+  height: 30px;
+  width: 300px;
+ }
+  

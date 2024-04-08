@@ -3,50 +3,50 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import "./Style/DoctorList.css"
+import "./Style/ListProfessional.css"
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar";
+import ProfessionalList from '../components/ProfessionalLIst/ProfessionalList';
 
 
-const DoctorsList = () => {
+const ListProfessional = () => {
   const navigate = useNavigate();
 
   const [doctors, setDoctors] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [doctorsPerPage] = useState(3);
+  const [doctorsPerPage] = useState(6);
   const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
 
   useEffect(() => {
+  
+    const fetchDoctors = async () => {
+      try {
+        const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
 
-    // const fetchDoctors = async () => {
-    //   try {
-    //     const response = await axios.get('http://localhost:8080/admin/view-doctor-list');
-    //     setDoctors(response.data);
-    //     setAllDoctors(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching doctors:", error);
-    //   }
-    // };
+        const response = await axios.get('http://localhost:8080/admin/all-professionals', {
+          headers: {
+            'Authorization': `Bearer ${token}` // Include JWT token in headers
+          }
+        });
 
-    // fetchDoctors();
+        setDoctors(response.data);
+        setAllDoctors(response.data);
 
+        console.log("data:",response.data);
 
-    //dummy
-    const dummyDoctors = [
-      { id: 1, name: 'John Doe', hospital: 'General Hospital', specialization: 'Cardiology' },
-      { id: 2, name: 'Jane Smith', hospital: 'City Medical Center', specialization: 'Dermatology' },
-      { id: 3, name: 'Michael Brown', hospital: "St. Judes Children's Hospital", specialization: 'Pediatrics' },
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        // Implement proper error handling here
+      }
+    };
 
-    ];
-    setDoctors(dummyDoctors); 
-    setAllDoctors(dummyDoctors);
-    console.log("doctors:",doctors);
-    console.log("alldoctors:", allDoctors);
+    fetchDoctors();
 
   }, []);
+
 
   useEffect(() => {
     console.log("Search term:", searchTerm);
@@ -56,9 +56,10 @@ const DoctorsList = () => {
       setFilteredDoctors(allDoctors);
     } else {
       const filtered = allDoctors.filter((doctor) =>
-        doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doctor.hospital.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase())
+        doctor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doctor.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doctor.placeOfWork.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
       console.log("Filtered doctors:", filtered);
@@ -73,7 +74,7 @@ const DoctorsList = () => {
   };
 
   const handleBack = () => {
-    navigate("/AdminDashboard");
+    navigate("/admin/dashboard");
   }
 
 
@@ -89,7 +90,7 @@ const DoctorsList = () => {
         <Navbar/>
         <div className="doctors-list">
           
-          <div className='search'>
+          <div className='search-back'>
             <div className='search-field'>
               <input
                 type="text"
@@ -105,37 +106,41 @@ const DoctorsList = () => {
             
           </div>
 
-          <div className='table-container'>
+          {/* <div className='table-container'>
             <table className='table'>
               <thead>
                 <tr>
                   <th>Doctor ID</th>
-                  <th>Name</th>
-                  <th>Hospital</th>
+                  <th>Full Name</th>
                   <th>Specialization</th>
+                  <th>Place of Work</th>
                   <th>View Details</th>
                 </tr>
               </thead>
               <tbody>
                 {currentDoctors.map((doctor) => (
-                  <tr key={doctor.id}>
-                    <td>{doctor.id}</td>
-                    <td>{doctor.name}</td>
-                    <td>{doctor.hospital}</td>
+                  <tr key={doctor.professionalId}>
+                    <td>{doctor.professionalId}</td>
+                    <td>{doctor.firstName} {doctor.lastName}</td>
                     <td>{doctor.specialization}</td>
+                    <td>{doctor.placeOfWork}</td>
                     <td>
-                      <Link className='view-link' to={`/doctors/${doctor.id}`}>View</Link> {/* Route to doctor details page */}
+                      <Link className='view-link' to={`/admin/professional/${doctor.professionalId}`}>View</Link> 
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div> */}
+
+          <div className="doctor-list">
+            <ProfessionalList professionals={currentDoctors} />
           </div>
 
           <div className='pagination'>
             <Pagination
               doctorsPerPage={doctorsPerPage}
-              totalDoctors={filteredDoctors.length} // Use total doctors even after filtering
+              totalDoctors={filteredDoctors.length} 
               paginate={paginate}
             />
           </div>
@@ -145,4 +150,5 @@ const DoctorsList = () => {
   );
 };
 
-export default DoctorsList;
+export default ListProfessional;
+

@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class JwtHelper{
 
 
-    public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60 * 60;
 
 
     private String secret = "$ecredjhgbfdiusflsdhliugsdgasgadfbaberabebdsfgsudifguiefgevlfdbfdvaduivuoagvuadbvjerghregaregiuaergjabrgkhraeigbakjbrgaeruighakekrhguiahreogoaoigaregareygdluaerarsdsit";
