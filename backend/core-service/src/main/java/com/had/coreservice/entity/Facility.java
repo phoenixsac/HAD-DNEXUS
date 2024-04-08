@@ -1,23 +1,25 @@
-package com.had.adminservice.entity;
+package com.had.coreservice.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+import java.util.Set;
+
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "facility")
 public class Facility {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
-    @Column(name = "ufid", nullable = false)
+    @Column(name = "ufid", unique = true, nullable = false)
     private String ufid;
 
     @Column(name = "state")
@@ -32,11 +34,15 @@ public class Facility {
     @Column(name = "country")
     private String country;
 
-    @Column(name = "type", length = 50)
+    @Column(name = "type")
     private String type;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @OneToMany(mappedBy = "labFacility", cascade = CascadeType.ALL)
+    private Set<Consultation> consultations;
+
+    // Getters and setters
 }

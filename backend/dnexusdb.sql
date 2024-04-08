@@ -11,9 +11,7 @@ DROP TABLE IF EXISTS
     professional,
     facility,
     professional_patient,
-    `case`,
-    patient_to_case,
-    professional_case
+    consultation
 ;
 
 create table health_facility_registry (
@@ -49,15 +47,15 @@ create table healthcare_professionals_registry (
 
 
 CREATE TABLE `otp_validation` (
-                                  `id` int NOT NULL AUTO_INCREMENT,
+                                  `id` BIGINT NOT NULL AUTO_INCREMENT,
                                   `email` varchar(255) NOT NULL,
                                   `otp` varchar(6) NOT NULL,
                                   `expiration_time` timestamp NOT NULL,
-                                   PRIMARY KEY (`id`)
+                                  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `user` (
-                        `id` INT AUTO_INCREMENT PRIMARY KEY,
+                        `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                         `email` varchar(255) UNIQUE NOT NULL,
                         `first_name` varchar(255) NOT NULL,
                         `last_name` varchar(255),
@@ -69,7 +67,7 @@ CREATE TABLE `user` (
 );
 
 CREATE TABLE `patient` (
-                           `id` INT AUTO_INCREMENT PRIMARY KEY,
+                           `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                            `dob` DATE DEFAULT NULL,
                            `age` INT DEFAULT NULL,
                            `gender` VARCHAR(10) DEFAULT NULL,
@@ -78,7 +76,7 @@ CREATE TABLE `patient` (
                            `guardian_first_name` VARCHAR(255) DEFAULT NULL,
                            `guardian_last_name` VARCHAR(255) DEFAULT NULL,
                            `guardian_contact` VARCHAR(20) DEFAULT NULL,
-                           `user_id` INT NOT NULL,
+                           `user_id` BIGINT NOT NULL,
                            UNIQUE KEY `pat_unique_user_id` (`user_id`),
                            FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -86,29 +84,50 @@ CREATE TABLE `patient` (
 
 
 CREATE TABLE professional (
-                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
                               license_number VARCHAR(50) NOT NULL,
                               experience INT DEFAULT NULL,
                               affiliated_facility_id varchar(255) DEFAULT NULL,
                               specialization VARCHAR(255) DEFAULT NULL,
                               system_of_medicine VARCHAR(255) DEFAULT NULL,
-                              user_id INT NOT NULL,
+                              user_id BIGINT NOT NULL,
                               qualification VARCHAR(255) DEFAULT NULL,
                               status VARCHAR(255) DEFAULT NULL,
                               place_of_work VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE `facility` (
-                            `id` INT AUTO_INCREMENT PRIMARY KEY,
+                            `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                             `ufid` varchar(255) UNIQUE NOT NULL,
                             `state` varchar(255) DEFAULT NULL,
                             `district` varchar(255) DEFAULT NULL,
                             `sub_district` varchar(255) DEFAULT NULL,
                             `country` varchar(255) DEFAULT NULL,
                             `type` varchar(50),
-                            `user_id` INT NOT NULL,
-                             UNIQUE KEY `fac_unique_user_id` (`user_id`),
-                             FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                            `user_id` BIGINT NOT NULL,
+                            UNIQUE KEY `fac_unique_user_id` (`user_id`),
+                            FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE `consultation` (
+                                `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                `name` VARCHAR(255) NOT NULL,
+                                `patient_id` BIGINT NOT NULL,
+                                `date_created` DATETIME NOT NULL,
+                                `prof_doc_id` BIGINT NOT NULL,
+                                `status` VARCHAR(255) NOT NULL,
+                               `final_report` TEXT,
+                                `test` TEXT NOT NULL,
+                                `fac_lab_id` BIGINT
+);
+
+CREATE TABLE message (
+                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         consultation_id BIGINT,
+                         sender_id BIGINT,
+                         receiver_id BIGINT,
+                         message_content TEXT,
+                         created_at DATETIME
 );
 
 ALTER TABLE `patient`
@@ -119,7 +138,7 @@ ALTER TABLE `patient`
             ON UPDATE CASCADE;
 
 ALTER TABLE `professional`
-    ADD CONSTRAINT `fk_professional_user_email`
+    ADD CONSTRAINT `fk_professional_user_id`
         FOREIGN KEY (`user_id`)
             REFERENCES `user` (`id`)
             ON DELETE CASCADE
@@ -133,11 +152,36 @@ ALTER TABLE `facility`
             ON UPDATE CASCADE;
 
 ALTER TABLE `professional`
-    ADD CONSTRAINT `fk_professional_facility_email`
+    ADD CONSTRAINT `fk_professional_facility_id`
         FOREIGN KEY (`affiliated_facility_id`)
             REFERENCES `facility` (`ufid`)
             ON DELETE CASCADE
             ON UPDATE CASCADE;
+
+
+ALTER TABLE `consultation`
+    ADD CONSTRAINT `fk_consultation_patient_id`
+        FOREIGN KEY (`patient_id`) REFERENCES `patient` (`id`)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    ADD CONSTRAINT `fk_consultation_professional_doc_id`
+    FOREIGN KEY (`prof_doc_id`) REFERENCES `professional` (`id`)
+            ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `fk_consultation_facility_lab_id`
+    FOREIGN KEY (`fac_lab_id`) REFERENCES `facility` (`id`)
+            ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+ALTER TABLE message
+    ADD CONSTRAINT fk_message_consultation
+        FOREIGN KEY (consultation_id)
+            REFERENCES consultation(id),
+    ADD CONSTRAINT fk_message_sender
+        FOREIGN KEY (sender_id)
+        REFERENCES professional(id),
+    ADD CONSTRAINT fk_message_receiver
+        FOREIGN KEY (receiver_id)
+        REFERENCES professional(id);
 
 
 insert into health_facility_registry values
@@ -186,27 +230,29 @@ INSERT INTO healthcare_professionals_registry VALUES
 
 
 INSERT INTO `user` (`id`,`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`,`is_active`) VALUES
-    (1,'Sachin.Nair@iiitb.ac.in', 'Sachin', 'Nair', '+918149734360', 'Sachin.Nair@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1),
-    (2,'Anjali.Kumar@iiitb.ac.in', 'Anjali', 'Kumar', '+916282693806', 'Anjali.Kumar@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1),
-    (3,'Srishti.Yadav@iiitb.ac.in', 'Srishti', 'Yadav', '+919917316461', 'Srishti.Yadav@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1),
-    (4,'Sambhu.SS@iiitb.ac.in', 'Sambhu', 'SS', '+919562758206', 'Sambhu.SS@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1);
+                                                                                                                        (1,'Sachin.Nair@iiitb.ac.in', 'Sachin', 'Nair', '+918149734360', 'Sachin.Nair@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1),
+                                                                                                                        (2,'Anjali.Kumar@iiitb.ac.in', 'Anjali', 'Kumar', '+916282693806', 'Anjali.Kumar@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1),
+                                                                                                                        (3,'Srishti.Yadav@iiitb.ac.in', 'Srishti', 'Yadav', '+919917316461', 'Srishti.Yadav@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1),
+                                                                                                                        (4,'Sambhu.SS@iiitb.ac.in', 'Sambhu', 'SS', '+919562758206', 'Sambhu.SS@iiitb.ac.in', '$2a$12$Yr.topTFWL.ESkM9gvEVve6L3geGc2YeO4hHjB3YYPuNunHOpQl8y', 'admin',1);
 
 INSERT INTO `user` (`id`,`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`,`is_active`) VALUES
-     (5,'Aromal@gmail.com', 'Aromal', 'A', '+919876543210', 'Aromal@gmail.com', 'patient123', 'patient',1),
-     (6,'Sunny@gmail.com', 'Sunny', 'L', '+918765432109', 'Sunny@gmail.com', 'patient123', 'patient',1),
-     (7,'Prabhas@gmail.com', 'Prabhas', 'S', '+917654321098', 'Prabhas@gmail.com', 'patient123', 'patient',1);
+                                                                                                                        (5,'Aromal@gmail.com', 'Aromal', 'A', '+919876543210', 'Aromal@gmail.com', 'patient123', 'patient',1),
+                                                                                                                        (6,'Sunny@gmail.com', 'Sunny', 'L', '+918765432109', 'Sunny@gmail.com', 'patient123', 'patient',1),
+                                                                                                                        (7,'Prabhas@gmail.com', 'Prabhas', 'S', '+917654321098', 'Prabhas@gmail.com', 'patient123', 'patient',1);
 
 INSERT INTO `user` (`id`,`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`,`is_active`) VALUES
-       (8,'hospital1@gmail.com', 'hos1', null, '+919876543210', 'hospital1@gmail.com', 'hos1pass', 'hospital',1),
-       (9,'hospital2@gmail.com', 'hos2', null, '+918765432109', 'hospital2@gmail.com', 'hos2pass', 'hospital',1),
-       (10,'lab1@gmail.com', 'lab1', null, '+917654321098', 'lab1@gmail.com', 'lab1pass', 'lab',1),
-        (11,'lab2@gmail.com', 'lab2', null, '+917654321098', 'lab2@gmail.com', 'lab2pass', 'lab',1);
+                                                                                                                        (8,'hospital1@gmail.com', 'hos1', null, '+919876543210', 'hospital1@gmail.com', 'hos1pass', 'hospital',1),
+                                                                                                                        (9,'hospital2@gmail.com', 'hos2', null, '+918765432109', 'hospital2@gmail.com', 'hos2pass', 'hospital',1),
+                                                                                                                        (10,'lab1@gmail.com', 'lab1', null, '+917654321098', 'lab1@gmail.com', 'lab1pass', 'lab',1),
+                                                                                                                        (11,'lab2@gmail.com', 'lab2', null, '+917654321098', 'lab2@gmail.com', 'lab2pass', 'lab',1);
 
 INSERT INTO `user` (`id`,`email`, `first_name`, `last_name`, `contact`, `login_id`, `password`, `type`,`is_active`) VALUES
-        (12,'rad1@gmail.com', 'rad1_fname', 'rad1_lname', '+919876543210', 'rad1@gmail.com', 'rad1pass', 'radiologist',1),
-        (13,'rad2@gmail.com', 'rad2_fname', 'rad2_lname', '+919876543210', 'rad2@gmail.com', 'rad2pass', 'radiologist',1),
-        (14,'doc1@gmail.com', 'doc1_fname', 'doc1_lname', '+917654321098', 'doc1@gmail.com', 'doc1pass', 'doctor',1),
-        (15,'doc2@gmail.com', 'doc2_fname', 'doc2_lname', '+917654321098', 'doc2@gmail.com', 'doc2pass', 'doctor',1);
+                                                                                                                        (12,'rad1@gmail.com', 'rad1_fname', 'rad1_lname', '+919876543210', 'rad1@gmail.com', 'rad1pass', 'radiologist',1),
+                                                                                                                        (13,'rad2@gmail.com', 'rad2_fname', 'rad2_lname', '+919876543210', 'rad2@gmail.com', 'rad2pass', 'radiologist',1),
+                                                                                                                        (14,'doc1@gmail.com', 'doc1_fname', 'doc1_lname', '+917654321098', 'doc1@gmail.com', 'doc1pass', 'doctor',1),
+                                                                                                                        (15,'doc2@gmail.com', 'doc2_fname', 'doc2_lname', '+917654321098', 'doc2@gmail.com', 'doc2pass', 'doctor',1),
+                                                                                                                        (16,'rad3@gmail.com', 'rad3_fname', 'rad3_lname', '+919876543210', 'rad3@gmail.com', 'rad3pass', 'radiologist',1),
+                                                                                                                        (17,'doc3@gmail.com', 'doc3_fname', 'doc3_lname', '+917654321098', 'doc3@gmail.com', 'doc3pass', 'doctor',1);
 
 INSERT INTO `patient` (`id`,`dob`, `age`, `gender`, `address`, `blood_grp`, `guardian_first_name`, `guardian_last_name`, `guardian_contact`,user_id)
 VALUES
@@ -218,12 +264,28 @@ VALUES
 INSERT INTO `facility` (`id`, `ufid`, `state`, `district`, `sub_district`, `country`, `type`,`user_id`)
 VALUES
     (1, 'techdiagnostics013@ch.ndhm', 'statem', 'district13', 'subdistm', 'countryn', 'hospital',8),
-    (2, 'metrocare003@ch.ndhm', 'statee', 'district5', 'subdiste', 'countryv', 'lab',10);
+    (2, 'metrocare003@ch.ndhm', 'statee', 'district5', 'subdiste', 'countryv', 'lab',10),
+    (3, 'coastalcenter@ch.ndhm', 'statec', 'district3', 'subdistc', 'countryz', 'hospital', 9),
+    (4, 'healthscan002@ch.ndhm', 'stated', 'district4', 'subdistd', 'countryw', 'lab', 11);
 
 INSERT INTO professional (id, license_number, experience, affiliated_facility_id, specialization, user_id, system_of_medicine, qualification, status, place_of_work)
 VALUES
-    (1, '10123456789012', 16, 'techdiagnostics013@ch.ndhm', 'radiology', 12, 'radiology', 'Dummy Qualification 1', 'Active', 'Hospital A'),
-    (2, '12123456789012', 7, 'metrocare003@ch.ndhm', 'doctor', 14, 'allopathy', 'Dummy Qualification 2', 'Inactive', 'Clinic B');
+    (1, '10123456789012', 16, 'techdiagnostics013@ch.ndhm', 'radiologist', 12, 'radiology', 'Dummy Qualification 1', 'Active', 'Hospital A'),
+    (2, '12123456789012', 7, 'metrocare003@ch.ndhm', 'doctor', 14, 'allopathy', 'Dummy Qualification 2', 'Inactive', 'Clinic B'),
+    (5, '15123456789012', 10, 'coastalcenter@ch.ndhm', 'radiologist', 17, 'radiology', 'MD', 'Active', 'Coastal Medical Center');
 
 
+INSERT INTO `consultation` (`id`,`name`,`patient_id`, `date_created`, `prof_doc_id`, `status`, `final_report`, `test`, `fac_lab_id`)
+VALUES
+    (1,'consultancy1',1, '2024-04-05 10:00:00', 2, 'Completed', 'Patient has recovered well.', 'Take antibiotics for 7 days.', 2),
+    (2,'consultancy2',2, '2024-04-05 11:00:00', 2, 'In Progress', 'Patient requires further tests.', 'Refer to a specialist.', 4),
+    (3,'consultancy3',3, '2024-04-05 12:00:00', 2, 'Completed', 'Patient has recovered fully.', 'No test required.', 2),
+    (4,'consultancy4',1, '2024-04-05 13:00:00', 2, 'In Progress', 'Further observation needed.', 'Prescribed painkillers.', 4),
+    (5,'consultancy5',2, '2024-04-05 14:00:00', 2, 'Completed', 'Patient discharged.', 'Rest recommended.', 2);
 
+
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'I need some clarification on the test results.', '2024-04-06 12:10:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Sure, could you please specify?', '2024-04-06 12:15:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Im concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Let me review the scan again and get back to you.', '2024-04-06 12:25:00');
+INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, Ill wait for your response.', '2024-04-06 12:30:00');
