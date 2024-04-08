@@ -50,6 +50,10 @@ const togglePopup = () => {
     </div>
     <LabDetails/>
 
+    <div className="custom-button-container">
+      <Button onClick={handleClick}>ADD RADIOLOGIST</Button>
+    </div>
+
     <RadDetails/>
 
     {/* <div className="custom-button-container">

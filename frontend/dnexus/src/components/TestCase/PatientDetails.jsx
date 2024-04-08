@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import "./PatientDetails.css";
 
 // function PatientDetails() {
@@ -27,35 +27,86 @@ import "./PatientDetails.css";
 
 
 
-function PatientDetails() {
-  // Dummy patient data
-  const dummyPatientData = {
-    id: 123456,
-    name: 'John Doe',
-    phone: '123-456-7890',
-    age: 30,
-    gender: 'Male',
-    email: 'johndoe@example.com',
-    address: '123 Main St, City, Country'
-  };
+// function PatientDetails() {
+//   // Dummy patient data
+//   const dummyPatientData = {
+//     id: 123456,
+//     name: 'John Doe',
+//     phone: '123-456-7890',
+//     age: 30,
+//     gender: 'Male',
+//     email: 'johndoe@example.com',
+//     address: '123 Main St, City, Country'
+//   };
 
+//   return (
+//     <div className="patient-banner">
+//       <div className="patient-info">
+//         <span className="patient-id">Patient ID: {dummyPatientData.id}</span>
+//         <span className="patient-name">Patient Name: {dummyPatientData.name}</span>
+//         <span className="age-gender">Age/Gender: {dummyPatientData.age}/{dummyPatientData.gender}</span>
+//       </div>
+//       <div className="patient-details">
+//         <span className="patient-phone">Phone: {dummyPatientData.phone}</span>
+//         <span className="email">Email: {dummyPatientData.email}</span>
+//         <span className="patient-address">Address: {dummyPatientData.address}</span>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default PatientDetails;
+
+
+import React, { useState, useEffect } from 'react';
+
+function PatientDetails() {
+  const [patientData, setPatientData] = useState(null);
+
+  // Fetch patient details from backend API
+  useEffect(() => {
+    const fetchPatientDetails = async () => {
+      try {
+        const consultationId = 2; // Set consultationId param for now
+        const response = await fetch(`http://localhost:8085/core/consultation/patient-details?consultationId=${consultationId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch patient details');
+        }
+        const data = await response.json();
+        setPatientData(data);
+      } catch (error) {
+        console.error('Error fetching patient details:', error);
+        // Handle error as needed
+      }
+    };
+
+    fetchPatientDetails();
+  }, []); // Empty dependency array ensures the effect runs only once
+
+  // Render patient details
   return (
     <div className="patient-banner">
-      <div className="patient-info">
-        <span className="patient-id">Patient ID: {dummyPatientData.id}</span>
-        <span className="patient-name">Patient Name: {dummyPatientData.name}</span>
-        <span className="age-gender">Age/Gender: {dummyPatientData.age}/{dummyPatientData.gender}</span>
-      </div>
-      <div className="patient-details">
-        <span className="patient-phone">Phone: {dummyPatientData.phone}</span>
-        <span className="email">Email: {dummyPatientData.email}</span>
-        <span className="patient-address">Address: {dummyPatientData.address}</span>
-      </div>
+      {patientData ? (
+        <>
+          <div className="patient-info">
+            <span className="patient-id">Patient ID: {patientData.id}</span>
+            <span className="patient-name">Patient Name: {patientData.name}</span>
+            <span className="age-gender">Age/Gender: {patientData.age}/{patientData.gender}</span>
+          </div>
+          <div className="patient-details">
+            <span className="patient-phone">Phone: {patientData.contact}</span>
+            {/* Include other patient details here */}
+          </div>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }
 
 export default PatientDetails;
+
 
 
 
