@@ -1,17 +1,20 @@
 .admin-dashboard {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 90vh;
 }
 
 .button-container {
   margin: 15px;
   padding: 10px;
-  width: 125vh;
+  /* width: 200vh; */
+
+  height: 350px;
+  width: 300px;
 
   display: flex;
+  flex-direction: column;
 
   border: 1px solid rgb(225, 222, 222);
   border-radius: 8px;
@@ -23,6 +26,14 @@
   justify-content: space-between;
 }
 
+.button-container h2{
+  padding: 10px;
+}
+
+.dash-icon{
+  font-size: 70px;
+  color: #0652a4;
+}
 
 .buttons {
   padding: 3px;
@@ -33,8 +44,51 @@ button {
   padding: 10px 20px;
   border: none;
   border-radius: 6px;
-  background-color: #2b8df6;
+  background-color:#1056a2;
   color: white;
   cursor: pointer;
   font-size: 22px;
 }
+
+.btn{
+  cursor:pointer;
+    position:relative;
+    padding:10px 20px;
+    background:#1056a2;
+    font-size:28px;
+    border-top-right-radius:10px;
+    border-bottom-left-radius:10px;
+    transition:all 1s;
+    &:after,&:before{
+      content:" ";
+      width:10px;
+      height:10px;
+      position:absolute;
+      border :0px solid #fff;
+      transition:all 1s;
+      }
+    &:after{
+      top:-1px;
+      left:-1px;
+      border-top:5px solid black;
+      border-left:5px solid black;
+    }
+    &:before{
+      bottom:-1px;
+      right:-1px;
+      border-bottom:5px solid black;
+      border-right:5px solid black;
+    }
+    &:hover{
+      border-top-right-radius:0px;
+    border-bottom-left-radius:0px;
+       /* background:rgba(0,0,0,.5); */
+       /* color:white; */
+      &:before,&:after{
+        
+        width:100%;
+        height:100%;
+         /* border-color:white; */
+      }
+    }
+  }

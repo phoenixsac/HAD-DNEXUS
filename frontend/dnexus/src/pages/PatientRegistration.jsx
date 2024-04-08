@@ -1,122 +1,11 @@
-
-// import React from 'react'
-// // import "./style folder/Registration.css";
-// import "./Style/PRegistration.css";
-// import { useNavigate } from "react-router-dom";
-// import Navbar from "../components/Navbar/LoginNav";
-
-
-// function PRegistration() {
-// const navigate = useNavigate();
-
-//   return (
-//     <>
-    
-//         <div>
-//         <Navbar />
-        
-//             <div className='registrationHeading'><span>Registration Form</span></div>
-
-//             <form >
-
-//                 <div className='formContainer'>
-//                     <div className='directionContainer'>
-//                         <div className='inputLeft'>
-//                                 <label htmlFor="first_name">First Name</label>
-//                                 <input type="name" id="name" placeholder="" />
-
-//                                 <label htmlFor="last_name">Last Name</label>
-//                                 <input type="name" id="name" placeholder="" />
-
-//                                 <label htmlFor="address">Address</label>
-//                                 <input type="text" id="address" placeholder="" />
-
-//                                 <label htmlFor="contact">Contact No.</label>
-//                                 <input type="tel" id="contact" placeholder="" />
-
-//                                 {/* <label htmlFor="emergencyContact">Emergency Contact</label>
-//                                 <input type="tel" id="emergencyContact" placeholder="" /> */}
-
-//                                 <label htmlFor="email">Email ID</label>
-//                                 <input type="email" id="email" placeholder="" />
-
-//                                 <div>
-//                                 <button type="submit">Send Consent Mail</button>
-//                                 </div>
-                                
-//                                 {/* <button type="submit">Login</button>
-//                                 <a href="#">Forgot your password?</a> */}
-//                         </div>
-//                         <div className='inputRight'>
-
-//                                 <div className='makerow'>
-
-//                                 <div className='agebox'>
-//                                 <label htmlFor="age">Age </label>
-//                                 <input type="tel" id="age" placeholder="" />
-//                                 </div>
-
-//                                 <div className='makeInline'>
-//                                 <div className='makeInlinetext'>Gender</div>
-//                                   <input type="radio" id="male" name="gender" value="male"/>
-//                                   <label for="male">Male</label>
-//                                   <input type="radio" id="female" name="gender" value="female"/>
-//                                   <label for="female">Female</label>
-//                                   <input type="radio" id="others" name="gender" value="others"/>
-//                                   <label for="others">Others</label>
-//                                 </div>
-
-//                                 </div>
-
-//                                 <div className='bloodgroup'>
-//                                     <label htmlFor="bloodgroup">Blood Group</label>
-//                                     <input type="text" id="bloodgroup" placeholder="" />
-//                                 </div>
-
-//                                 <label htmlFor="guardian_first_name">Guardian First Name</label>
-//                                 <input type="name" id="name" placeholder="" />
-
-//                                 <label htmlFor="guardian_last_name">Guardian Last Name</label>
-//                                 <input type="name" id="name" placeholder="" />
-
-//                                 <label htmlFor="guardian_Contact">Guardian Contact</label>
-//                                 <input type="tel" id="guardian_Contact" placeholder="" />
-
-                                
-
-//                                 {/* <label htmlFor="otp">OTP</label>
-//                                 <input type="text" id="otp" placeholder="" />
-//                                 <div>
-//                                 <button type="submit">Verify OTP</button>
-//                                 </div> */}
-
-                                
-//                         </div>
-//                     </div>
-                    
-//                     <div className='SubmitButton'>
-//                     <button type="submit">ADD</button>
-//                     </div>
-//                 </div>
-
-//             </form>
-            
-//         </div>
-//     </>
-//   )
-// }
-
-// export default PRegistration;
-
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from "../components/Navbar/LoginNav";
 import axios from "axios";
-import "./Style/PRegistration.css";
 
-function PRegistration() {
+import Navbar from "../components/Navbar/ConditionalNavbar";
+import "./Style/PatientRegistration.css";
+
+function PatientRegistration() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         first_name: '',
@@ -164,7 +53,7 @@ function PRegistration() {
                 alert('User already exists'); // User already exists
             } else {
                 console.error(error);
-                alert('INVALID DATA DUMBASS!!!'); // Handle other errors
+                alert('INVALID DATA!!!'); // Handle other errors
             }
         }
     };
@@ -399,4 +288,4 @@ function PRegistration() {
     );
 }
 
-export default PRegistration;
+export default PatientRegistration;

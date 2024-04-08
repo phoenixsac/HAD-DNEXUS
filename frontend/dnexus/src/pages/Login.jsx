@@ -66,7 +66,7 @@ function Login() {
   
           localStorage.setItem('jwtToken', token);
   
-          navigate("/AdminDashboard"); 
+          navigate("/admin/dashboard"); 
         }
       } 
       catch (error) {
@@ -117,10 +117,7 @@ function Login() {
             <button type="submit" className="login-button">
               Login
             </button>
-
-            <a href="#" className="forgot-password-link">
-              Forgot your password?
-            </a>
+            
           </form>
         </div>
       </div>

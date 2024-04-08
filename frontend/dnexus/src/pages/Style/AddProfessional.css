@@ -1,0 +1,24 @@
+.professional-verification-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  /* position: absolute; */
+}
+
+.hpId-field{
+  padding: 10px;
+  margin: 5px;
+
+}
+
+.hpId-field input{
+  font-size: 22px;
+  padding: 10px;
+}
+
+.verify-button{
+  margin: 5px;
+}

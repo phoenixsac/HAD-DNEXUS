@@ -1,9 +1,9 @@
-import "./Style/PLogin.css";
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+import "./Style/PLogin.css";
+
+function PLogin() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ function Login() {
     console.log("Email:", email);
     console.log("Password:", password);
 
-    navigate("/PatientDash");
+    navigate("/patient/dashboard");
   };
 
   return (
@@ -35,7 +35,7 @@ function Login() {
           Not Registered? <a href="#">Create an Account</a>
         </p> } */}
            <p className="create-account-text">
-              Not Registered? <Link to="/PRegistration">Create an Account</Link>
+              Not Registered? <Link to="/patient/registration">Create an Account</Link>
             </p>
 
             <div className="form-group">
@@ -74,4 +74,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default PLogin;

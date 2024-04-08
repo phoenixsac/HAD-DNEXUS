@@ -1,14 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import "./Style/SuccessPage.css";
-import Navbar from "../components/Navbar/ConditionalNavbar"
+import "./Success.css";
 
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
-const SuccessPage = ({ loginId, password }) => {
+
+const Success = ({ loginId, password }) => {
+
+    const navigate = useNavigate();
+
+    const handleFinish = () => {
+        navigate("/admin/dashboard");
+      }
+
   return (
     <div>
-      <Navbar/>
         <div className="success-page">
             <div className='icon'>
               <IoIosCheckmarkCircleOutline />
@@ -18,19 +25,15 @@ const SuccessPage = ({ loginId, password }) => {
                 <h2>Added Successfully!</h2>
               </div>
               <div className='credentials'>
-                <p>Please save the details for future use</p>
-                <ul>
-                    <li>Login Id: {loginId}</li>
-                    <li>Password: {password}</li>
-                </ul>
+                <p>Credentials send to professional's Email ID</p>
               </div>
             </div>
             <div className='button-div'>
-              <button to={"/AdminDashboard"}>FINISH</button>
+              <button onClick={handleFinish}>FINISH</button>
             </div>
         </div>
     </div>
   );
 };
 
-export default SuccessPage;
+export default Success;
