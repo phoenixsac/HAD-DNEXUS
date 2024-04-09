@@ -134,8 +134,10 @@ public class ConsultationService {
         return PatientResponseBodyForConsultation.builder()
                 .id(patient.getId())
                 .name(patient.getUser().getFirstName() + " " + patient.getUser().getLastName())
+                .email(patient.getUser().getEmail())
                 .gender(patient.getGender())
                 .age(patient.getAge())
+                .address(patient.getAddress())
                 .bloodGroup(patient.getBloodGroup())
                 .contact(patient.getUser().getContact())
                 .build();
@@ -153,6 +155,16 @@ public class ConsultationService {
                 .bloodGroup(patient.getBloodGroup())
                 .contact(patient.getGuardianContact())
                 .build();
+    }
+
+    public void saveFinalReport(Long consultationId, String finalReport) {
+        Optional<Consultation> optionalConsultation = consultationRepository.findById(consultationId);
+
+        Consultation consultation = optionalConsultation.orElseThrow(() -> new RuntimeException("Consultation not found with ID: " + consultationId));
+
+        consultation.setFinalReport(finalReport);
+
+        consultationRepository.save(consultation);
     }
 
 

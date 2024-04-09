@@ -1,6 +1,7 @@
 package com.had.coreservice.controllers;
 
 import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
+import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientCardDetailResponseBody;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ConsultationService;
@@ -65,5 +66,21 @@ public class ProfessionalController {
     public List<ConsultationCardDetailResponseBody> getConsultationCardDetailsByRadiologist(
             @RequestParam Long profRadiologistId) {
         return professionalService.getConsultationCardDetailsByRadiologist(profRadiologistId);
+    }
+
+    @GetMapping("/doctor-details-by-id")
+    public List<ConsultationCardDetailResponseBody> getDoctorDetailsByProffDocId(
+            @RequestParam Long profRadiologistId) {
+        return professionalService.getConsultationCardDetailsByRadiologist(profRadiologistId);
+    }
+
+    @GetMapping("/doctor-details")
+    public ResponseEntity<?> getDoctorDetails(@RequestParam Long doctorId) {
+        try {
+            DoctorDetailResponseBody doctorDetails = professionalService.getDoctorDetails(doctorId);
+            return ResponseEntity.ok(doctorDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }
