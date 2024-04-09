@@ -92,26 +92,31 @@ function MessageInput({ users, onSubmit }) {
   };
 
   return (
-    <form className="message-input-form" onSubmit={handleSubmit}>
-      <div className="message-input-container">
-        <input 
-          type="text"
-          placeholder="Type your message here..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <select
-          value={receiverId}
-          onChange={(e) => setReceiverId(e.target.value)}
-        >
-          <option value="">All</option>
-          {users.map(user => (
-            <option key={user.id} value={user.id}>{user.name}</option>
-          ))}
-        </select>
-        <button type="submit">Send</button>
+    
+      <form className="message-input-form" onSubmit={handleSubmit}>
+    <div className="message-input-container">
+      <div className='message-input'>
+      <input 
+        type="text"
+        placeholder="Type your message here..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
       </div>
-    </form>
+      
+      <select
+        value={receiverId}
+        onChange={(e) => setReceiverId(e.target.value)}
+      >
+        <option value="">All</option>
+        {users.map(user => (
+          <option key={user.id} value={user.id}>{user.name}</option>
+        ))}
+      </select>
+      <button type="submit">Send</button>
+    </div>
+  </form>
+    
   );
 }
 
