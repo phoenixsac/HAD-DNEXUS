@@ -6,7 +6,10 @@ import com.had.adminservice.entity.*;
 import com.had.adminservice.exception.ResourceNotFoundException;
 import com.had.adminservice.repository.*;
 import com.had.adminservice.responseBody.FacilityResponseBody;
+import com.had.adminservice.responseBody.PatientCardDetailResponseBody;
+import com.had.adminservice.responseBody.PatientResponseBody;
 import com.had.adminservice.responseBody.ProfessionalResponseBody;
+import com.netflix.discovery.converters.Auto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -39,6 +43,9 @@ public class AdminService {
 
     @Autowired
     private HealthcareProfessionalsRegistryRepository hprRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
 
 
     public String addFacility(String facilityId) {
@@ -375,5 +382,39 @@ public class AdminService {
     public List<ProfessionalResponseBody> getAllProfessionalsByType(String type) {
         List<Professional> professionals = professionalRepository.findByTypeOrSpecialization(type);
         return mapProfessionalsToResponse(professionals);
+    }
+
+    public List<PatientCardDetailResponseBody> getAllPatientDetails() {
+        List<Patient> patients = patientRepository.findAll();
+
+        return patients.stream()
+                .map(this::mapToPatientCardDetailResponseBody)
+                .collect(Collectors.toList());
+    }
+
+    private PatientCardDetailResponseBody mapToPatientCardDetailResponseBody(Patient patient) {
+        return PatientCardDetailResponseBody.builder()
+                .id(patient.getId())
+                .name(patient.getUser().getFirstName() + " " + patient.getUser().getLastName())
+                .gender(patient.getGender())
+                .age(patient.getAge())
+                .bloodGroup(patient.getBloodGroup())
+                .contact(patient.getGuardianContact())
+                .build();
+    }
+
+    public PatientResponseBody getPatientDetailsById(Long patientId) {
+        Optional<Patient> optionalPatient = patientRepository.findById(patientId);
+
+        Patient patient = optionalPatient.orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
+
+        return PatientResponseBody.builder()
+                .id(patient.getId())
+                .name(patient.getUser().getFirstName() + " " + patient.getUser().getLastName())
+                .gender(patient.getGender())
+                .age(patient.getAge())
+                .bloodGroup(patient.getBloodGroup())
+                .contact(patient.getGuardianContact())
+                .build();
     }
 }
