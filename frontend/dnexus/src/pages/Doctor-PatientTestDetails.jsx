@@ -1,75 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { useNavigate, useParams } from 'react-router-dom';
-// import PatientTestItem from '../components/PatientTestItem/PatientTestItem';
-// import "./Style/PatientTestDetails.css";
-// import Navbar from '../components/Navbar/ConditionalNavbar';
-
-// const DocPatientTestDetails = () => {
-//   const navigate = useNavigate();
-//   const { patientId } = useParams();
-//   const [patient, setPatient] = useState(null);
-//   const [tests, setTests] = useState([]);
-
-//   useEffect(() => {
-//     const fetchPatientData = async () => {
-//       try {
-//         const response = await fetch(`http://localhost:8085/core/professional/consultation-card-details?docId=2&patientId=${patientId}`);
-//         if (!response.ok) {
-//           throw new Error('Failed to fetch patient data.');
-//         }
-//         const data = await response.json();
-//         setPatient(data.patient);
-//         setTests(data.tests || []); 
-//       } catch (error) {
-//         console.error('Error fetching patient data:', error);
-//       }
-//     };
-//     if (patientId) {
-//       fetchPatientData();
-//     }
-//   }, [patientId]);
-
-//   const handleTestClick = (testId) => {
-//     console.log(`Navigate to test details page for test ID: ${testId}`);
-//   };
-
-//   const handleCreateCase = () => {
-//     navigate(`/doctor/patient-test-details/${patientId}/create-case`);
-//   }
-
-//   const handleGoBack = () => {
-//     navigate('/doctor/dashboard/');
-//   }
-
-//   return (
-//     <div>
-//       <Navbar/>
-//       <div className="patient-test-details">
-//         <div className='header'>
-//           <div className='patient-data'>
-//             <p>{patient?.id}</p>
-//             <p>{patient?.name}</p>
-//             <p>{patient?.age} / {patient?.gender}</p>
-//           </div>
-//           <div className='create-button'>
-//             <button onClick={handleCreateCase}>Create Case</button>
-//             <button onClick={handleGoBack}>Go Back</button>
-//           </div>
-//         </div>
-//         {tests.length > 0 && (
-//           <div className="test-list">
-//             {tests.map((test) => (
-//               <PatientTestItem key={test.consultationId} test={test} onTestClick={handleTestClick} />
-//             ))}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DocPatientTestDetails;
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PatientTestItem from '../components/PatientTestItem/PatientTestItem';
@@ -101,16 +29,14 @@ const DocPatientTestDetails = () => {
         // setTests(data || []);
 
         // Make additional API call to fetch patient details from another URL
-        // const patientResponse = await fetch(`http://localhost:8085/core/consultation/${patientId}`);
-        // if (!patientResponse.ok) {
-        //   throw new Error('Failed to fetch patient details from another URL.');
-        // }
-        // const patientData = await patientResponse.json();
-        // // Update patient state with details from the additional API call
-        // setPatient(patientData);
+        const patientResponse = await fetch(`http://localhost:8085/core/consultation/patient-details-by-patient-id?patientId=${patientId}`);
+        if (!patientResponse.ok) {
+          throw new Error('Failed to fetch patient details from another URL.');
+        }
+        const patientData = await patientResponse.json();
+        setPatient(patientData);
 
-        // console.log("tests:", data.tests);
-        console.log("tests:", tests);
+        console.log("patientData:", patientData);
 
       } catch (error) {
         console.error('Error fetching patient data:', error);
