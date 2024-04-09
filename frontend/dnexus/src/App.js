@@ -71,24 +71,24 @@ function App() {
 
             {/* Doctor */}
             <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-            <Route path="/doctor/patient-test-details/:id" element={<DocPatientTestDetails />} />
+            <Route path="/doctor/patient-test-details/:patientId" element={<DocPatientTestDetails />} />
             {/* navigate to a case page path:"/doctor/patient-list/:id/:caseId" */}
             <Route path="/doctor/patient-test-details/:id/create-case" element={<DoctorCreateCase />} />
 
             {/* Radiologist */}
             <Route path="/rad/dashboard" element={<RadDashboard />} />
-            <Route path="/rad/patient-test-details/:id" element={<RadPatientTestDetails />} />
+            {/* <Route path="/rad/patient-test-details/:id" element={<RadPatientTestDetails />} /> */}
 
             {/* Lab */}
-            <Route path="/lab/dashboard" element={<LabDashboard />} />
-            <Route path="/lab/patient-test-details/:id" element={<LabPatientTestDetails />} />
+            <Route path="/facility/dashboard" element={<LabDashboard />} />
+            <Route path="/facility/patient-test-details/:id" element={<LabPatientTestDetails />} />
                    
             {/* Patient */}
             <Route path="/PLogin" element={<PLogin />} />
             <Route path="/patient/registration" element={<PatientRegistration />} />
-            <Route path="/patient/report" element={<PatientReport />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="/TestCase" element={<TestCase />} />
+            <Route path="/patient/report" element={<PatientReport />} />
 
 
           </Routes>

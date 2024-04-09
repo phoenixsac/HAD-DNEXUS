@@ -275,6 +275,7 @@ VALUES
     (5, '15123456789012', 10, 'coastalcenter@ch.ndhm', 'radiologist', 17, 'radiology', 'MD', 'Active', 'Coastal Medical Center');
 
 
+
 INSERT INTO `consultation` (`id`,`name`,`patient_id`, `date_created`, `prof_doc_id`, `status`, `final_report`, `test`, `fac_lab_id`)
 VALUES
     (1,'consultancy1',1, '2024-04-05 10:00:00', 2, 'Completed', 'Patient has recovered well.', 'Take antibiotics for 7 days.', 2),

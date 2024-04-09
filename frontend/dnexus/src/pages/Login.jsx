@@ -66,7 +66,26 @@ function Login() {
   
           localStorage.setItem('jwtToken', token);
   
-          navigate("/admin/dashboard"); 
+          // Conditionally navigate based on userType
+          switch (userType) {
+            case "admin":
+              navigate("/admin/dashboard");
+              break;
+            case "doctor":
+              navigate("/doctor/dashboard");
+              break;
+            case "radiologist":
+              navigate("/rad/dashboard");
+              break;
+            case "facility":
+              navigate("/facility/dashboard");
+              break;
+            case "patient":
+              navigate("/patient/dashboard");
+              break;
+            default:
+              navigate("/Login");
+          }
         }
       } 
       catch (error) {
