@@ -1,4 +1,4 @@
-package com.had.coreservice.responseBody;
+package com.had.adminservice.responseBody;
 
 
 import lombok.*;
@@ -8,14 +8,12 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatientResponseBodyForConsultation {
+public class PatientResponseBody {
 
     private Long id;
-    private String email;
     private String name;
     private String gender;
     private Integer age;
-    private String address;
     private String bloodGroup;
     private String contact;
 

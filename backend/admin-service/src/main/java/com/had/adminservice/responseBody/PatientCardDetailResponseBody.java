@@ -1,22 +1,19 @@
-package com.had.coreservice.responseBody;
+package com.had.adminservice.responseBody;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.*;
-
+@Data
 @Builder
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatientResponseBodyForConsultation {
-
+public class PatientCardDetailResponseBody {
     private Long id;
-    private String email;
     private String name;
     private String gender;
     private Integer age;
-    private String address;
     private String bloodGroup;
     private String contact;
-
 }

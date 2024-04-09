@@ -3,10 +3,12 @@ package com.had.coreservice.service;
 import com.had.coreservice.entity.Consultation;
 import com.had.coreservice.entity.Patient;
 import com.had.coreservice.entity.Professional;
+import com.had.coreservice.entity.User;
 import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.repository.ProfessionalRepository;
 import com.had.coreservice.repository.UserRepository;
 import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
+import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientCardDetailResponseBody;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
 
@@ -159,6 +162,27 @@ public class ProfessionalService {
         }
 
         return consultationDetails;
+    }
+
+    public DoctorDetailResponseBody getDoctorDetails(Long doctorId) {
+        Optional<Professional> optionalProfessional = professionalRepository.findById(doctorId);
+        if (optionalProfessional.isEmpty()) {
+            throw new RuntimeException("Professional(doctor) not found with ID: " + doctorId);
+        }
+
+        Professional professional = optionalProfessional.get();
+        User user = professional.getUser();
+        if (user == null || !user.getType().equals("doctor")) {
+            throw new RuntimeException("User with ID " + doctorId + " is not a doctor.");
+        }
+
+        return DoctorDetailResponseBody.builder()
+                .id(professional.getId())
+                .name(user.getFirstName() + " " + user.getLastName())
+                .systemOfMedicine(professional.getSystemOfMedicine())
+                .qualification(professional.getQualification())
+                .place_of_work(professional.getPlaceOfWork())
+                .build();
     }
 
 
