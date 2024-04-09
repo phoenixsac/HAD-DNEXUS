@@ -141,5 +141,19 @@ public class ConsultationService {
                 .build();
     }
 
+    public PatientResponseBodyForConsultation getPatientDetailsByPatientId(Long patientId) {
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
+
+        return PatientResponseBodyForConsultation.builder()
+                .id(patient.getId())
+                .name(patient.getUser().getFirstName() + " " + patient.getUser().getLastName())
+                .gender(patient.getGender())
+                .age(patient.getAge())
+                .bloodGroup(patient.getBloodGroup())
+                .contact(patient.getGuardianContact())
+                .build();
+    }
+
 
 }
