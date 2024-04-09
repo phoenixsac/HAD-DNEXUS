@@ -3,6 +3,8 @@ package com.had.adminservice.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.had.adminservice.exception.ResourceNotFoundException;
 import com.had.adminservice.responseBody.FacilityResponseBody;
+import com.had.adminservice.responseBody.PatientCardDetailResponseBody;
+import com.had.adminservice.responseBody.PatientResponseBody;
 import com.had.adminservice.responseBody.ProfessionalResponseBody;
 import com.had.adminservice.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
     AdminService adminService;
 
-    @PostMapping("/admin/add-facility")
+    @PostMapping("/add-facility")
     public ResponseEntity<String> addFacilityByFacilityId(@RequestParam("facilityId") String facilityId) {
 
         try {
@@ -33,7 +36,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/all-facilities")
+    @GetMapping("/all-facilities")
     public ResponseEntity<List<FacilityResponseBody>> getAllFacilities() {
         try {
             List<FacilityResponseBody> responseBodies = adminService.getAllFacilities();
@@ -43,7 +46,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/all-facilities-by-type")
+    @GetMapping("/all-facilities-by-type")
     public ResponseEntity<List<FacilityResponseBody>> getAllFacilitiesByType(@RequestParam String type) {
         try {
             List<FacilityResponseBody> responseBodies = adminService.getAllFacilitiesByType(type);
@@ -53,7 +56,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/facility-by-id")
+    @GetMapping("/facility-by-id")
     public ResponseEntity<String> getAllFacilityById(@RequestParam Long id) {
         try {
             FacilityResponseBody responseBody = adminService.getFacilityById(id);
@@ -70,7 +73,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/admin/remove-facility")
+    @DeleteMapping("/remove-facility")
     public ResponseEntity<String> removeFacility(@RequestParam String facilityId) {
         try {
             adminService.removeFacility(facilityId);
@@ -86,7 +89,7 @@ public class AdminController {
 
     //-----------------------------------------------PROFESSIONAL----------------------------------------------------
 
-    @PostMapping("/admin/add-professional")
+    @PostMapping("/add-professional")
     public ResponseEntity<String> addProfessionalByFacilityId(@RequestParam("hpId") Long hpId) {
 
         try {
@@ -104,7 +107,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/admin/remove-professional")
+    @DeleteMapping("/remove-professional")
     public ResponseEntity<String> removeProfessional(@RequestParam Long id) {
         try {
             adminService.removeProfessional(id);
@@ -118,7 +121,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/all-professionals")
+    @GetMapping("/all-professionals")
     public ResponseEntity<List<ProfessionalResponseBody>> getAllProfessionals() {
         try {
             List<ProfessionalResponseBody> responseBodies = adminService.getAllProfessionals();
@@ -128,7 +131,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/all-professionals-by-type")
+    @GetMapping("/all-professionals-by-type")
     public ResponseEntity<List<ProfessionalResponseBody>> getProfessionalsByType(@RequestParam String type) {
         try {
             List<ProfessionalResponseBody> responseBodies = adminService.getAllProfessionalsByType(type);
@@ -138,7 +141,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin/professional-by-id")
+    @GetMapping("/professional-by-id")
     public ResponseEntity<String> getProfessionalById(@RequestParam Long id) {
         try {
             ProfessionalResponseBody responseBody = adminService.getProfessionalById(id);
@@ -155,6 +158,26 @@ public class AdminController {
         }
     }
 
+    //-----------------------------------------------PATIENT----------------------------------------------------
 
+    @GetMapping("/all-patients")
+    public ResponseEntity<?> getAllPatientDetails() {
+        try {
+            List<PatientCardDetailResponseBody> patientDetails = adminService.getAllPatientDetails();
+            return ResponseEntity.ok(patientDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/details-by-id")
+    public ResponseEntity<?> getPatientDetailsById(@RequestParam Long patientId) {
+        try {
+            PatientResponseBody patientDetails = adminService.getPatientDetailsById(patientId);
+            return ResponseEntity.ok(patientDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
 }
