@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers("/chat/**").permitAll()
                         .requestMatchers("/topic/**").permitAll()
+                        .requestMatchers("/core/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Permit pre-flight requests
                         .anyRequest().authenticated()
                 )

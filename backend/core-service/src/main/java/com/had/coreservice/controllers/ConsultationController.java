@@ -96,4 +96,14 @@ public class ConsultationController {
         }
     }
 
+    @GetMapping("/patient-details-by-patient-id")
+    public ResponseEntity<?> getPatientDetailsByPatientId(@RequestParam Long patientId) {
+        try {
+            PatientResponseBodyForConsultation patientDetails = consultationService.getPatientDetailsByPatientId(patientId);
+            return ResponseEntity.ok(patientDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }
