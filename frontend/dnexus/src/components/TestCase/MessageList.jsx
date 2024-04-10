@@ -38,14 +38,17 @@ function Message({ sender, receiver, content }) {
 }
 
 function MessageList({ messages }) {
+  console.log('Messages new:', messages);
   return (
     <div className="message-list-container">
+      
+      
       {messages.map((msg, index) => (
         <Message
           key={index}
-          sender={msg.sender}
-          receiver={msg.receiver}
-          content={msg.message}
+          sender={msg.senderId}
+          receiver={msg.receiverId}
+          content={msg.messageContent}
         />
       ))}
     </div>

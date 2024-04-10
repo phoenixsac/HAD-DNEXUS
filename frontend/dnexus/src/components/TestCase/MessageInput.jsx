@@ -135,6 +135,7 @@
 
 import React, { useState } from 'react';
 import "./MessageInput.css";
+import { sendPrivateMessage } from './WebSocket'; 
 
 function MessageInput({ users, onSubmit, onConnect }) {
   const [message, setMessage] = useState('');
@@ -143,7 +144,7 @@ function MessageInput({ users, onSubmit, onConnect }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim() || !receiverId.trim()) return;
-    onSubmit({ message, receiverId });
+    onSubmit();
     setMessage(''); // Reset message input field
     setReceiverId(''); // Reset receiver select field
   };
@@ -156,7 +157,16 @@ function MessageInput({ users, onSubmit, onConnect }) {
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
-
+  
+  const handleSendClick = (e) => {
+    e.preventDefault();
+    const consultationId = 1
+    if (!message.trim()) return;
+    onSubmit({ message, receiverId });
+    sendPrivateMessage('1', '2', message, consultationId); // Pass consultationId
+    setMessage(''); 
+    // Reset message input field
+  };
   // Other input handlers and JSX here...
 
   return (
@@ -181,7 +191,7 @@ function MessageInput({ users, onSubmit, onConnect }) {
       
       
       {/* Send button */}
-      <button className="send-button" type="submit">Send</button>
+      <button className="send-button" onClick={handleSendClick}>Send</button>
       </div>
     </form>
   );
