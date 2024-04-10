@@ -14,6 +14,9 @@ const DoctorDashboard = () => {
   const { actorId } = useContext(AuthContext);
   console.log("Actor Id:",actorId);
 
+  const actorIdlocal = localStorage.getItem('actorId');
+  console.log("actorIdlocal:",actorIdlocal);
+
   const [patients, setPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1); // For pagination
@@ -29,7 +32,7 @@ const DoctorDashboard = () => {
           throw new Error('User type or token not found.');
         }
 
-        const response = await fetch(`http://localhost:8085/core/professional/patient-card-detail-list?docProffId=${actorId}`, {
+        const response = await fetch(`http://localhost:8085/core/professional/patient-card-detail-list?docProffId=${actorIdlocal}`, {
           headers: {
             'Content-Type': 'application/json',
             // 'Authorization': `Bearer ${jwtToken}`
@@ -54,7 +57,7 @@ const DoctorDashboard = () => {
     };
 
     fetchPatients();
-  }, []);
+  }, [actorIdlocal]);
 
 
 //dummy

@@ -10,6 +10,9 @@ const DocPatientTestDetails = () => {
   const{ actorId } = useContext(AuthContext);
   localStorage.setItem('actorId', actorId);
 
+  const actorIdlocal = localStorage.getItem('actorId');
+  console.log("actorIdlocal:",actorIdlocal);
+
   const navigate = useNavigate();
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
@@ -19,7 +22,7 @@ const DocPatientTestDetails = () => {
     const fetchPatientData = async () => {
       try {
         // Fetch patient details from the primary backend endpoint
-        const response = await fetch(`http://localhost:8085/core/professional/consultation-card-details?docId=${actorId}&patientId=${patientId}`);
+        const response = await fetch(`http://localhost:8085/core/professional/consultation-card-details?docId=${actorIdlocal}&patientId=${patientId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch patient data.');
         }
