@@ -40,22 +40,34 @@
 // export default MessagingPage;
 
 
+// 
+
 import React, { useState } from 'react';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
+import { connectToChat } from './WebSocket'; // Assuming you have a separate file for WebSocket connection
 import './MessagingPage.css'; // Importing the CSS file
+
 
 function MessagingPage() {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
 
   const handleMessageSubmit = (newMessage) => {
-    const { message, receiverId } = newMessage;
-    const sender = 'Doctor'; // Assuming the sender is always the doctor for now
-    const receiver = receiverId === '' ? 'All' : users.find(user => user.id === receiverId)?.name || 'Unknown';
-    const newMessages = [...messages, { sender, receiver, message }];
-    setMessages(newMessages);
-    setMessageInput(''); // Reset message input
+    
+    
+    
+    setMessages(prevMessages => [...prevMessages, newMessage]);
+  };
+
+  const handleConnect = () => {
+    // Connect to WebSocket
+    connectToChat(1, 2, 1, handleMessagesReceived, handleMessageSubmit); // Hardcoded senderId, receiverId, and consultationId
+  };
+  
+  const handleMessagesReceived = (olderMessages) => {
+    // Update message state with older messages
+    setMessages(olderMessages);
   };
 
   // Dummy user data
@@ -74,10 +86,10 @@ function MessagingPage() {
         onSubmit={handleMessageSubmit}
         messageInput={messageInput}
         setMessageInput={setMessageInput}
+        onConnect={handleConnect} // Pass connect handler to MessageInput component
       />
     </div>
   );
 }
 
 export default MessagingPage;
-
