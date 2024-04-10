@@ -6,7 +6,7 @@ import axios from 'axios';
 import "./Style/ListPatient.css"
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar";
-import PatientList from "../components/PatientList/PatientList";
+import AdminPatientList from '../components/AdminPatientList/AdminPatientList';
 
 
 const ListPatient = () => {
@@ -24,13 +24,16 @@ const ListPatient = () => {
     const fetchDoctors = async () => {
       try {
         const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
-        const response = await axios.get('http://localhost:8080/admin/all-facilities', {
+        const response = await axios.get('http://localhost:8080/admin/all-patients', {
           headers: {
             'Authorization': `Bearer ${token}` // Include JWT token in the request headers
           }
         });
         setpatients(response.data);
         setAllpatients(response.data);
+
+        console.log("response:",response.data);
+
       } catch (error) {
         console.error("Error fetching doctors:", error);
         // Handle error here, such as displaying an error message or redirecting the user
@@ -126,7 +129,7 @@ const ListPatient = () => {
           </div> */}
 
           <div className="patient-list">
-            <PatientList facilities={currentpatients} />
+            <AdminPatientList patients={currentpatients} />
           </div>
 
           <div className='pagination-container'>

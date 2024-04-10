@@ -22,7 +22,7 @@ function LoginAs() {
         case "radiologist":
           navigate("/Login",  { state: { userType: persona } });
           break;
-      case "laboratory":
+      case "lab":
         navigate("/Login",  { state: { userType: persona } });
         break;
       case "patient":
@@ -64,9 +64,9 @@ function LoginAs() {
               <div className="placeholder">Radiologist</div>
             </div>
         
-            <div className="login-card" onClick={() => handleClick("laboratory")}>
+            <div className="login-card" onClick={() => handleClick("lab")}>
               <div className="rectangle" />
-              <div className="placeholder">Laboratory</div>
+              <div className="placeholder">Facility</div>
             </div>
 
             <div className="login-card" onClick={() => handleClick("patient")}>

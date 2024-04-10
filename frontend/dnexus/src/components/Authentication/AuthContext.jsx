@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [contextUserType, setcontextUserType] = useState(null);
   const [loading, setLoading] = useState(true); // Initial loading stat
+  const [actorId, setActorId] = useState(null); 
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwtToken");
@@ -37,7 +38,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn: setIsLoggedInFn, contextUserType, setcontextUserType, loading}}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn: setIsLoggedInFn, contextUserType, setcontextUserType, actorId, setActorId , loading}}>
       {children}
     </AuthContext.Provider>
   );

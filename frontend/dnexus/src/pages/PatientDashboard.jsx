@@ -1,46 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import "./Style/PatientDashboard.css";
-import Navbar from "../components/Navbar/ConditionalNavbar";
+import Navbar from '../components/Navbar/ConditionalNavbar';
 
-// const threads = [
-//   { threadId: 1, threadName: 'Thread 1', isCompleted: false },
-//   { threadId: 2, threadName: 'Thread 2', isCompleted: true },
-//   { threadId: 3, threadName: 'Thread 3', isCompleted: true },
-// ];
+function PatientDashboard() {  
+  const [consultations, setconsultations] = useState([]);
+  const [error, setError] = useState(null);
 
-// function PatientDash({threads}) {
-  function PatientDashboard() {  
-    const threads = [
-      { threadId: 1, threadName: 'Thread 1', isCompleted: false },
-      { threadId: 2, threadName: 'Thread 2', isCompleted: true },
-      { threadId: 3, threadName: 'Thread 3', isCompleted: true },
-    ];
+  useEffect(() => {
+    const fetchConsultations = async () => {
+      try {
+        const token = localStorage.getItem('jwtToken');
 
-    
+        // Make API call to fetch patient consultations
+        const response = await axios.get(`http://localhost:8080/patient/consultation-list?patientId=2`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        // Set fetched consultations to state
+        setconsultations(response.data);
+
+        console.log("response:",response.data);
+
+        // const data = await response.json();
+        // console.log("data:",data);
+
+        console.log("consultations:",consultations);
+
+      } catch (error) {
+        console.error('Error fetching consultations:', error);
+        setError('Error fetching consultations. Please try again.');
+      }
+    };
+
+    fetchConsultations();
+  }, []); // Dependency array is empty to ensure the effect runs only once
+
   return (
     <>
       <Navbar />
       <div className='container'>
-        <div className='childcontainer'>
-          {threads.map((thread) => (
-            <div key={thread.threadId}>
-              {thread.isCompleted ? (
-                <Link to="/patient/report" className="link-no-underline">
-                  <div className='card'>
-                    <div className='cardId'><p>{thread.threadId}</p></div>
-                    <div className='cardName'><p>{thread.threadName}</p></div>
-                    <div className='cardStatus'><p>{thread.isCompleted ? 'COMPLETED' : 'ONGOING'}</p></div>
-                  </div>
-                </Link>
-              ) : (
+      <div className='childcontainer'>
+        <div>
                 <div className='card'>
-                  <div className='cardId'><p>{thread.threadId}</p></div>
-                  <div className='cardName'><p>{thread.threadName}</p></div>
-                  <div className='cardStatus'><p>{thread.isCompleted ? 'COMPLETED' : 'ONGOING'}</p></div>
+                  <div className='cardId'><p>ConsultationId</p></div>
+                  <div className='cardName'><p>Name</p></div>
+                  <div className='datecreated'><p>DateCreated</p></div>
+                  <div className='cardStatus'><p>Status</p></div>
                 </div>
-              )}
+            </div>
+        </div>
+        <div className='childcontainer'>
+          {error && <p>{error}</p>}
+          {consultations.map((consultation) => (
+            <div key={consultation.consultationId}>
+              <Link to={`/patient/report/${consultation.consultationId}`} className="link-no-underline">
+                <div className='card'>
+                  <div className='cardId'><p>{consultation.consultationId}</p></div>
+                  <div className='cardName'><p>{consultation.name}</p></div>
+                  <div className='date'><p>{consultation.dateCreated}</p></div>
+                  <div className='cardStatus'><p>{consultation.status}</p></div>
+                </div>
+              </Link>
             </div>
           ))}
         </div>

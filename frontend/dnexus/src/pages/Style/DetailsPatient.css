@@ -1,0 +1,118 @@
+/* .patientdetails-container{
+    padding: 22px;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.patient-details{
+    padding: 12px 0;
+    margin: 10px;
+
+    border: 1px solid rgb(149, 181, 201);
+    border-radius: 0.5rem;
+
+    width: 1000px;
+    height: 500px;
+
+}
+
+.hosp-name{
+    padding: 15px 0;
+
+    background-color: #7696D2;
+}
+
+.hosp-name h2{
+    font-size: 50px;
+    color: white;
+}
+
+.patient-info{
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+
+}
+
+.patient-image{
+    background: rgb(204, 199, 199);
+
+    height: 200px;
+    width: 170px;
+
+    border-radius: 5px;
+
+    padding: 10px;
+    margin: 10px 25px;
+}
+
+.patient-data{
+    padding: 10px;
+    margin: 10px 25px;
+
+    text-align: left;
+}
+
+.patient-data h3{
+    font-size: 35px;
+}
+
+.patient{
+    padding: 8px;
+}
+
+.patient p{
+    font-size: 20px;
+    padding: 2px;
+}
+
+.patient-spec{
+    font-weight: 800;
+    color: #3D6ABC;
+}
+
+.title{
+    color: #3D6ABC;
+}
+
+.buttons{
+    padding: 10px;
+    margin: 5px;   
+}
+
+.back{
+    color: #20315E;
+    border:1px solid #20315E;
+    background-color: white;
+}
+
+.edit{
+    border: 1px solid #3D6ABC;
+    color: #3D6ABC;
+    background-color: white;
+}
+
+.delete{
+    color: red;
+    background-color: white;
+
+    border: 1px solid red;
+}
+
+.back:hover{
+    background-color: #98b0f2;
+}
+
+.edit:hover{
+    background-color: #d5e1f7;
+}
+
+.delete:hover{
+    background-color: rgb(248, 179, 179);
+} */
