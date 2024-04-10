@@ -67,7 +67,8 @@ const AddFacility = () => {
           </div>
 
            {/* Render success/failure component based on isVerified */}
-           {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)}
+           {/* {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)} */}
+           <p>{message}</p>
         </div>
       </div>
     </div>

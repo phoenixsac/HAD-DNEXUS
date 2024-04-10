@@ -6,25 +6,51 @@ import "./PatientList.css"
 const PatientList = ({ patients }) => {
 
   const userType = sessionStorage.getItem('userType');
+  const navigate = useNavigate();
+
+  const handlePatientClick = (patient) => {
+    // Navigate to the dynamic route with patient details and userType as state
+    navigate(generateDynamicRoute(userType, patient));
+  };
 
   // Function to generate dynamic route based on user type
-  const generateDynamicRoute = (userType, patientId) => {
+  const generateDynamicRoute = (userType, patient) => {
+    const patientState = {
+      id: patient.id,
+      name: patient.name,
+      age: patient.age,
+      gender: patient.gender
+      // Add other patient details as needed
+    };
+
+    console.log("patientState",patientState);
+
     switch (userType) {
       case 'doctor':
-        return `/doctor/patient-test-details/${patientId}`;
+        return {
+          pathname: `/doctor/patient-test-details/${patient.id}`,
+          state: { patient : patientState }
+        };
       case 'radiologist':
-        return `/rad/patient-test-details/${patientId}`;
+        return {
+          pathname: `/rad/patient-test-details/${patient.id}`,
+          state: { userType, patient }
+        };
       case 'lab':
-        return `/lab/patient-test-details/${patientId}`;
+        return {
+          pathname: `/lab/patient-test-details/${patient.id}`,
+          state: { userType, patient }
+        };
       default:
-        return `/patient-test-details/${patientId}`;
+        return {
+          pathname: `/patient-test-details/${patient.id}`,
+          state: { userType, patient }
+        };
     }
   };
 
-
   return (
     <div className="patient-list" >
-
       <div className="patient-card heading-bg">
         <div className="field">
           <p>Patient ID</p>
@@ -41,11 +67,11 @@ const PatientList = ({ patients }) => {
       </div>
 
       {patients.map((patient) => (
-        <Link className='patient-card-link' 
-        key={patient.id} 
-        to={generateDynamicRoute(userType, patient.id)}
+        <div 
+          className='patient-card-link' 
+          key={patient.id} 
+          onClick={() => handlePatientClick(patient)}
         >  
-          
           <div className="patient-card list-bg">
             <div className="field">
               <p>{patient.id}</p>
@@ -60,8 +86,7 @@ const PatientList = ({ patients }) => {
               <p>{patient.age}</p>
             </div>  
           </div>
-
-      </Link>
+        </div>
       ))}
     </div>
   );

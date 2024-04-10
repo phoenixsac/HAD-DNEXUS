@@ -19,10 +19,10 @@ import PatientList from "./components/PatientList/PatientList";
 import DocPatientTestDetails from "./pages/Doctor-PatientTestDetails";
 import DoctorCreateCase from "./pages/DoctorCreateCase";
 import RadDashboard from "./pages/RadDashboard";
-import RadPatientTestDetails from "./pages/Rad-PatientTestDetails";
+// import RadPatientTestDetails from "./pages/Rad-PatientTestDetails";
 import LabDetails from "./pages/DetailsFacility";
-import LabDashboard from "./pages/LabDashboard";
-import LabPatientTestDetails from "./pages/Lab-PatientTestDetails";
+import LabDashboard from "./pages/FacilityDashboard";
+// import LabPatientTestDetails from "./pages/Lab-PatientTestDetails";
 import PatientDashboard from "./pages/PatientDashboard";
 import PatientRegistration from "./pages/PatientRegistration";
 import AddProfessional from "./pages/AddProfessional";
@@ -31,6 +31,10 @@ import DetailsProfessional from "./pages/DetailsProfessional";
 import AddFacility from "./pages/AddFacility";
 import ListFacility from "./pages/ListFacility";
 import DetailsFacility from "./pages/DetailsFacility";
+import ListPatient from "./pages/ListPatient";
+import DetailsPatient from "./pages/DetailsPatient";
+import FAcilityDashboard from "./pages/FacilityDashboard";
+import FacilityDashboard from "./pages/FacilityDashboard";
 
 
 function App() {
@@ -68,27 +72,29 @@ function App() {
             <Route path="/admin/facility/:id" element={<DetailsFacility />} />
 
             {/* Admin-Patient */}
+            <Route path="/admin/view-patient-list" element={<ListPatient />} /> 
+            <Route path="/admin/patient/:patientId" element={<DetailsPatient />} />
 
             {/* Doctor */}
             <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-            <Route path="/doctor/patient-test-details/:id" element={<DocPatientTestDetails />} />
+            <Route path="/doctor/patient-test-details/:patientId" element={<DocPatientTestDetails />} />
             {/* navigate to a case page path:"/doctor/patient-list/:id/:caseId" */}
             <Route path="/doctor/patient-test-details/:id/create-case" element={<DoctorCreateCase />} />
 
             {/* Radiologist */}
             <Route path="/rad/dashboard" element={<RadDashboard />} />
-            <Route path="/rad/patient-test-details/:id" element={<RadPatientTestDetails />} />
+            {/* <Route path="/rad/patient-test-details/:id" element={<RadPatientTestDetails />} /> */}
 
             {/* Lab */}
-            <Route path="/lab/dashboard" element={<LabDashboard />} />
-            <Route path="/lab/patient-test-details/:id" element={<LabPatientTestDetails />} />
+            <Route path="/facility/dashboard" element={<FacilityDashboard />} />
+            {/* <Route path="/facility/patient-test-details/:id" element={<LabPatientTestDetails />} /> */}
                    
             {/* Patient */}
             <Route path="/PLogin" element={<PLogin />} />
             <Route path="/patient/registration" element={<PatientRegistration />} />
-            <Route path="/patient/report" element={<PatientReport />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="/TestCase" element={<TestCase />} />
+            <Route path="/patient/report/:consultationId" element={<PatientReport />} />
 
 
           </Routes>

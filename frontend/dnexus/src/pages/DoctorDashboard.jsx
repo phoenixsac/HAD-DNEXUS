@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../components/Authentication/AuthContext';
+
 import PatientList from '../components/PatientList/PatientList';
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar"
@@ -9,44 +11,72 @@ import "./Style/DoctorDashboard.css"
 const DoctorDashboard = () => {
   const navigate = useNavigate();
 
+  const { actorId } = useContext(AuthContext);
+  console.log("Actor Id:",actorId);
+
   const [patients, setPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1); // For pagination
   const [patientsPerPage] = useState(3);
 
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const userType = sessionStorage.getItem('userType');
+        const jwtToken = localStorage.getItem('jwtToken');
 
-  // Fetch patient data from backend (replace with your actual API call)
-//   useEffect(() => {
-//     const fetchPatients = async () => {
-//       const response = await fetch('/api/patients'); // Replace with your API endpoint
-//       const data = await response.json();
-//       setPatients(data);
-//     };
+        if (!userType || !jwtToken) {
+          throw new Error('User type or token not found.');
+        }
 
-//     fetchPatients();
-//   }, []);
+        const response = await fetch(`http://localhost:8085/core/professional/patient-card-detail-list?docProffId=${actorId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            // 'Authorization': `Bearer ${jwtToken}`
+          },
+          method: 'GET',
+          // body: JSON.stringify({ userType }) // Send userType with the request
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch patient data.');
+        }
+
+        const data = await response.json();
+        setPatients(data);
+
+        console.log("patients:",patients);
+        
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+        // Handle error (e.g., show error message)
+      }
+    };
+
+    fetchPatients();
+  }, []);
 
 
 //dummy
-useEffect(() => {
-    const patientData = [
-      // Sample patient data objects
-      { id: 123, name: 'John Doe', gender: 'Male', age: 30 },
-      { id: 234, name: 'Mary Poppins', gender: 'Female', age: 10 },
-      { id: 345, name: 'Dory Nemo', gender: 'Female', age: 25 },
-      { id: 456, name: 'Alexander', gender: 'Male', age: 32 },
-      // ... more patients
-    ];
-    setPatients(patientData);
-  }, []);
+// useEffect(() => {
+//     const patientData = [
+//       // Sample patient data objects
+//       { id: 123, name: 'John Doe', gender: 'Male', age: 30 },
+//       { id: 234, name: 'Mary Poppins', gender: 'Female', age: 10 },
+//       { id: 345, name: 'Dory Nemo', gender: 'Female', age: 25 },
+//       { id: 456, name: 'Alexander', gender: 'Male', age: 32 },
+//       // ... more patients
+//     ];
+//     setPatients(patientData);
+//   }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase()); // Ensure case-insensitive search
   };
 
-  const handleBack = () => {
-    navigate("/doctor/dashboard");
-  }
+  // const handleBack = () => {
+  //   navigate("/doctor/dashboard");
+  // }
 
   const filteredPatients = patients.filter((patient) => {
     if (!searchTerm) return true; // Show all patients if no search term
@@ -84,9 +114,9 @@ useEffect(() => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <button onClick={handleBack}>Back</button>
-            </div> 
+            </div>  */}
 
           </div>
 

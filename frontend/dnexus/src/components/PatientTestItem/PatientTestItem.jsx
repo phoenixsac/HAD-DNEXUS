@@ -8,9 +8,9 @@ const PatientTestItem = ({ test, onTestClick }) => {
 
     const testStatusColor = () => {
       switch (test.status) {
-        case 'completed':
+        case 'Completed':
           return '#D6F0E0';
-        case 'ongoing':
+        case 'Ongoing':
           return '#FEFFD6';
         case 'upcoming':
           return '#FFD3D3';
@@ -37,8 +37,8 @@ const PatientTestItem = ({ test, onTestClick }) => {
       >
 
         <div className='div1'>
-          <p>{test.id}</p>
-          <p>{test.date}</p>
+          <p>{test.consultationId}</p>
+          <p>{test.dateCreated}</p>
         </div>
 
         <div className='div2'>
@@ -46,7 +46,8 @@ const PatientTestItem = ({ test, onTestClick }) => {
         </div>
         
         <div className='div-desc'>
-          <p>{test.description.substring(0, 200)}...</p>
+          {/* <p>{test.description.substring(0, 200)}...</p> */}
+          <p>djchbdsncscjsdncmscldskjbvdsmvmdskcidsjndsm ldskcjidshcndskjnckjdsbvjdsbdsjncklsjcishcjndsckdsckdshcjdscndkncdskj</p>
         </div>
 
       </div>
