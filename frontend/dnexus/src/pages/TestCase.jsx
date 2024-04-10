@@ -298,6 +298,7 @@ import LabUpload from '../components/TestCase/LabUpload';
 import RadDetails from '../components/TestCase/RadDetails';
 import MessagingPage from "../components/TestCase/MessagingPage";
 
+
 function TestCase() {
   const [labs, setLabs] = useState([]);
   const [selectedLab, setSelectedLab] = useState(null);
@@ -306,7 +307,9 @@ function TestCase() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [radmessage, setradMessage] = useState("");
+  const [submitmessage, setsubmitMessage] = useState("");
   const [radiologistAdded, setRadiologistAdded] = useState(false);
+  const [reportSubmitted, setReportSubmitted] = useState(false);
 
   useEffect(() => {
     fetchLabs();
@@ -394,6 +397,30 @@ function TestCase() {
       setradMessage("Error adding radiologist. Please try again.");
     }
   };
+
+  const handleSubmit = async () => {
+    try {
+      const consultationId = 2; // Set consultationId param for now
+      const finalReport = document.querySelector('.report').value;
+      const response = await fetch(`http://localhost:8085/core/consultation/post-final-report?consultationId=${consultationId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: finalReport
+      });
+      if (!response.ok) {
+        throw new Error('Failed to submit report');
+      }
+      const responseData = await response.text();
+      // Assuming the response data contains the text of the submitted report
+      setsubmitMessage(responseData);
+      setReportSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      // Handle error as needed
+    }
+  };
   
 
   return (
@@ -455,22 +482,38 @@ function TestCase() {
       <RadDetails />
 
       <MessagingPage />
+    
+     
+      
+
+{!reportSubmitted && (
+  <>
+    <div className='rad-recommend'>
+      Write Final Report
+    </div>
+
+    <div className="report-container">
+      <input type="text" className="report" placeholder="Enter text" /> {/* Text box */}
+    </div>
+
+    <div className="submit-button-container">
+      <Button onClick={handleSubmit}>SUBMIT</Button>
+    </div>
+  </>
+)}
+
 
       <div className='rad-recommend'>
-        Write Final Report
-      </div>
-
-      <div className="report-container">
-        <input type="text" className="report" placeholder="Enter text" /> {/* Text box */}
+    {submitmessage && <p>{submitmessage}</p>}
       </div>
 
       <div className="submit-button-container">
-        <Button onClick={() => console.log("SUBMIT clicked!")}>SUBMIT</Button>
+        <Button onClick={() => console.log("CLOSE THREAD clicked!")}>CLOSE THREAD</Button>
       </div>
 
-      <div className="submit-button-container">
+      {/* <div className="submit-button-container">
         <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
-      </div>
+      </div> */}
     </>
   );
 }

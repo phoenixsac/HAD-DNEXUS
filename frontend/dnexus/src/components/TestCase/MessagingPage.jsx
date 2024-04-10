@@ -40,9 +40,12 @@
 // export default MessagingPage;
 
 
+// 
+
 import React, { useState } from 'react';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
+import { connectToChat } from './WebSocket'; // Assuming you have a separate file for WebSocket connection
 import './MessagingPage.css'; // Importing the CSS file
 
 function MessagingPage() {
@@ -56,6 +59,11 @@ function MessagingPage() {
     const newMessages = [...messages, { sender, receiver, message }];
     setMessages(newMessages);
     setMessageInput(''); // Reset message input
+  };
+
+  const handleConnect = () => {
+    // Connect to WebSocket
+    connectToChat(1, 2, 2); // Hardcoded senderId, receiverId, and consultationId
   };
 
   // Dummy user data
@@ -74,10 +82,10 @@ function MessagingPage() {
         onSubmit={handleMessageSubmit}
         messageInput={messageInput}
         setMessageInput={setMessageInput}
+        onConnect={handleConnect} // Pass connect handler to MessageInput component
       />
     </div>
   );
 }
 
 export default MessagingPage;
-

@@ -75,14 +75,34 @@
 .message-input{
   width: 100%;
 }
-.message-input-container select {
+/* .message-input-container select {
   position: absolute;
   top: 5px;
   right: 0;
   height: 16%;
+} */
+/* .connect-button{
+  position: absolute;
+  top: 5px;
+  right: 0;
+  height: 16%;
+
+} */
+.connect-div{
+  position: absolute;
+  top: 1px;
+  right: 0;
+  height: 16%;
 }
 
-.message-input-container button{
+/* .message-input-container button{
+  position: absolute;
+  top: 150px;
+  right: 0;
+  height: 15%;
+} */
+
+.send-button{
   position: absolute;
   top: 150px;
   right: 0;

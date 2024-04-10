@@ -76,10 +76,67 @@
 // export default MessageInput;
 
 
+// import React, { useState } from 'react';
+// import "./MessageInput.css";
+
+// function MessageInput({ users, onSubmit }) {
+//   const [message, setMessage] = useState('');
+//   const [receiverId, setReceiverId] = useState('');
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     if (!message.trim() || !receiverId.trim()) return;
+//     onSubmit({ message, receiverId });
+//     setMessage(''); // Reset message input field
+//     setReceiverId(''); // Reset receiver select field
+//   };
+
+//   const handleConnect = () => {
+//     // Handle connect button click
+//     // You can implement the functionality here
+//   };
+
+//   return (
+    
+//       <form className="message-input-form" onSubmit={handleSubmit}>
+//     <div className="message-input-container">
+//       <div className='message-input'>
+//       <input 
+//         type="text"
+//         placeholder="Type your message here..."
+//         value={message}
+//         onChange={(e) => setMessage(e.target.value)}
+//       />
+//       </div>
+      
+//       {/* <select
+//         value={receiverId}
+//         onChange={(e) => setReceiverId(e.target.value)}
+//       >
+//         <option value="">All</option>
+//         {users.map(user => (
+//           <option key={user.id} value={user.id}>{user.name}</option>
+//         ))}
+//       </select> */}
+//       <div className='connect-div'>
+//         <button className="connect-button" onClick={handleConnect}>Connect</button>
+//         </div>
+      
+//       <button className='send-button' type="submit">Send</button>
+//     </div>
+//   </form>
+    
+//   );
+// }
+
+// export default MessageInput;
+
+
+
 import React, { useState } from 'react';
 import "./MessageInput.css";
 
-function MessageInput({ users, onSubmit }) {
+function MessageInput({ users, onSubmit, onConnect }) {
   const [message, setMessage] = useState('');
   const [receiverId, setReceiverId] = useState('');
 
@@ -91,35 +148,46 @@ function MessageInput({ users, onSubmit }) {
     setReceiverId(''); // Reset receiver select field
   };
 
+  const handleConnectClick = () => {
+    // Call the connect handler passed from the parent component
+    onConnect();
+  };
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  // Other input handlers and JSX here...
+
   return (
-    
-      <form className="message-input-form" onSubmit={handleSubmit}>
-    <div className="message-input-container">
+    <form className="message-input-form" onSubmit={handleSubmit}>
+      <div className='message-input-container'>
+
+      
       <div className='message-input'>
+        {/* Input fields for message and receiver */}
       <input 
         type="text"
         placeholder="Type your message here..."
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={handleMessageChange}
       />
       </div>
       
-      <select
-        value={receiverId}
-        onChange={(e) => setReceiverId(e.target.value)}
-      >
-        <option value="">All</option>
-        {users.map(user => (
-          <option key={user.id} value={user.id}>{user.name}</option>
-        ))}
-      </select>
-      <button type="submit">Send</button>
-    </div>
-  </form>
-    
+      <div className='connect-div'>
+      {/* Connect button */}
+      <button className="connect-button" onClick={handleConnectClick}>Connect</button>
+      </div>
+      
+      
+      {/* Send button */}
+      <button className="send-button" type="submit">Send</button>
+      </div>
+    </form>
   );
 }
 
 export default MessageInput;
+
 
 

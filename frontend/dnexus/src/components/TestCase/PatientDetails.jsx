@@ -94,7 +94,10 @@ function PatientDetails() {
             <span className="age-gender">Age/Gender: {patientData.age}/{patientData.gender}</span>
           </div>
           <div className="patient-details">
+            <span className="patient-address">Blood Group: {patientData.bloodGroup}</span>
             <span className="patient-phone">Phone: {patientData.contact}</span>
+            <span className="email">Email: {patientData.email}</span>
+            
             {/* Include other patient details here */}
           </div>
         </>
