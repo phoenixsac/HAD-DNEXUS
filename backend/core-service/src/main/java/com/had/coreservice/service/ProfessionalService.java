@@ -3,10 +3,12 @@ package com.had.coreservice.service;
 import com.had.coreservice.entity.Consultation;
 import com.had.coreservice.entity.Patient;
 import com.had.coreservice.entity.Professional;
+import com.had.coreservice.entity.User;
 import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.repository.ProfessionalRepository;
 import com.had.coreservice.repository.UserRepository;
 import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
+import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientCardDetailResponseBody;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
 
@@ -59,12 +62,54 @@ public class ProfessionalService {
         }
     }
 
+//    @Transactional
+//    public void addRadiologistToConsultation(Long consultationId, Long proRadiologistId) {
+//        Consultation consultation = consultationRepository.findById(consultationId).orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
+//        Professional professional = professionalRepository.findById(proRadiologistId).orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
+//
+//        // Check if the professional is a radiologist
+//        if (!"radiologist".equalsIgnoreCase(professional.getSpecialization())) {
+//            throw new IllegalArgumentException("Only professional of type radiologist can be added to the consultation");
+//        }
+//
+//        consultation.getProfessionals().add(professional);
+//        consultationRepository.save(consultation);
+//    }
+
+//    @Transactional
+//    public void addRadiologistToConsultation(Long consultationId, Long proRadiologistId) {
+//        Consultation consultation = consultationRepository.findById(consultationId)
+//                .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
+//
+//        // Check if a radiologist is already added to the consultation
+//        if (isRadiologistAlreadyAdded(consultation, proRadiologistId)) {
+//            throw new IllegalArgumentException("A radiologist has already been added to this consultation");
+//        }
+//
+//        Professional professional = professionalRepository.findById(proRadiologistId)
+//                .orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
+//
+//        // Check if the professional is a radiologist
+//        if (!"radiologist".equalsIgnoreCase(professional.getSpecialization())) {
+//            throw new IllegalArgumentException("Only professional of type radiologist can be added to the consultation");
+//        }
+//
+//        consultation.getProfessionals().add(professional);
+//        consultationRepository.save(consultation);
+//    }
+
     @Transactional
     public void addRadiologistToConsultation(Long consultationId, Long proRadiologistId) {
-        Consultation consultation = consultationRepository.findById(consultationId).orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
-        Professional professional = professionalRepository.findById(proRadiologistId).orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
 
-        // Check if the professional is a radiologist
+        if (isRadiologistAlreadyAdded(consultation)) {
+            throw new IllegalArgumentException("A radiologist has already been added to this consultation");
+        }
+
+        Professional professional = professionalRepository.findById(proRadiologistId)
+                .orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
+
         if (!"radiologist".equalsIgnoreCase(professional.getSpecialization())) {
             throw new IllegalArgumentException("Only professional of type radiologist can be added to the consultation");
         }
@@ -72,6 +117,54 @@ public class ProfessionalService {
         consultation.getProfessionals().add(professional);
         consultationRepository.save(consultation);
     }
+
+    private boolean isRadiologistAlreadyAdded(Consultation consultation) {
+        return !consultation.getProfessionals().isEmpty();
+    }
+
+
+//    private boolean isRadiologistAlreadyAdded(Consultation consultation, Long consultationId) {
+//        return consultation.getProfessionals().stream()
+//                .anyMatch(professional -> professional.getConsultationId().equals(consultationId));
+//    }
+
+
+//    private boolean isRadiologistAlreadyAdded(Consultation consultation, Long proRadiologistId) {
+//        return consultation.getProfessionals().stream()
+//                .anyMatch(professional -> professional.getId().equals(proRadiologistId) && "radiologist".equalsIgnoreCase(professional.getSpecialization()));
+//    }
+//
+//    private boolean isRadiologistAlreadyAdded(Consultation consultation, Long proRadiologistId) {
+//        return consultation.getProfessionals().stream()
+//                .anyMatch(professional -> professional.getId().equals(proRadiologistId) && "radiologist".equalsIgnoreCase(professional.getSpecialization()));
+//    }
+
+//    @Transactional
+//    public boolean addRadiologistToConsultation(Long consultationId, Long proRadiologistId) {
+//        Consultation consultation = consultationRepository.findById(consultationId)
+//                .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
+//
+//        if (isRadiologistAlreadyAdded(consultation, proRadiologistId)) {
+//            return false;
+//        }
+//
+//        Professional professional = professionalRepository.findById(proRadiologistId)
+//                .orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
+//
+//        // Check if the professional is a radiologist
+//        if (!"radiologist".equalsIgnoreCase(professional.getSpecialization())) {
+//            throw new IllegalArgumentException("Only professional of type radiologist can be added to the consultation");
+//        }
+//
+//        consultation.getProfessionals().add(professional);
+//        consultationRepository.save(consultation);
+//        return true;
+//    }
+//
+//    private boolean isRadiologistAlreadyAdded(Consultation consultation, Long proRadiologistId) {
+//        return consultation.getProfessionals().stream()
+//                .anyMatch(professional -> professional.getId().equals(proRadiologistId) && "radiologist".equalsIgnoreCase(professional.getSpecialization()));
+//    }
 
     public List<PatientCardDetailResponseBody> getPatientCardDetailsByDoctor(Long docId) {
         logger.info("Fetching patient card details for doctor with ID: {}", docId);
@@ -159,6 +252,27 @@ public class ProfessionalService {
         }
 
         return consultationDetails;
+    }
+
+    public DoctorDetailResponseBody getDoctorDetails(Long doctorId) {
+        Optional<Professional> optionalProfessional = professionalRepository.findById(doctorId);
+        if (optionalProfessional.isEmpty()) {
+            throw new RuntimeException("Professional(doctor) not found with ID: " + doctorId);
+        }
+
+        Professional professional = optionalProfessional.get();
+        User user = professional.getUser();
+        if (user == null || !user.getType().equals("doctor")) {
+            throw new RuntimeException("User with ID " + doctorId + " is not a doctor.");
+        }
+
+        return DoctorDetailResponseBody.builder()
+                .id(professional.getId())
+                .name(user.getFirstName() + " " + user.getLastName())
+                .systemOfMedicine(professional.getSystemOfMedicine())
+                .qualification(professional.getQualification())
+                .place_of_work(professional.getPlaceOfWork())
+                .build();
     }
 
 

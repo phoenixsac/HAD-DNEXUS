@@ -2,14 +2,15 @@ package com.had.coreservice.responseBody;
 
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ProfessionalRadiologistResponseBody {
+public class DoctorDetailResponseBody {
     private Long id;
-    private String fullName;
+    private String name;
     private String systemOfMedicine;
-    private String impression;
+    private String qualification;
+    private String place_of_work;
 }

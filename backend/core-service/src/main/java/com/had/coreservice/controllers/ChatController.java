@@ -1,13 +1,11 @@
 package com.had.coreservice.controllers;
 
-import com.had.coreservice.entity.Message;
 import com.had.coreservice.requestBody.MessageDTO;
 import com.had.coreservice.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;

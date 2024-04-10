@@ -4,7 +4,9 @@ import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
 import com.had.coreservice.requestBody.FinalReportRequestBody;
+import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
+import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ConsultationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,6 +62,19 @@ public class ConsultationController {
         }
     }
 
+    @PostMapping("/post-final-report")
+    public ResponseEntity<?> postFinalReport(
+            @RequestParam Long consultationId,
+            @RequestBody String finalReport
+    ) {
+        try {
+            consultationService.saveFinalReport(consultationId, finalReport);
+            return ResponseEntity.ok("Final report saved successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     @PutMapping("/close-consultation")
     public ResponseEntity<String> closeConsultation(@RequestParam Long consultationId) {
         try {
@@ -106,4 +121,13 @@ public class ConsultationController {
         }
     }
 
+    @GetMapping("/radiologist-detail-for-consultation")
+    public ResponseEntity<?> getPatientDetailsByConsultationId(@RequestParam Long consultationId) {
+        try {
+            ProfessionalRadiologistResponseBody professionalResponse = consultationService.getProfessionalDetailsByConsultationId(consultationId);
+            return ResponseEntity.ok(professionalResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }
