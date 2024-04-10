@@ -50,7 +50,7 @@ public class AuthorizationFilter implements Filter, WebFilter {
             chain.doFilter(request, response);
         } else {
             // User is not authorized, send a forbidden response
-            logger.warn("No admin privilege. Access denied.");
+            logger.warn("No patient privilege. Access denied.");
             httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
     }
@@ -61,7 +61,7 @@ public class AuthorizationFilter implements Filter, WebFilter {
         // You can query a database or use any other method to determine authorization
         // Return true if authorized, false otherwise
         User user = userRepo.findByEmail(email);
-        return user != null && user.getType().equalsIgnoreCase("pat");
+        return user != null && user.getType().equalsIgnoreCase("patient");
     }
 
     @Override

@@ -77,7 +77,7 @@ function Login() {
             case "radiologist":
               navigate("/rad/dashboard");
               break;
-            case "facility":
+            case "lab":
               navigate("/facility/dashboard");
               break;
             case "patient":

@@ -79,7 +79,8 @@ const AddProfessional = () => {
           </div>
 
           {/* Render success/failure component based on isVerified */}
-          {showResult && (isVerified ? <SuccessComponent message={message} /> : <FailureComponent message={message} />)}
+          {/* {showResult && (isVerified ? <SuccessComponent message={message} /> : <FailureComponent message={message} />)} */}
+          <p>{message}</p>
         </div>
       </div>
     </div>

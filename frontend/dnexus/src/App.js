@@ -31,6 +31,8 @@ import DetailsProfessional from "./pages/DetailsProfessional";
 import AddFacility from "./pages/AddFacility";
 import ListFacility from "./pages/ListFacility";
 import DetailsFacility from "./pages/DetailsFacility";
+import ListPatient from "./pages/ListPatient";
+import DetailsPatient from "./pages/DetailsPatient";
 
 
 function App() {
@@ -68,6 +70,8 @@ function App() {
             <Route path="/admin/facility/:id" element={<DetailsFacility />} />
 
             {/* Admin-Patient */}
+            <Route path="/admin/view-patient-list" element={<ListPatient />} /> 
+            <Route path="/admin/patient/:patientId" element={<DetailsPatient />} />
 
             {/* Doctor */}
             <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
@@ -88,7 +92,7 @@ function App() {
             <Route path="/patient/registration" element={<PatientRegistration />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="/TestCase" element={<TestCase />} />
-            <Route path="/patient/report" element={<PatientReport />} />
+            <Route path="/patient/report/:consultationId" element={<PatientReport />} />
 
 
           </Routes>

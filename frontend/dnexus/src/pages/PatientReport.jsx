@@ -8,22 +8,7 @@ function PatientReport() {
     <>
     <Navbar />
         <div className='PatientChoicecontainer'>
-        <div className='PatientChoicechildcontainer'>
-               
-            
-          <div className='PatientChoicecard' >
-            <p>Lab Images</p>
-          </div>
-
-          <div className='PatientChoicecard' >
-            <p>RadioLogist Impression</p>
-          </div>
-
-          <div className='PatientChoicecard' >
-            <p>Final Report</p>
-          </div>
-
-         </div>
+        <p>patient report</p>
         </div>
 
     </>
