@@ -137,16 +137,19 @@ import React, { useState } from 'react';
 import "./MessageInput.css";
 import { sendPrivateMessage } from './WebSocket'; 
 
-function MessageInput({ users, onSubmit, onConnect }) {
+function MessageInput({ users, onSubmit, onConnect ,connected}) {
   const [message, setMessage] = useState('');
   const [receiverId, setReceiverId] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!message.trim() || !receiverId.trim()) return;
-    onSubmit();
-    setMessage(''); // Reset message input field
-    setReceiverId(''); // Reset receiver select field
+    // const consultationId = 1
+    // if (!message.trim() || !receiverId.trim()) return;
+    // onSubmit({ message, receiverId });
+    // sendPrivateMessage('1', '2', message, consultationId); // Pass consultationId
+    // // onSubmit();
+    // // setMessage(''); // Reset message input field
+    // setReceiverId(''); // Reset receiver select field
   };
 
   const handleConnectClick = () => {
@@ -159,10 +162,10 @@ function MessageInput({ users, onSubmit, onConnect }) {
   };
   
   const handleSendClick = (e) => {
-    e.preventDefault();
+   
     const consultationId = 1
     if (!message.trim()) return;
-    onSubmit({ message, receiverId });
+    // onSubmit({ message, receiverId });
     sendPrivateMessage('1', '2', message, consultationId); // Pass consultationId
     setMessage(''); 
     // Reset message input field
@@ -186,7 +189,10 @@ function MessageInput({ users, onSubmit, onConnect }) {
       
       <div className='connect-div'>
       {/* Connect button */}
-      <button className="connect-button" onClick={handleConnectClick}>Connect</button>
+      {/* <button className="connect-button" onClick={handleConnectClick}>Connect</button> */}
+      
+     {!connected && <button className="connect-button" onClick={handleConnectClick}>Connect</button>}
+
       </div>
       
       

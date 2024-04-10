@@ -52,13 +52,9 @@ import './MessagingPage.css'; // Importing the CSS file
 function MessagingPage() {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
+  const [connected, setConnected] = useState(false);
 
-  const handleMessageSubmit = (newMessage) => {
-    
-    
-    
-    setMessages(prevMessages => [...prevMessages, newMessage]);
-  };
+  
 
   const handleConnect = () => {
     // Connect to WebSocket
@@ -68,8 +64,12 @@ function MessagingPage() {
   const handleMessagesReceived = (olderMessages) => {
     // Update message state with older messages
     setMessages(olderMessages);
+    setConnected(true); 
   };
-
+  
+  const handleMessageSubmit = (newMessage) => {
+    setMessages(prevMessages => [...prevMessages, newMessage]);
+  };
   // Dummy user data
   const users = [
     { id: 'doctor', name: 'Doctor' },
@@ -87,6 +87,7 @@ function MessagingPage() {
         messageInput={messageInput}
         setMessageInput={setMessageInput}
         onConnect={handleConnect} // Pass connect handler to MessageInput component
+        connected={connected} 
       />
     </div>
   );
