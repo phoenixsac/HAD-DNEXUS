@@ -12,17 +12,12 @@ import PLogin from "./pages/PLogin";
 import PatientReport from "./pages/PatientReport"
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
-import TestCase from "./pages/TestCase";
 
 import DoctorDashboard from "./pages/DoctorDashboard";
 import PatientList from "./components/PatientList/PatientList";
 import DocPatientTestDetails from "./pages/Doctor-PatientTestDetails";
 import DoctorCreateCase from "./pages/DoctorCreateCase";
 import RadDashboard from "./pages/RadDashboard";
-// import RadPatientTestDetails from "./pages/Rad-PatientTestDetails";
-import LabDetails from "./pages/DetailsFacility";
-import LabDashboard from "./pages/FacilityDashboard";
-// import LabPatientTestDetails from "./pages/Lab-PatientTestDetails";
 import PatientDashboard from "./pages/PatientDashboard";
 import PatientRegistration from "./pages/PatientRegistration";
 import AddProfessional from "./pages/AddProfessional";
@@ -33,8 +28,9 @@ import ListFacility from "./pages/ListFacility";
 import DetailsFacility from "./pages/DetailsFacility";
 import ListPatient from "./pages/ListPatient";
 import DetailsPatient from "./pages/DetailsPatient";
-import FAcilityDashboard from "./pages/FacilityDashboard";
 import FacilityDashboard from "./pages/FacilityDashboard";
+
+import TestCase from "./pages/TestCase";
 
 
 function App() {
@@ -79,6 +75,7 @@ function App() {
             <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
             <Route path="/doctor/patient-test-details/:patientId" element={<DocPatientTestDetails />} />
             {/* navigate to a case page path:"/doctor/patient-list/:id/:caseId" */}
+            <Route path="/doctor/patient-test-details/:patientId/:consultationId" element={<TestCase />} />
             <Route path="/doctor/patient-test-details/:id/create-case" element={<DoctorCreateCase />} />
 
             {/* Radiologist */}
@@ -91,9 +88,8 @@ function App() {
                    
             {/* Patient */}
             <Route path="/PLogin" element={<PLogin />} />
-            <Route path="/patient/registration" element={<PatientRegistration />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
-            <Route path="/TestCase" element={<TestCase />} />
+            <Route path="/patient/registration" element={<PatientRegistration />} />
             <Route path="/patient/report/:consultationId" element={<PatientReport />} />
 
 
