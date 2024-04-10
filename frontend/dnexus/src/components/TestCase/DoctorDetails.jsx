@@ -53,15 +53,34 @@
 // export default DoctorDetails;
 
 
+// 
+
 import React, { useState, useEffect } from 'react';
 import './DoctorDetails.css';
 
 function DoctorDetails() {
-  // Dummy data
-  const doctorName = "Dr. Smith";
-  const specialization = "Radiology";
+  const [doctorDetails, setDoctorDetails] = useState(null);
   const [prescription, setPrescription] = useState([]);
   const [showFullPrescription, setShowFullPrescription] = useState(false);
+
+  useEffect(() => {
+    const fetchDoctorDetails = async () => {
+      try {
+        const doctorId = 2; // Set doctorId param for now
+        const response = await fetch(`http://localhost:8085/core/professional/doctor-details?doctorId=${doctorId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch doctor details');
+        }
+        const data = await response.json();
+        setDoctorDetails(data);
+      } catch (error) {
+        console.error('Error fetching doctor details:', error);
+        // Handle error as needed
+      }
+    };
+
+    fetchDoctorDetails();
+  }, []); // Empty dependency array ensures the effect runs only once
 
   // Fetch prescription from backend API
   useEffect(() => {
@@ -90,9 +109,9 @@ function DoctorDetails() {
   return (
     <div className="mri-info-container">
       <div className="header">
-        <span className="doctor-name">{doctorName}</span>
+        <span className="doctor-name">{doctorDetails ? doctorDetails.name : ''}</span>
         <br />
-        <span className="specialization">{specialization}</span>
+        <span className="specialization">{doctorDetails ? doctorDetails.systemOfMedicine : ''}</span>
       </div>
       <div className="prescription">
         {prescription.slice(0, 5).map((line, index) => (
@@ -110,4 +129,3 @@ function DoctorDetails() {
 }
 
 export default DoctorDetails;
-

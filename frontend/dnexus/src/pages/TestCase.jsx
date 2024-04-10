@@ -310,6 +310,9 @@ function TestCase() {
   const [submitmessage, setsubmitMessage] = useState("");
   const [radiologistAdded, setRadiologistAdded] = useState(false);
   const [reportSubmitted, setReportSubmitted] = useState(false);
+  const [labAdded, setLabAdded] = useState(false);
+  const [radAdded, setradAdded] = useState(false);
+
 
   useEffect(() => {
     fetchLabs();
@@ -360,6 +363,7 @@ function TestCase() {
       const data = await response.text();
       console.log("Response data:", data); // Log received data
       setMessage(data); // Update message state
+      setLabAdded(true);
   
     } catch (error) {
       console.error('Error adding lab:', error);
@@ -391,7 +395,8 @@ function TestCase() {
   
       const data = await response.text();
       setradMessage(data);
-      setRadiologistAdded(true); // Set flag to indicate radiologist added successfully
+      setRadiologistAdded(true);
+      setradAdded(true); // Set flag to indicate radiologist added successfully
     } catch (error) {
       console.error('Error adding radiologist:', error);
       setradMessage("Error adding radiologist. Please try again.");
@@ -449,7 +454,8 @@ function TestCase() {
        {message && <p>{message}</p>}
       </div>
 
-      <LabDetails />
+      {/* <LabDetails /> */}
+      {labAdded && <LabDetails />}
 
       {/* <div className="custom-button-container">
         <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
@@ -479,14 +485,14 @@ function TestCase() {
       </div>
 
       
-      <RadDetails />
+      {radAdded && <RadDetails />}
 
-      <MessagingPage />
+      {radAdded && <MessagingPage />}
     
      
       
 
-{!reportSubmitted && (
+{!reportSubmitted && radAdded && (
   <>
     <div className='rad-recommend'>
       Write Final Report
