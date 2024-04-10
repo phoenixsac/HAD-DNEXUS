@@ -10,6 +10,7 @@ import com.had.coreservice.repository.PatientRepository;
 import com.had.coreservice.repository.ProfessionalRepository;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
 import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
+import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -165,6 +166,21 @@ public class ConsultationService {
         consultation.setFinalReport(finalReport);
 
         consultationRepository.save(consultation);
+    }
+
+    public ProfessionalRadiologistResponseBody getProfessionalDetailsByConsultationId(Long consultationId) {
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new RuntimeException("Consultation not found"));
+
+        Professional professional = consultation.getProfessionals().stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("No radiologist found for this consultation"));
+
+        return ProfessionalRadiologistResponseBody.builder()
+                .id(professional.getId())
+                .fullName(professional.getUser().getFirstName() + " " + professional.getUser().getLastName())
+                .systemOfMedicine(professional.getSystemOfMedicine())
+               // .impression(consultation.getFinalReport()) // Assuming finalReport holds the impression
+                .build();
     }
 
 

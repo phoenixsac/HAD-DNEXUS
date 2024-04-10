@@ -6,6 +6,7 @@ import com.had.coreservice.requestBody.CreateConsultationRequestBody;
 import com.had.coreservice.requestBody.FinalReportRequestBody;
 import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
+import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ConsultationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -120,4 +121,13 @@ public class ConsultationController {
         }
     }
 
+    @GetMapping("/radiologist-detail-for-consultation")
+    public ResponseEntity<?> getPatientDetailsByConsultationId(@RequestParam Long consultationId) {
+        try {
+            ProfessionalRadiologistResponseBody professionalResponse = consultationService.getProfessionalDetailsByConsultationId(consultationId);
+            return ResponseEntity.ok(professionalResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }
