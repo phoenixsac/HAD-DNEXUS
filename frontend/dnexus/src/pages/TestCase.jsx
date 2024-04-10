@@ -288,6 +288,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./Style/TestCase.css";
 import Navbar from "../components/Navbar/LoginNav";
 import PatientDetails from '../components/TestCase/PatientDetails';
@@ -300,6 +301,7 @@ import MessagingPage from "../components/TestCase/MessagingPage";
 
 
 function TestCase() {
+  const navigate = useNavigate();
   const [labs, setLabs] = useState([]);
   const [selectedLab, setSelectedLab] = useState(null);
   const [radiologists, setRadiologists] = useState([]);
@@ -312,6 +314,9 @@ function TestCase() {
   const [reportSubmitted, setReportSubmitted] = useState(false);
   const [labAdded, setLabAdded] = useState(false);
   const [radAdded, setradAdded] = useState(false);
+  const [closeMessage, setCloseMessage] = useState("");
+  const [testClosed, settestClosed] = useState(false);
+
 
 
   useEffect(() => {
@@ -426,6 +431,28 @@ function TestCase() {
       // Handle error as needed
     }
   };
+
+
+  const handleCloseThread = async () => {
+    try {
+      const consultationId = 2;
+      const response = await fetch(`http://localhost:8085/core/consultation/close-consultation?consultationId=${consultationId}`, {
+        method: 'PUT',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to close thread');
+      }
+      const responseData = await response.text();
+      setCloseMessage(responseData);
+      settestClosed(true);
+    } catch (error) {
+      console.error('Error closing thread:', error);
+    }
+  };
+
+  const handleGoBack = () => {
+   navigate("/doctor/patient-test-details/:patientId")
+  };
   
 
   return (
@@ -513,13 +540,21 @@ function TestCase() {
     {submitmessage && <p>{submitmessage}</p>}
       </div>
 
-      <div className="submit-button-container">
-        <Button onClick={() => console.log("CLOSE THREAD clicked!")}>CLOSE THREAD</Button>
-      </div>
+     {!testClosed && <div className="submit-button-container">
+      <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
+      </div>}
 
+      <div className='rad-recommend'>
+    {closeMessage && <p>{closeMessage}</p>}
+      </div>
       {/* <div className="submit-button-container">
         <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
       </div> */}
+     {testClosed && (<div className="submit-button-container">
+        <Button onClick={handleGoBack}>GO BACK</Button>
+      </div>
+     )
+}
     </>
   );
 }
