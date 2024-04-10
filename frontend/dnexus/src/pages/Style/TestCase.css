@@ -18,3 +18,26 @@
 .submit-button-container{
     margin-bottom: 40px;
 }
+
+.add-button-container{
+    margin-bottom: 40px;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  
+  /* background-color: aqua; */
+}
+
+.add-button-container select {
+    margin-left: 7px;
+    margin-top: 18px;
+     /* Adjust as needed */
+     height: 35px;
+  }
+
+  .add-button-container add-lab{
+    vertical-align: middle;
+    
+}
+
