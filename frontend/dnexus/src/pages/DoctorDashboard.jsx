@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../components/Authentication/AuthContext';
+
 import PatientList from '../components/PatientList/PatientList';
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar"
@@ -8,6 +10,9 @@ import "./Style/DoctorDashboard.css"
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
+
+  const { actorId } = useContext(AuthContext);
+  console.log("Actor Id:",actorId);
 
   const [patients, setPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,7 +29,7 @@ const DoctorDashboard = () => {
           throw new Error('User type or token not found.');
         }
 
-        const response = await fetch('http://localhost:8085/core/professional/patient-card-detail-list?docProffId=2', {
+        const response = await fetch(`http://localhost:8085/core/professional/patient-card-detail-list?docProffId=${actorId}`, {
           headers: {
             'Content-Type': 'application/json',
             // 'Authorization': `Bearer ${jwtToken}`
@@ -39,6 +44,8 @@ const DoctorDashboard = () => {
 
         const data = await response.json();
         setPatients(data);
+
+        console.log("patients:",patients);
         
       } catch (error) {
         console.error('Error fetching patients:', error);

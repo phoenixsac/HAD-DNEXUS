@@ -19,10 +19,10 @@ import PatientList from "./components/PatientList/PatientList";
 import DocPatientTestDetails from "./pages/Doctor-PatientTestDetails";
 import DoctorCreateCase from "./pages/DoctorCreateCase";
 import RadDashboard from "./pages/RadDashboard";
-import RadPatientTestDetails from "./pages/Rad-PatientTestDetails";
+// import RadPatientTestDetails from "./pages/Rad-PatientTestDetails";
 import LabDetails from "./pages/DetailsFacility";
-import LabDashboard from "./pages/LabDashboard";
-import LabPatientTestDetails from "./pages/Lab-PatientTestDetails";
+import LabDashboard from "./pages/FacilityDashboard";
+// import LabPatientTestDetails from "./pages/Lab-PatientTestDetails";
 import PatientDashboard from "./pages/PatientDashboard";
 import PatientRegistration from "./pages/PatientRegistration";
 import AddProfessional from "./pages/AddProfessional";
@@ -33,6 +33,8 @@ import ListFacility from "./pages/ListFacility";
 import DetailsFacility from "./pages/DetailsFacility";
 import ListPatient from "./pages/ListPatient";
 import DetailsPatient from "./pages/DetailsPatient";
+import FAcilityDashboard from "./pages/FacilityDashboard";
+import FacilityDashboard from "./pages/FacilityDashboard";
 
 
 function App() {
@@ -84,8 +86,8 @@ function App() {
             {/* <Route path="/rad/patient-test-details/:id" element={<RadPatientTestDetails />} /> */}
 
             {/* Lab */}
-            <Route path="/facility/dashboard" element={<LabDashboard />} />
-            <Route path="/facility/patient-test-details/:id" element={<LabPatientTestDetails />} />
+            <Route path="/facility/dashboard" element={<FacilityDashboard />} />
+            {/* <Route path="/facility/patient-test-details/:id" element={<LabPatientTestDetails />} /> */}
                    
             {/* Patient */}
             <Route path="/PLogin" element={<PLogin />} />

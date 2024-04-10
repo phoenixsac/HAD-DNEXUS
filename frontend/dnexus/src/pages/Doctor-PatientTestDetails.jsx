@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PatientTestItem from '../components/PatientTestItem/PatientTestItem';
 import "./Style/PatientTestDetails.css";
 import Navbar from '../components/Navbar/ConditionalNavbar';
+import { AuthContext } from '../components/Authentication/AuthContext';
 
 const DocPatientTestDetails = () => {
+
+  const{ actorId } = useContext(AuthContext);
   const navigate = useNavigate();
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
@@ -14,7 +17,7 @@ const DocPatientTestDetails = () => {
     const fetchPatientData = async () => {
       try {
         // Fetch patient details from the primary backend endpoint
-        const response = await fetch(`http://localhost:8085/core/professional/consultation-card-details?docId=2&patientId=${patientId}`);
+        const response = await fetch(`http://localhost:8085/core/professional/consultation-card-details?docId=${actorId}&patientId=${patientId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch patient data.');
         }
@@ -45,7 +48,7 @@ const DocPatientTestDetails = () => {
     if (patientId) {
       fetchPatientData();
     }
-  }, [patientId]);
+  }, [ patientId ]);
 
   const handleTestClick = (testId) => {
     console.log(`Navigate to test details page for test ID: ${testId}`);

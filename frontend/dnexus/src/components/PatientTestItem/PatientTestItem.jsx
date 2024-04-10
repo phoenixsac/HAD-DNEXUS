@@ -10,7 +10,7 @@ const PatientTestItem = ({ test, onTestClick }) => {
       switch (test.status) {
         case 'Completed':
           return '#D6F0E0';
-        case 'In Progress':
+        case 'Ongoing':
           return '#FEFFD6';
         case 'upcoming':
           return '#FFD3D3';
