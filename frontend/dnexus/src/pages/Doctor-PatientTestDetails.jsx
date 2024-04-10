@@ -8,6 +8,8 @@ import { AuthContext } from '../components/Authentication/AuthContext';
 const DocPatientTestDetails = () => {
 
   const{ actorId } = useContext(AuthContext);
+  localStorage.setItem('actorId', actorId);
+
   const navigate = useNavigate();
   const { patientId } = useParams();
   const [patient, setPatient] = useState(null);
@@ -51,8 +53,18 @@ const DocPatientTestDetails = () => {
   }, [ patientId ]);
 
   const handleTestClick = (testId) => {
-    console.log(`Navigate to test details page for test ID: ${testId}`);
+    console.log("Navigate to test details page for test ID:", testId);
+    console.log("patientId:", patientId);
+    console.log("consultationId:", testId);
+  
+    // Store actorId in local storage
+    // localStorage.setItem('actorId', actorId);
+    console.log("actorId:", actorId);
+  
+    // Navigate to test details page with patientId and consultationId as parameters
+    navigate(`/doctor/patient-test-details/${patientId}/${testId}`);
   };
+  
 
   const handleCreateCase = () => {
     navigate(`/doctor/patient-test-details/${patientId}/create-case`);
