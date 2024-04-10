@@ -12,6 +12,7 @@ public class LoginResponse {
 
     private String jwtToken;
     private String username;
+    private Long actorId;
 
     public static Builder builder() {
         return new Builder();
@@ -22,6 +23,7 @@ public class LoginResponse {
 
         private String jwtToken;
         private String username;
+        private Long actorId;
 
         public Builder() {
         }
@@ -36,9 +38,15 @@ public class LoginResponse {
             return this;
         }
 
+        public Builder actorId(Long actorId) {
+            this.actorId = actorId;
+            return this;
+        }
+
         public LoginResponse build() {
             LoginResponse response = new LoginResponse();
             response.setJwtToken(jwtToken);
+            response.setActorId(actorId);
             response.setUsername(username);
             return response;
         }
