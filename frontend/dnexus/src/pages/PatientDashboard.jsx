@@ -1,44 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link , useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import "./Style/PatientDashboard.css";
+
+import { AuthContext } from '../components/Authentication/AuthContext';
 import Navbar from '../components/Navbar/ConditionalNavbar';
 
 function PatientDashboard() {  
+
+  const navigate = useNavigate();
+  const { actorId } = useContext(AuthContext);
+
+  // Initialize actorId state with value from local storage or context
+  const [actorIdState, setActorIdState] = useState(actorId || localStorage.getItem('actorId'));
+  console.log("actorIdState:", actorIdState);
+
   const [consultations, setconsultations] = useState([]);
   const [error, setError] = useState(null);
 
+  // const [searchTerm, setSearchTerm] = useState('');
+  // const [currentPage, setCurrentPage] = useState(1); // For pagination
+  // const [patientsPerPage] = useState(6);
+
   useEffect(() => {
-    const fetchConsultations = async () => {
-      try {
-        const token = localStorage.getItem('jwtToken');
+    // Check if actorId is available and not null
+    if (actorId) {
+      setActorIdState(actorId);
+      localStorage.setItem('actorId', actorId);
+    }
+  }, [actorId]);
 
-        // Make API call to fetch patient consultations
-        const response = await axios.get(`http://localhost:8080/patient/consultation-list?patientId=2`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+  useEffect(() => {
+    if (actorIdState) {
+      const fetchConsultations = async () => {
+        try {
+          const userType = sessionStorage.getItem('userType');
+          const jwtToken = localStorage.getItem('jwtToken');
+
+          if (!userType || !jwtToken) {
+            throw new Error('User type or token not found.');
           }
-        });
 
-        // Set fetched consultations to state
-        setconsultations(response.data);
+          const response = await axios.get(`http://localhost:8080/patient/consultation-list?patientId=2`, {
+            headers: {
+              'Authorization': `Bearer ${jwtToken}`
+            }
+          });
 
-        console.log("response:",response.data);
+          // Set fetched consultations to state
+          setconsultations(response.data);
 
-        // const data = await response.json();
-        // console.log("data:",data);
+          console.log("response:",response.data);
 
-        console.log("consultations:",consultations);
+          // const data = await response.json();
+          // console.log("data:",data);
 
-      } catch (error) {
-        console.error('Error fetching consultations:', error);
-        setError('Error fetching consultations. Please try again.');
-      }
-    };
+          console.log("consultations:",consultations);
 
-    fetchConsultations();
-  }, []); // Dependency array is empty to ensure the effect runs only once
+        } catch (error) {
+          console.error('Error fetching consultations:', error);
+          setError('Error fetching consultations. Please try again.');
+        }
+      };
+
+      fetchConsultations();
+    }
+  }, [actorIdState]); 
 
   return (
     <>
@@ -58,7 +86,7 @@ function PatientDashboard() {
           {error && <p>{error}</p>}
           {consultations.map((consultation) => (
             <div key={consultation.consultationId}>
-              <Link to={`/patient/report/${consultation.consultationId}`} className="link-no-underline">
+              <Link to={`/patient/patient-test-details/${consultation.consultationId}`} className="link-no-underline">
                 <div className='card'>
                   <div className='cardId'><p>{consultation.consultationId}</p></div>
                   <div className='cardName'><p>{consultation.name}</p></div>

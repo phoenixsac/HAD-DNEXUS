@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ConsultationService {
@@ -63,8 +62,8 @@ public class ConsultationService {
 
         // Save consultation to database
         consultationRepository.save(consultation);
-
         return ResponseEntity.status(HttpStatus.CREATED).body("Consultation created successfully");
+
     }
 
     @Transactional

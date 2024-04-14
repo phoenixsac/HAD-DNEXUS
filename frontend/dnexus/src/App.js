@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/Authentication/AuthContext";
 
 import "./App.css";
-import "./components/Navbar/Navbar.css";
+// import "./components/Navbar/Navbar.css";
 
 import LandingPage from "./pages/LandingPage";
 import LoginAs from "./pages/LoginAs";
@@ -16,7 +16,6 @@ import Unauthorized from "./components/Unauthorized/Unauthorized";
 import DoctorDashboard from "./pages/DoctorDashboard";
 import PatientList from "./components/PatientList/PatientList";
 import DocPatientTestDetails from "./pages/Doctor-PatientTestDetails";
-import DoctorCreateCase from "./pages/DoctorCreateCase";
 import RadDashboard from "./pages/RadDashboard";
 import PatientDashboard from "./pages/PatientDashboard";
 import PatientRegistration from "./pages/PatientRegistration";
@@ -54,7 +53,7 @@ function App() {
               }
             /> */}
 
-            {/* for now */}
+            {/* for now - Admin */}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
             {/* Admin-professional */}
@@ -76,11 +75,10 @@ function App() {
             <Route path="/doctor/patient-test-details/:patientId" element={<DocPatientTestDetails />} />
             {/* navigate to a case page path:"/doctor/patient-list/:id/:caseId" */}
             <Route path="/doctor/patient-test-details/:patientId/:consultationId" element={<TestCase />} />
-            <Route path="/doctor/patient-test-details/:id/create-case" element={<DoctorCreateCase />} />
 
             {/* Radiologist */}
             <Route path="/rad/dashboard" element={<RadDashboard />} />
-            {/* <Route path="/rad/patient-test-details/:id" element={<RadPatientTestDetails />} /> */}
+            <Route path="/rad/patient-test-details/:testId" element={<TestCase />} />
 
             {/* Lab */}
             <Route path="/facility/dashboard" element={<FacilityDashboard />} />
@@ -90,7 +88,8 @@ function App() {
             <Route path="/PLogin" element={<PLogin />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="/patient/registration" element={<PatientRegistration />} />
-            <Route path="/patient/report/:consultationId" element={<PatientReport />} />
+            {/* <Route path="/patient/report/:consultationId" element={<PatientReport />} /> */}
+            <Route path="/patient/patient-test-details/:testId" element={<TestCase />} />
 
 
           </Routes>

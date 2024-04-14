@@ -1,13 +1,15 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../components/Authentication/AuthContext"; // Import AuthContext
 import axios from "axios";
 
 import "./Style/PLogin.css";
 
+import { AuthContext } from "../components/Authentication/AuthContext"; 
+
 function PLogin() {
+
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useContext(AuthContext); // Use context for authentication state
+  const { setIsLoggedIn, setActorId } = useContext(AuthContext); 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,10 +58,16 @@ function PLogin() {
         // Do something here on invalid login
       } else {
         console.log("Login successful",response.data);
-        setIsLoggedIn(true);
-        const token = response.data.jwtToken;
 
+        setIsLoggedIn(true);
+
+        const token = response.data.jwtToken;
         localStorage.setItem('jwtToken', token);
+
+        // Store actorId in context state
+        setActorId(response.data.actorId);
+        const actorId = response.data.actorId;
+        localStorage.setItem('actorId', actorId);
 
         navigate("/patient/dashboard");
 
@@ -88,7 +96,7 @@ function PLogin() {
           Not Registered? <a href="#">Create an Account</a>
         </p> } */}
            <p className="create-account-text">
-              Not Registered? <Link to="/patient/registration">Create an Account</Link>
+              Not Registered? <Link className="create-account-link" to="/patient/registration">Create an Account</Link>
             </p>
 
             <div className="form-group">
@@ -117,9 +125,9 @@ function PLogin() {
               Login
             </button>
 
-            <a href="#" className="forgot-password-link">
+            <Link href="#" className="forgot-password-link">
               Forgot your password?
-            </a>
+            </Link>
           </form>
         </div>
       </div>

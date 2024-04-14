@@ -4,7 +4,6 @@ import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
 import com.had.coreservice.requestBody.FinalReportRequestBody;
-import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ConsultationService;
