@@ -34,3 +34,19 @@
 .test-list{
   padding: 15px;
 }
+
+ /* Blur effect on the background */
+ /* .blur-background {
+  filter: blur(2px); 
+} */
+
+/* Apply blur effect only to the background */
+.blur-background:not(.modal-open) {
+  filter: blur(2px);
+}
+
+
+/* .patient-test-details {
+  position: relative;
+  filter: blur(5px); 
+} */

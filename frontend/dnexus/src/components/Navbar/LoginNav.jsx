@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AuthContext } from "../Authentication/AuthContext";
+
 import "./LoginNav.css";
+
+import { AuthContext } from "../Authentication/AuthContext";
 import logoImage from "../assets/logo/nexus white-crop.png";
 
 const LoginNav = () => {

@@ -62,7 +62,6 @@ function Login() {
         } else {
           console.log("Login successful",response.data);
 
-          
           setIsLoggedIn(true);
 
           const token = response.data.jwtToken;  
@@ -87,9 +86,9 @@ function Login() {
             case "lab":
               navigate("/facility/dashboard");
               break;
-            case "patient":
-              navigate("/patient/dashboard");
-              break;
+            // case "patient":
+            //   navigate("/patient/dashboard");
+            //   break;
             default:
               navigate("/Login");
           }

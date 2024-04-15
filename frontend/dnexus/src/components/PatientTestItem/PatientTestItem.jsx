@@ -47,7 +47,7 @@ const PatientTestItem = ({ test, onTestClick }) => {
         
         <div className='div-desc'>
           {/* <p>{test.description.substring(0, 200)}...</p> */}
-          <p>djchbdsncscjsdncmscldskjbvdsmvmdskcidsjndsm ldskcjidshcndskjnckjdsbvjdsbdsjncklsjcishcjndsckdsckdshcjdscndkncdskj</p>
+          <p>This is a sample description for the consultation... </p>
         </div>
 
       </div>
