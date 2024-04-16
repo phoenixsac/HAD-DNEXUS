@@ -3,7 +3,6 @@ package com.had.coreservice.controllers;
 import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
 import com.had.coreservice.responseBody.LabDetailsResponseBody;
 import com.had.coreservice.responseBody.LabFacilityDropdownResponseBody;
-import com.had.coreservice.responseBody.PatientCardDetailResponseBody;
 import com.had.coreservice.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
