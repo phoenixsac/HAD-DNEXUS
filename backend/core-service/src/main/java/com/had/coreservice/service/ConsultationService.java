@@ -9,6 +9,7 @@ import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.repository.PatientRepository;
 import com.had.coreservice.repository.ProfessionalRepository;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
+import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,6 +181,27 @@ public class ConsultationService {
                 .systemOfMedicine(professional.getSystemOfMedicine())
                // .impression(consultation.getFinalReport()) // Assuming finalReport holds the impression
                 .build();
+    }
+
+    public DoctorDetailResponseBody getDoctorDetailsByConsultationId(Long consultationId) {
+        Optional<Consultation> consultationOptional = consultationRepository.findById(consultationId);
+        if (consultationOptional.isPresent()) {
+            Consultation consultation = consultationOptional.get();
+            Professional professional = consultation.getProfessionals().stream().findFirst().orElse(null);
+            if (professional != null) {
+                return DoctorDetailResponseBody.builder()
+                        .id(professional.getId())
+                        .name(professional.getUser().getFirstName() + " " + professional.getUser().getLastName())
+                        .systemOfMedicine(professional.getSystemOfMedicine())
+                        .qualification(professional.getQualification())
+                        .place_of_work(professional.getPlaceOfWork())
+                        .build();
+            } else {
+                throw new RuntimeException("No doctor found for the given consultation ID");
+            }
+        } else {
+            throw new RuntimeException("Consultation not found for the given ID");
+        }
     }
 
 
