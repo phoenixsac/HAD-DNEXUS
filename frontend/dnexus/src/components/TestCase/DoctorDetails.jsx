@@ -56,17 +56,20 @@
 // 
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import './DoctorDetails.css';
 
 function DoctorDetails() {
   const [doctorDetails, setDoctorDetails] = useState(null);
   const [prescription, setPrescription] = useState([]);
   const [showFullPrescription, setShowFullPrescription] = useState(false);
+  const { testId, consultationId } = useParams();
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {
       try {
-        const doctorId = 2; // Set doctorId param for now
+        // const doctorId = 2; // Set doctorId param for now
+        const doctorId = localStorage.getItem('actorId');
         const response = await fetch(`http://localhost:8085/core/professional/doctor-details?doctorId=${doctorId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch doctor details');
@@ -86,8 +89,10 @@ function DoctorDetails() {
   useEffect(() => {
     const fetchPrescription = async () => {
       try {
-        const consultationId = 2; // Set consultationId param for now
-        const response = await fetch(`http://localhost:8085/core/consultation/get-test?consultationId=${consultationId}`);
+        // const consultationId = 2; // Set consultationId param for now
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        // const response = await fetch(`http://localhost:8085/core/consultation/get-test?consultationId=${consultationId}`);
+        const response = await fetch(`http://localhost:8085/core/consultation/get-test?${idParam}`);
         if (!response.ok) {
           throw new Error('Failed to fetch prescription');
         }

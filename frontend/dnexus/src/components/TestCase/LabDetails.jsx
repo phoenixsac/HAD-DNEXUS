@@ -29,11 +29,13 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import './LabDetails.css';
 
 const LabDetails = () => {
     const [labData, setLabData] = useState(null);
     const description = "Description";
+    const { testId, consultationId } = useParams();
 
     useEffect(() => {
         fetchLabDetails();
@@ -41,8 +43,9 @@ const LabDetails = () => {
 
     const fetchLabDetails = async () => {
         try {
-            const consultationId = 3; // Assuming constant consultationId
-            const response = await fetch(`http://localhost:8085/core/facility/lab-details?consultationId=${consultationId}`);
+            // const consultationId = 3; // Assuming constant consultationId
+            const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+            const response = await fetch(`http://localhost:8085/core/facility/lab-details?${idParam}`);
             const data = await response.json();
             setLabData(data);
         } catch (error) {

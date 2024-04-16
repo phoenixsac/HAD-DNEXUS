@@ -298,6 +298,7 @@ import Button from '../components/TestCase/Button';
 import LabUpload from '../components/TestCase/LabUpload';
 import RadDetails from '../components/TestCase/RadDetails';
 import MessagingPage from "../components/TestCase/MessagingPage";
+import { useParams } from 'react-router-dom';
 
 
 function TestCase() {
@@ -316,8 +317,45 @@ function TestCase() {
   const [radAdded, setradAdded] = useState(false);
   const [closeMessage, setCloseMessage] = useState("");
   const [testClosed, settestClosed] = useState(false);
+  const { testId, consultationId } = useParams();
+  const [radDetailsVisible, setRadDetailsVisible] = useState(false);
+  const [labDetailsVisible, setlabDetailsVisible] = useState(false);
 
+  useEffect(() => {
+    async function fetchRadiologistDetails() {
+      try {
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/radiologist-detail-for-consultation?${idParam}`);
+        if (response.ok) {
+          setRadDetailsVisible(true);
+        } else {
+          console.error('Failed to fetch radiologist details:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching radiologist details:', error);
+      }
+    }
 
+    fetchRadiologistDetails();
+  }, [consultationId]);
+
+  useEffect(() => {
+    async function fetchLabDetails() {
+      try {
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/facility/lab-details?${idParam}`);
+        if (response.ok) {
+          setlabDetailsVisible(true);
+        } else {
+          console.error('Failed to fetch radiologist details:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching radiologist details:', error);
+      }
+    }
+
+    fetchLabDetails();
+  }, [consultationId]);
 
   useEffect(() => {
     fetchLabs();
@@ -347,7 +385,7 @@ function TestCase() {
     const handleAddLab = async () => {
     try {
       const labId = selectedLab; // Assuming labId is selectedLab
-      const consultationId = 2; // Assuming constant consultationId
+      // const consultationId = 2; // Assuming constant consultationId
   
       if (!labId) {
         setMessage("Please select a lab.");
@@ -355,7 +393,7 @@ function TestCase() {
       }
   
       const url = new URL('http://localhost:8085/core/facility/add-lab');
-      url.searchParams.append('consultationId', consultationId);
+      url.searchParams.append('consultationId', consultationId || testId);
       url.searchParams.append('labFacId', labId);
   
       const response = await fetch(url, {
@@ -380,7 +418,7 @@ function TestCase() {
   const handleAddRadiologist = async () => {
     try {
       const radiologistId = selectedRadiologist;
-      const consultationId = 2;
+      // const consultationId = 3;
   
       if (!radiologistId) {
         setradMessage("Please select a radiologist.");
@@ -388,7 +426,8 @@ function TestCase() {
       }
   
       const url = new URL('http://localhost:8085/core/professional/add-radiologist');
-      url.searchParams.append('consultationId', consultationId);
+      url.searchParams.append('consultationId', consultationId || testId);
+      // url.searchParams.append('consultationId', consultationId );
       url.searchParams.append('proRadiologistId', radiologistId);
   
       const response = await fetch(url, {
@@ -397,7 +436,7 @@ function TestCase() {
           'Content-Type': 'application/json',
         },
       });
-  
+      
       const data = await response.text();
       setradMessage(data);
       setRadiologistAdded(true);
@@ -410,9 +449,10 @@ function TestCase() {
 
   const handleSubmit = async () => {
     try {
-      const consultationId = 2; // Set consultationId param for now
+      // const consultationId = 2; // Set consultationId param for now
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
       const finalReport = document.querySelector('.report').value;
-      const response = await fetch(`http://localhost:8085/core/consultation/post-final-report?consultationId=${consultationId}`, {
+      const response = await fetch(`http://localhost:8085/core/consultation/post-final-report?${idParam}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain'
@@ -435,8 +475,9 @@ function TestCase() {
 
   const handleCloseThread = async () => {
     try {
-      const consultationId = 2;
-      const response = await fetch(`http://localhost:8085/core/consultation/close-consultation?consultationId=${consultationId}`, {
+      // const consultationId = 2;
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const response = await fetch(`http://localhost:8085/core/consultation/close-consultation?${idParam}`, {
         method: 'PUT',
       });
       if (!response.ok) {
@@ -466,7 +507,7 @@ function TestCase() {
         {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
       </div>
 
-      <div className="add-button-container">
+      {!labDetailsVisible && (<div className="add-button-container">
         <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
        <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
           <option value="">Select Lab</option>
@@ -475,14 +516,14 @@ function TestCase() {
           ))}
         </select>
         </div>
-      </div>
-
+      </div>)
+}
       < div className='rad-recommend'>
        {message && <p>{message}</p>}
       </div>
 
       {/* <LabDetails /> */}
-      {labAdded && <LabDetails />}
+      {(labAdded || labDetailsVisible)  && <LabDetails />}
 
       {/* <div className="custom-button-container">
         <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
@@ -494,7 +535,7 @@ function TestCase() {
         </select>
       </div> */}
 
-        {!radiologistAdded && (
+        {(!radDetailsVisible || radiologistAdded ) && (
         <div className="add-button-container">
          <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
@@ -507,19 +548,19 @@ function TestCase() {
         </div>
       )}
 
-            <div className='rad-recommend'>
+          <div className='rad-recommend'>
     {radmessage && <p>{radmessage}</p>}
       </div>
 
       
-      {radAdded && <RadDetails />}
+      {(radAdded || radDetailsVisible) && <RadDetails />}
 
-      {radAdded && <MessagingPage />}
+      {(radAdded || radDetailsVisible) && <MessagingPage />}
     
      
       
 
-{!reportSubmitted && radAdded && (
+{!reportSubmitted && (radAdded  || radDetailsVisible) && (
   <>
     <div className='rad-recommend'>
       Write Final Report
