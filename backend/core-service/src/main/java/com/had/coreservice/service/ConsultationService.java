@@ -3,6 +3,7 @@ package com.had.coreservice.service;
 import com.had.coreservice.entity.Consultation;
 import com.had.coreservice.entity.Professional;
 import com.had.coreservice.entity.Patient;
+import com.had.coreservice.entity.User;
 import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.repository.ConsultationRepository;
@@ -187,15 +188,23 @@ public class ConsultationService {
         Optional<Consultation> consultationOptional = consultationRepository.findById(consultationId);
         if (consultationOptional.isPresent()) {
             Consultation consultation = consultationOptional.get();
-            Professional professional = consultation.getProfessionals().stream().findFirst().orElse(null);
-            if (professional != null) {
-                return DoctorDetailResponseBody.builder()
-                        .id(professional.getId())
-                        .name(professional.getUser().getFirstName() + " " + professional.getUser().getLastName())
-                        .systemOfMedicine(professional.getSystemOfMedicine())
-                        .qualification(professional.getQualification())
-                        .place_of_work(professional.getPlaceOfWork())
-                        .build();
+            Long docId = consultation.getDocProfesionalId();
+            if (docId != null) {
+                Professional professional = professionalRepository.findById(docId).orElseThrow(() ->
+                        new RuntimeException("Doctor not found for the given ID"));
+                User user = professional.getUser();
+                if (user != null) {
+                    String doctorName = user.getFirstName() + " " + user.getLastName();
+                    return DoctorDetailResponseBody.builder()
+                            .id(docId)
+                            .name(doctorName)
+                            .systemOfMedicine(professional.getSystemOfMedicine())
+                            .place_of_work(professional.getPlaceOfWork())
+                            .qualification(professional.getQualification())
+                            .build();
+                } else {
+                    throw new RuntimeException("User details not found for the doctor");
+                }
             } else {
                 throw new RuntimeException("No doctor found for the given consultation ID");
             }
