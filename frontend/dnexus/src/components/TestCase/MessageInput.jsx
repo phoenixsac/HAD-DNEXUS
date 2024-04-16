@@ -197,6 +197,19 @@ function MessageInput({ users, onSubmit, onConnect ,connected}) {
          
         
       }
+      else if (userType === "radiologist") {
+        senderId = localStorage.getItem('actorId');
+  
+        // Fetch receiverId from backend using consultationId
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/doctor-details-by-consultation?${idParam}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch receiverId');
+        }
+        const data = await response.json();
+        receiverId = data.id;
+        
+      } 
       // Handle other userTypes here
   
       // Reset message input field
