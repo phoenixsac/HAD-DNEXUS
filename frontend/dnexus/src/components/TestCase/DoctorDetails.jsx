@@ -70,7 +70,8 @@ function DoctorDetails() {
       try {
         // const doctorId = 2; // Set doctorId param for now
         const doctorId = localStorage.getItem('actorId');
-        const response = await fetch(`http://localhost:8085/core/professional/doctor-details?doctorId=${doctorId}`);
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/doctor-details-by-consultation?${idParam}`);
         if (!response.ok) {
           throw new Error('Failed to fetch doctor details');
         }
@@ -105,7 +106,7 @@ function DoctorDetails() {
     };
 
     fetchPrescription();
-  }, []); // Empty dependency array ensures the effect runs only once
+  }, [testId, consultationId]); // Empty dependency array ensures the effect runs only once
 
   const togglePrescription = () => {
     setShowFullPrescription(!showFullPrescription);
