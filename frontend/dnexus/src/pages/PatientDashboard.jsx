@@ -7,6 +7,7 @@ import "./Style/PatientDashboard.css";
 import { AuthContext } from '../components/Authentication/AuthContext';
 import Navbar from '../components/Navbar/ConditionalNavbar';
 
+
 function PatientDashboard() {  
 
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ function PatientDashboard() {
   }, [actorIdState]); 
 
   return (
-    <>
+    <div>
       <Navbar />
       <div className='container'>
       <div className='childcontainer'>
@@ -98,7 +99,7 @@ function PatientDashboard() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
