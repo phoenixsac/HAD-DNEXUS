@@ -4,6 +4,7 @@ import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
 import com.had.coreservice.requestBody.FinalReportRequestBody;
+import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientResponseBodyForConsultation;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ConsultationService;
@@ -127,6 +128,17 @@ public class ConsultationController {
             return ResponseEntity.ok(professionalResponse);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/doctor-details-by-consultation")
+    public ResponseEntity<DoctorDetailResponseBody> getDoctorDetails(@RequestParam Long consultationId) {
+        try {
+            DoctorDetailResponseBody doctorDetails = consultationService.getDoctorDetailsByConsultationId(consultationId);
+            return ResponseEntity.ok(doctorDetails);
+        } catch (Exception e) {
+            // Handle exception appropriately
+            return ResponseEntity.status(500).body(null); // Example: Internal Server Error
         }
     }
 }
