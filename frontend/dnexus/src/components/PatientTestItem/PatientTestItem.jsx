@@ -6,6 +6,11 @@ import "./PatientTestItem.css";
 const PatientTestItem = ({ test, onTestClick }) => {
   const [hovered, setHovered] = useState(false);
 
+  const handleClick = () => {
+    // Pass the consultation ID to the onTestClick callback
+    onTestClick(test.consultationId);
+  };
+
     const testStatusColor = () => {
       switch (test.status) {
         case 'Completed':
@@ -30,7 +35,7 @@ const PatientTestItem = ({ test, onTestClick }) => {
   
     return (
       <div className="test-list-item" 
-        onClick={onTestClick} 
+        onClick={handleClick} 
         style={{ backgroundColor: testStatusColor() }} 
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}

@@ -67,13 +67,13 @@ const DocPatientTestDetails = () => {
     }
   }, [actorIdState, patientId]);
 
-  const handleTestClick = (testId) => {
-    console.log("Navigate to test details page for test ID:", testId);
+  const handleTestClick = (consultationId) => {
+    console.log("Navigate to test details page for test ID:", consultationId);
     console.log("patientId:", patientId);
-    console.log("consultationId:", testId);
+    console.log("consultationId:", consultationId);
 
     // Navigate to test details page with patientId and consultationId as parameters
-    navigate(`/doctor/patient-test-details/${patientId}/${testId}`);
+    navigate(`/doctor/patient-test-details/${patientId}/${consultationId}`);
   };
 
   const handleCreateCase = () => {
