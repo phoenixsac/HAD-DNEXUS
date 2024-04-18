@@ -23,12 +23,9 @@ function Login() {
     console.log("usertype:",userType);
     
     if (!userType) {
-      // Handle error or redirect to selection page if userType is missing
       console.error("User type not found in session storage.");
       return;
     }
-
-
     console.log("Email:", email);
     console.log("Password:", password);
     console.log("UserType:", userType);

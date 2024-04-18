@@ -1,0 +1,13 @@
+/* OHIFModal.css */
+
+/* Apply custom styles to the modal body */
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
