@@ -99,12 +99,13 @@ public class AdminController {
             }
             else if(message.equals("Professional associated facility id does not exist in Facility and HFR tables.")){
                 return ResponseEntity.badRequest().body(message);
-            }else {
+            }else if(message.equals("Success")){
                 return ResponseEntity.ok(message);
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
         }
+        return null;
     }
 
     @DeleteMapping("/remove-professional")

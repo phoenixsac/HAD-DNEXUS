@@ -6,10 +6,10 @@ import "./PatientTestItem.css";
 const PatientTestItem = ({ test, onTestClick }) => {
   const [hovered, setHovered] = useState(false);
 
-  const handleClick = () => {
-    // Pass the consultation ID to the onTestClick callback
-    onTestClick(test.consultationId);
-  };
+    const handleClick = () => {
+      // Pass the consultation ID to the onTestClick callback
+      onTestClick(test.consultationId);
+    };
 
     const testStatusColor = () => {
       switch (test.status) {

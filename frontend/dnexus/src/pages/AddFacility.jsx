@@ -24,9 +24,30 @@ const AddFacility = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setMessage(data);
-        setIsVerified(true);
+        // const data = await response.json();
+        // setMessage(data);
+        // setIsVerified(true);
+        console.log("response:",response.data);
+
+        const data = await response.text();
+
+        console.log("data:",data);
+        console.log("data:",data);
+
+        // setMessage(data.message);
+        // // setMessage("Added Successfully");
+        // setIsVerified(true);
+
+        if (data === "Success") {
+          setMessage("Added Successfully");
+          setIsVerified(true);
+        } else {
+          setIsVerified(false);
+          setMessage(data);
+        }
+
+        console.log("data:",data);
+        console.log("isVerified:",isVerified);
       } else {
         setIsVerified(false);
         setMessage('Failed to verify. Please try again.');
@@ -67,8 +88,8 @@ const AddFacility = () => {
           </div>
 
            {/* Render success/failure component based on isVerified */}
-           {/* {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)} */}
-           <p>{message}</p>
+           {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)}
+           
         </div>
       </div>
     </div>

@@ -102,7 +102,7 @@ public class AdminService {
 
         if (savedFacility != null) {
             logger.info("Facility added successfully with id: {}", facilityId);
-            return "Facility added successfully";
+            return "Success";
         } else {
             logger.error("Failed to add facility {}", facilityId);
             return "Failed to add facility";
@@ -300,7 +300,7 @@ public class AdminService {
 
             logger.info("Professional added successfully with license/id: {}", hpId);
 
-            return "Professional added successfully";
+            return "Success";
         } else {
             return "Error creating professional due to facility addition issues";
         }
