@@ -1,0 +1,73 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        # Ensure CORS headers are set before executing other filters
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+        default-filters:
+          # Ensure global CORS headers are applied to all routes
+          - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+          - name: AddResponseHeader
+            args:
+              headerName: "Vary"
+              headerValue: "Origin"
+      routes:
+        - id: admin-route
+          uri: lb://adminService
+          predicates:
+            - Path=/admin/**
+          filters:
+            # Apply JWT token validation filter
+            - name: JwtTokenValidationFilter
+              args:
+                config: ""
+        - id: user-auth-route
+          uri: lb://userAuthService
+          predicates:
+            - Path=/auth/**
+          filters:
+            # Apply JWT token validation filter
+            - name: JwtTokenValidationFilter
+              args:
+                config: ""
+        - id: patient-route
+          uri: lb://patientService
+          predicates:
+            - Path=/patient/**
+          filters:
+            # Apply JWT token validation filter
+            - name: JwtTokenValidationFilter
+              args:
+                config: ""
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, gateway
+  endpoint:
+    gateway:
+      enabled: true

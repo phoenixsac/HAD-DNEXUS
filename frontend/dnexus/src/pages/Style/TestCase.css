@@ -1,0 +1,43 @@
+.rad-recommend{
+    margin: 10px auto 0; 
+    color: #09254b;
+    width: 80%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    
+}
+
+
+
+.report {
+    height: 100px; /* Adjust the height of the input field */
+    font-size: 14px;
+    width: 81%; /* Adjust the font size of the input field */
+}
+
+.submit-button-container{
+    margin-bottom: 40px;
+}
+
+.add-button-container{
+    margin-bottom: 40px;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  
+  /* background-color: aqua; */
+}
+
+.add-button-container select {
+    margin-left: 7px;
+    margin-top: 18px;
+     /* Adjust as needed */
+     height: 35px;
+  }
+
+  .add-button-container add-lab{
+    vertical-align: middle;
+    
+}
+

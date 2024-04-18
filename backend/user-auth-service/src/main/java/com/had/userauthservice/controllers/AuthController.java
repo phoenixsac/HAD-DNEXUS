@@ -1,5 +1,6 @@
 package com.had.userauthservice.controllers;
 
+import com.had.userauthservice.repository.UserRepository;
 import com.had.userauthservice.requestBody.LoginRequest;
 import com.had.userauthservice.requestBody.PatientSignupReqBody;
 import com.had.userauthservice.responseBody.LoginResponse;
@@ -39,10 +40,13 @@ public class AuthController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    UserRepository userRepo;
+
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 
-    @PostMapping("/login")
+    @PostMapping("/auth/issue-jwt")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws UserUnauthorizedException, UserNotFoundException {
         try {
             User user;
@@ -51,10 +55,12 @@ public class AuthController {
 
             if(userService.validateByType(user, request.getType())) {
                 logger.info("checking get with jwt");
-                String token = this.helper.generateToken(user);
+                Long actorId=getActorId(request.getEmail(), request.getType());
+                String token = this.helper.generateToken(user, user.getType(), user.getEmail(), actorId);
 
                 LoginResponse response = LoginResponse.builder()
                         .jwtToken(token)
+                        .actorId(actorId)
                         .username(user.getUsername()).build();
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -64,9 +70,32 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+    private Long getActorId(String email, String type) {
+        Long id = 0L;
+        if ("patient".equalsIgnoreCase(type)) {
+            id = userRepo.getActorIdFromEmailAndTypePatient(email);
+        } else if ("radiologist".equalsIgnoreCase(type)) {
+            id = userRepo.getActorIdFromEmailAndTypeProfRadiologist(email);
+        } else if ("doctor".equalsIgnoreCase(type)) {
+            id = userRepo.getActorIdFromEmailAndTypeProffDoctor(email);
+        } else if ("lab".equalsIgnoreCase(type)) {
+            id = userRepo.getActorIdFromEmailAndTypeFacLab(email);
+        } else if ("hospital".equalsIgnoreCase(type)) {
+            id = userRepo.getActorIdFromEmailAndTypeFacLab(email);
+        }
+        else if ("admin".equalsIgnoreCase(type)) {
+            id = userRepo.getActorIdFromEmailAndTypeAdmin(email);
+        }
+
+        if (id == 0L) {
+            throw new IllegalArgumentException("User type not supported");
+        }
+
+        return id;
+    }
+
 
     private void doAuthenticate(String email, String password, String type) {
-
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
             manager.authenticate(authentication);
@@ -74,7 +103,6 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(" Invalid Username or Password  !!");
         }
-
     }
 
     @ExceptionHandler(BadCredentialsException.class)

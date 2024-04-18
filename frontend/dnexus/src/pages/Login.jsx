@@ -9,7 +9,7 @@ import { AuthContext } from "../components/Authentication/AuthContext"; // Impor
 function Login() {
 
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useContext(AuthContext); // Use context for authentication state
+  const { setIsLoggedIn, setActorId } = useContext(AuthContext); // Use context for authentication state
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +45,7 @@ function Login() {
       
       try {
         const response = await axios.post(
-          "http://localhost:8081/login",
+          "http://localhost:8080/auth/issue-jwt",
           {
             email: email,
             password: password,
@@ -53,7 +53,7 @@ function Login() {
           }
           );
 
-        // const response = await axios.post("http://localhost:8081/login", data);
+        // const response = await axios.post("http://localhost:8081/auth/issue-jwt", data);
   
   
         if (response.status !== 200) {
@@ -61,12 +61,37 @@ function Login() {
           // Do something here on invalid login
         } else {
           console.log("Login successful",response.data);
+
           setIsLoggedIn(true);
-          const token = response.data.jwtToken;
-  
+
+          const token = response.data.jwtToken;  
           localStorage.setItem('jwtToken', token);
+
+          // Store actorId in context state
+          setActorId(response.data.actorId);
+          const actorId = response.data.actorId;
+          localStorage.setItem('actorId', actorId);
   
-          navigate("/AdminDashboard"); 
+          // Conditionally navigate based on userType
+          switch (userType) {
+            case "admin":
+              navigate("/admin/dashboard");
+              break;
+            case "doctor":
+              navigate("/doctor/dashboard");
+              break;
+            case "radiologist":
+              navigate("/rad/dashboard");
+              break;
+            case "lab":
+              navigate("/facility/dashboard");
+              break;
+            // case "patient":
+            //   navigate("/patient/dashboard");
+            //   break;
+            default:
+              navigate("/Login");
+          }
         }
       } 
       catch (error) {
@@ -117,10 +142,7 @@ function Login() {
             <button type="submit" className="login-button">
               Login
             </button>
-
-            <a href="#" className="forgot-password-link">
-              Forgot your password?
-            </a>
+            
           </form>
         </div>
       </div>

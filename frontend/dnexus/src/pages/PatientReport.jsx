@@ -1,29 +1,14 @@
 import React from 'react'
 
 import "./Style/PatientReport.css";
-import Navbar from "../components/Navbar/LoginNav";
+import Navbar from "../components/Navbar/ConditionalNavbar";
 
 function PatientReport() {
   return (
     <>
     <Navbar />
         <div className='PatientChoicecontainer'>
-        <div className='PatientChoicechildcontainer'>
-               
-            
-          <div className='PatientChoicecard' >
-            <p>Lab Images</p>
-          </div>
-
-          <div className='PatientChoicecard' >
-            <p>RadioLogist Impression</p>
-          </div>
-
-          <div className='PatientChoicecard' >
-            <p>Final Report</p>
-          </div>
-
-         </div>
+        <p>patient report</p>
         </div>
 
     </>

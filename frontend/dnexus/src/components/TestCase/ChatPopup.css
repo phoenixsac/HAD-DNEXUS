@@ -1,0 +1,60 @@
+.chat-popup {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 400px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .room-name {
+    font-weight: bold;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .chat-messages {
+    height: 300px;
+    overflow-y: scroll;
+    padding: 10px;
+  }
+  
+  .input-area {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .input-area textarea {
+    flex: 1;
+    height: 50px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 10px;
+  }
+  
+  .input-area button {
+    background-color: #0b438b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  

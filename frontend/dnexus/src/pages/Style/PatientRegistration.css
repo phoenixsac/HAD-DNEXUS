@@ -1,0 +1,174 @@
+.registrationHeading{
+
+  width: 100vw;
+  margin-top: 5vh;
+  margin-bottom: -4vh;
+  /* background-color: aqua; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+  
+  .registrationHeading span{
+          font-size: 1.5rem;
+      
+      }
+  
+  
+  
+  .formContainer{
+  
+  
+  }
+  
+  
+  .formContainer label {
+      display: block;
+      text-align: left;
+      /* margin-bottom: 5px; */
+      /* font-size: 0.8rem; */
+      color: #5A607F;
+    }
+  
+  
+    .formContainer input[type="name"],
+    .formContainer input[type="text"],
+    .formContainer input[type="email"],
+    .formContainer input[type="tel"],
+    .formContainer input[type="number"]
+     {
+      width: 98%;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 15px;
+      outline: none;
+    }  
+  
+    .formContainer input[type="radio"] {
+  
+    }
+  
+  .directionContainer{
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      margin-top: 10vh;
+  }
+  
+  .inputLeft{
+  width: 30%;
+  /* height: 50vh; */
+  /* background-color: rgb(43, 88, 88); */
+  
+  }
+  
+  
+  .inputRight{
+  width: 35%;
+  /* height: 50vh; */
+  /* background-color: blueviolet; */
+  }
+  
+  .agebox,.bloodgroup {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      /* background-color: aqua; */
+  }
+  .inputRight input[type="tel"],
+  .bloodgroup input[type="text"]{
+      width: 30%;
+      padding-top: 9px;
+      padding-bottom: 9px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 20px;
+      outline: none;
+      
+  }
+  
+  
+  .inputRight input[type="tel"] {
+      width: 98%;
+  }
+  
+  
+  .makeInline label {
+      display: inline;
+      font-size: 0.8rem;
+      
+      /* margin-bottom: 5px; */
+      /* font-size: 0.8rem; */
+      color: #5A607F;
+    }
+  
+    .makeInlinetext{
+      text-align: left;
+      margin-left: 13px;
+    }
+  
+    /* .formContainer button {
+      text-decoration: none;
+      font-size: 0.8rem;
+      display: block;
+      margin-top: 10px;
+      color: #001b79;
+    } */
+  
+    .inputLeft button,
+    .inputRight button{
+      background-color: #001b79;
+    display: block;
+    width: auto; /* Adjust the width as needed */
+    color: #fff;
+    padding: 8px 15px; /* Adjust padding to make it smaller */
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.9rem; /* Adjust font size */
+    position: absolute; /* Add this line */
+    
+    
+    
+    
+
+    }
+    
+  
+  
+  
+    .SubmitButton{
+      display: flex;
+      justify-content: center;
+      margin-top: 5vh;
+    }
+    .SubmitButton button{
+      background-color: #001b79;
+    display: block;
+    width: 10%; /* Make the width 100% to elongate the button */
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    }
+
+    .SubmitButton button:hover{
+      background-color: #021b36;
+    }
+  
+    .makerow {
+      display: flex;
+      
+  
+    }
+
+    .SubmitButton button:disabled {
+      background-color: #ccc; /* Change to grey color */
+      cursor: not-allowed; /* Change cursor to not allowed */
+    }
+
+  
+  

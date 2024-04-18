@@ -11,12 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-
 import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,9 +25,6 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationEntryPoint point;
-
-//    @Autowired
-//    private JwtAuthenticationFilter filter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -69,10 +62,10 @@ public class SecurityConfig {
                     cors.configurationSource(corsConfigurationSource());
                 })
                 .authorizeHttpRequests((authorize)-> authorize
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/patient-signup").permitAll()
-                        .requestMatchers("/send-otp").permitAll()
-                        .requestMatchers("/validate-otp").permitAll()
+                        .requestMatchers("/auth/issue-jwt").permitAll()
+                        .requestMatchers("/auth/patient-signup").permitAll()
+                        .requestMatchers("/auth/send-otp").permitAll()
+                        .requestMatchers("/auth/validate-otp").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Permit pre-flight requests
                         .anyRequest().authenticated()
                 )

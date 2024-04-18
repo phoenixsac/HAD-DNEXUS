@@ -1,0 +1,19 @@
+ /* MessageList.css */
+
+ .message-list-container {
+    max-height: 200px; /* Adjust height as needed */
+    overflow-y: auto;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .message {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .message strong {
+    font-weight: bold;
+  }
