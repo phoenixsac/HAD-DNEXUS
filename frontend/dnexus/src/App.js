@@ -44,17 +44,17 @@ function App() {
             <Route path="/Login" element={<Login />} /> 
             <Route path="/unauthorized" element={<Unauthorized />} /> 
             
-            {/* <Route
-              path="/AdminDashboard"
+            <Route
+              path="/admin/dashboard"
               element={
                 <ProtectedRoute userType="admin">
                   <AdminDashboard /> 
                 </ProtectedRoute>
               }
-            /> */}
+            />
 
             {/* for now - Admin */}
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
 
             {/* Admin-professional */}
             <Route path="/admin/view-professional-list" element={<ListProfessional />} />

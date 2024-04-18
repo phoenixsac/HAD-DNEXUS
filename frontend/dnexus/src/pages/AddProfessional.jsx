@@ -29,14 +29,26 @@ const AddProfessional = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        console.log("response:",response.data);
 
-        console.log("response:",data);
+        const data = await response.text();
 
-        setMessage(data.message);
-        setIsVerified(true);
+        console.log("data:",data);
+        console.log("data:",data);
 
-        console.log("data.message:",data.message);
+        // setMessage(data.message);
+        // // setMessage("Added Successfully");
+        // setIsVerified(true);
+
+        if (data === "Success") {
+          setMessage("Added Successfully");
+          setIsVerified(true);
+        } else {
+          setIsVerified(false);
+          setMessage(data);
+        }
+
+        console.log("data:",data);
         console.log("isVerified:",isVerified);
 
       } else {
@@ -79,8 +91,11 @@ const AddProfessional = () => {
           </div>
 
           {/* Render success/failure component based on isVerified */}
-          {/* {showResult && (isVerified ? <SuccessComponent message={message} /> : <FailureComponent message={message} />)} */}
+          {showResult && (isVerified ? <SuccessComponent message={message} /> : <FailureComponent message={message} />)}
           {/* <p>Added Successfully</p> */}
+          {/* Render the message paragraph based on isVerified */}
+          {/* {showResult && <p>{message}</p>} */}
+          
         </div>
       </div>
     </div>

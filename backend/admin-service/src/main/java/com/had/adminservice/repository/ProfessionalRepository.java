@@ -12,7 +12,7 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
 
     @Query(value = "SELECT * FROM professional WHERE specialization = :type", nativeQuery = true)
     List<Professional> findByTypeOrSpecialization(String type);
-    @Query(value = "SELECT * FROM professional WHERE id = :id", nativeQuery = true)
-    Optional<Professional> findProfessionalExists(Long id);
+    @Query(value = "SELECT * FROM professional WHERE license_number = :hpId", nativeQuery = true)
+    Optional<Professional> findProfessionalExists(Long hpId);
 
 }
