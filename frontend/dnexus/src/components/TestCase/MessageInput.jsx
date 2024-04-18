@@ -140,7 +140,7 @@ import { useParams } from 'react-router-dom';
 
 function MessageInput({ users, onSubmit, onConnect ,connected}) {
   const [message, setMessage] = useState('');
-  const [receiverId, setReceiverId] = useState('');
+  // const [receiverId, setReceiverId] = useState('');
   const { consultationId, testId } = useParams(); 
 
   const handleSubmit = (e) => {

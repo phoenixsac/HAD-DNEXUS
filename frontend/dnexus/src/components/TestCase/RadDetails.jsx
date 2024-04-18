@@ -149,6 +149,7 @@ function RadDetails() {
   const [radDetails, setRadDetails] = useState(null);
   const [showFullPrescription, setShowFullPrescription] = useState(false);
   const { testId, consultationId } = useParams();
+  const [userType, setUserType] = useState("");
   
 
   useEffect(() => {
@@ -168,6 +169,11 @@ function RadDetails() {
       });
   }, [testId,consultationId]); // Empty dependency array to run effect only once on mount
 
+  useEffect(() => {
+    const userTypeFromStorage = sessionStorage.getItem('userType');
+    setUserType(userTypeFromStorage);
+  }, []);
+
   const togglePrescription = () => {
     setShowFullPrescription(!showFullPrescription);
   };
@@ -183,9 +189,9 @@ function RadDetails() {
         <br />
         <span className="specialization">{radDetails ? radDetails.systemOfMedicine : ''}</span>
         <br />
-        <span >
+        {userType!=="patient" && <span >
           <button className='lab-button' onClick={handleClick}>View Annotated Images</button>
-        </span>
+        </span>}
       </div>
 
       <div className="prescription">

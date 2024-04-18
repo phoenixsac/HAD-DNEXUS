@@ -320,6 +320,9 @@ function TestCase() {
   const { testId, consultationId } = useParams();
   const [radDetailsVisible, setRadDetailsVisible] = useState(false);
   const [labDetailsVisible, setlabDetailsVisible] = useState(false);
+  const [consultationStatus, setConsultationStatus] = useState("");
+  const [submitStatus, setSubmitStatus] = useState("");
+  const [userType, setUserType] = useState("");
 
   useEffect(() => {
     async function fetchRadiologistDetails() {
@@ -338,6 +341,40 @@ function TestCase() {
 
     fetchRadiologistDetails();
   }, [consultationId]);
+
+  useEffect(() => {
+    const userTypeFromStorage = sessionStorage.getItem('userType');
+    setUserType(userTypeFromStorage);
+  }, []);
+
+  const fetchConsultationStatus = async () => {
+    try {
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const response = await fetch(`http://localhost:8085/core/consultation/status?${idParam}`);
+      const data = await response.text();
+      setConsultationStatus(data.trim());
+    } catch (error) {
+      console.error('Error fetching consultation status:', error);
+    }
+  };
+
+  fetchConsultationStatus();
+
+  const fetchSubmitStatus = async () => {
+    try {
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const response = await fetch(`http://localhost:8085/core/consultation/get-final-report?${idParam}`);
+      const data = await response.text();
+      const trimmedData = data.trim();
+      const submitStatus = trimmedData === '' ? null : trimmedData;
+      setSubmitStatus(submitStatus);
+      // console.log("report:" ,data.trim())
+    } catch (error) {
+      console.error('Error fetching consultation status:', error);
+    }
+  };
+
+  fetchSubmitStatus();
 
   useEffect(() => {
     async function fetchLabDetails() {
@@ -459,6 +496,7 @@ function TestCase() {
         },
         body: finalReport
       });
+      fetchSubmitStatus();
       if (!response.ok) {
         throw new Error('Failed to submit report');
       }
@@ -492,7 +530,38 @@ function TestCase() {
   };
 
   const handleGoBack = () => {
-   navigate("/doctor/patient-test-details/:patientId")
+  //  navigate("/doctor/patient-test-details/:patientId")
+  // // Get the current URL
+  if (userType === "doctor"){
+  const currentUrl = window.location.href;
+
+  // Parse the URL to extract its pathname
+  const url = new URL(currentUrl);
+
+  // Get the pathname and split it into segments
+  let pathname = url.pathname;
+  let segments = pathname.split('/');
+
+  // Remove the last segment (parameter)
+  segments.pop();
+
+  // Reconstruct the URL without the last parameter
+  const newUrl = url.origin + segments.join('/');
+
+  // Navigate to the new URL
+  window.location.href = newUrl;
+  }
+  else if (userType === "radiologist"){
+    navigate("/rad/dashboard")
+  }
+
+  else if (userType === "lab"){
+    navigate("/facility/dashboard")
+  }
+
+  else if (userType === "patient"){
+    navigate("/patient/dashboard")
+  }
   };
   
 
@@ -502,12 +571,12 @@ function TestCase() {
       <PatientDetails />
       <DoctorDetails />
 
-      <div className="custom-button-container">
+      {userType=== "lab"  &&<div className="custom-button-container">
         <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
         {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
-      </div>
+      </div>}
 
-      {!labDetailsVisible && (<div className="add-button-container">
+      {userType==="doctor" && !labDetailsVisible && (<div className="add-button-container">
         <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
        <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
           <option value="">Select Lab</option>
@@ -523,7 +592,7 @@ function TestCase() {
       </div>
 
       {/* <LabDetails /> */}
-      {(labAdded || labDetailsVisible)  && <LabDetails />}
+      {userType!=="lab" && (labAdded || labDetailsVisible)  && <LabDetails />}
 
       {/* <div className="custom-button-container">
         <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
@@ -535,7 +604,7 @@ function TestCase() {
         </select>
       </div> */}
 
-        {(!radDetailsVisible || radiologistAdded ) && (
+        {userType==="doctor"&& (!radDetailsVisible || radiologistAdded ) && (
         <div className="add-button-container">
          <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
@@ -553,14 +622,14 @@ function TestCase() {
       </div>
 
       
-      {(radAdded || radDetailsVisible) && <RadDetails />}
+      {userType!=="lab" && (radAdded || radDetailsVisible) && <RadDetails />}
 
-      {(radAdded || radDetailsVisible) && <MessagingPage />}
+      {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />}
     
      
       
 
-{!reportSubmitted && (radAdded  || radDetailsVisible) && (
+{userType==="doctor" && submitStatus === null && !reportSubmitted && (radAdded  || radDetailsVisible) && (
   <>
     <div className='rad-recommend'>
       Write Final Report
@@ -573,17 +642,27 @@ function TestCase() {
     <div className="submit-button-container">
       <Button onClick={handleSubmit}>SUBMIT</Button>
     </div>
+
+
   </>
 )}
-
+    
+    
+    
 
       <div className='rad-recommend'>
     {submitmessage && <p>{submitmessage}</p>}
       </div>
 
-     {!testClosed && <div className="submit-button-container">
+      {(userType==="doctor" || userType==="patient") && submitStatus !== null &&<div className="submit-button-container">
+      <Button onClick={handleSubmit}>VIEW REPORT</Button>
+    </div>}
+
+     
+     
+     {userType==="doctor" && consultationStatus!== "COMPLETED" &&!testClosed  &&(<div className="submit-button-container">
       <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
-      </div>}
+      </div>)}
 
       <div className='rad-recommend'>
     {closeMessage && <p>{closeMessage}</p>}
@@ -591,7 +670,7 @@ function TestCase() {
       {/* <div className="submit-button-container">
         <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
       </div> */}
-     {testClosed && (<div className="submit-button-container">
+     { (<div className="submit-button-container">
         <Button onClick={handleGoBack}>GO BACK</Button>
       </div>
      )
