@@ -133,7 +133,8 @@
 
 
 
-import React, { useState , useParams} from 'react';
+import React, { useState } from 'react';
+import {useParams} from 'react-router-dom';
 import "./MessageInput.css";
 import { sendPrivateMessage } from './WebSocket'; 
 
