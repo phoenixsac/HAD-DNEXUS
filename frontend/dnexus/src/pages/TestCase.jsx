@@ -1,4 +1,397 @@
 
+import React, { useState, useEffect } from 'react';
+import { useNavigate , useParams} from 'react-router-dom';
+import "./Style/TestCase.css";
+import Navbar from "../components/Navbar/LoginNav";
+import PatientDetails from '../components/TestCase/PatientDetails';
+import DoctorDetails from '../components/TestCase/DoctorDetails';
+import LabDetails from '../components/TestCase/LabDetails';
+import Button from '../components/TestCase/Button';
+import LabUpload from '../components/TestCase/LabUpload';
+import RadDetails from '../components/TestCase/RadDetails';
+import MessagingPage from "../components/TestCase/MessagingPage";
+
+
+
+function TestCase() {
+  const navigate = useNavigate();
+  const [labs, setLabs] = useState([]);
+  const [selectedLab, setSelectedLab] = useState(null);
+  const [radiologists, setRadiologists] = useState([]);
+  const [selectedRadiologist, setSelectedRadiologist] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [radmessage, setradMessage] = useState("");
+  const [submitmessage, setsubmitMessage] = useState("");
+  const [radiologistAdded, setRadiologistAdded] = useState(false);
+  const [reportSubmitted, setReportSubmitted] = useState(false);
+  const [labAdded, setLabAdded] = useState(false);
+  const [radAdded, setradAdded] = useState(false);
+  const [closeMessage, setCloseMessage] = useState("");
+  const [testClosed, settestClosed] = useState(false);
+  const { testId, consultationId } = useParams();
+  const [radDetailsVisible, setRadDetailsVisible] = useState(false);
+  const [labDetailsVisible, setlabDetailsVisible] = useState(false);
+  const [consultationStatus, setConsultationStatus] = useState("");
+  const [submitStatus, setSubmitStatus] = useState("");
+  const [userType, setUserType] = useState("");
+
+  useEffect(() => {
+    async function fetchRadiologistDetails() {
+      try {
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/radiologist-detail-for-consultation?${idParam}`);
+        if (response.ok) {
+          setRadDetailsVisible(true);
+        } else {
+          console.error('Failed to fetch radiologist details:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching radiologist details:', error);
+      }
+    }
+
+    fetchRadiologistDetails();
+  }, [consultationId]);
+
+  useEffect(() => {
+    const userTypeFromStorage = sessionStorage.getItem('userType');
+    setUserType(userTypeFromStorage);
+  }, []);
+
+  const fetchConsultationStatus = async () => {
+    try {
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const response = await fetch(`http://localhost:8085/core/consultation/status?${idParam}`);
+      const data = await response.text();
+      setConsultationStatus(data.trim());
+    } catch (error) {
+      console.error('Error fetching consultation status:', error);
+    }
+  };
+
+  fetchConsultationStatus();
+
+  const fetchSubmitStatus = async () => {
+    try {
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const response = await fetch(`http://localhost:8085/core/consultation/get-final-report?${idParam}`);
+      const data = await response.text();
+      const trimmedData = data.trim();
+      const submitStatus = trimmedData === '' ? null : trimmedData;
+      setSubmitStatus(submitStatus);
+      // console.log("report:" ,data.trim())
+    } catch (error) {
+      console.error('Error fetching consultation status:', error);
+    }
+  };
+
+  fetchSubmitStatus();
+
+  useEffect(() => {
+    async function fetchLabDetails() {
+      try {
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/facility/lab-details?${idParam}`);
+        if (response.ok) {
+          setlabDetailsVisible(true);
+        } else {
+          console.error('Failed to fetch radiologist details:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching radiologist details:', error);
+      }
+    }
+
+    fetchLabDetails();
+  }, [consultationId]);
+
+  useEffect(() => {
+    fetchLabs();
+    fetchRadiologists();
+  }, []);
+
+  const fetchLabs = async () => {
+    try {
+      const response = await fetch('http://localhost:8085/core/facility/get-labs');
+      const data = await response.json();
+      setLabs(data);
+    } catch (error) {
+      console.error('Error fetching labs:', error);
+    }
+  };
+
+  const fetchRadiologists = async () => {
+    try {
+      const response = await fetch('http://localhost:8085/core/professional/get-radiologists');
+      const data = await response.json();
+      setRadiologists(data);
+    } catch (error) {
+      console.error('Error fetching radiologists:', error);
+    }
+  };
+
+    const handleAddLab = async () => {
+    try {
+      const labId = selectedLab; // Assuming labId is selectedLab
+      // const consultationId = 2; // Assuming constant consultationId
+  
+      if (!labId) {
+        setMessage("Please select a lab.");
+        return;
+      }
+  
+      const url = new URL('http://localhost:8085/core/facility/add-lab');
+      url.searchParams.append('consultationId', consultationId || testId);
+      url.searchParams.append('labFacId', labId);
+  
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await response.text();
+      console.log("Response data:", data); // Log received data
+      setMessage(data); // Update message state
+      setLabAdded(true);
+  
+    } catch (error) {
+      console.error('Error adding lab:', error);
+      setMessage("Error adding lab. Please try again.");
+    }
+  };
+  
+
+  const handleAddRadiologist = async () => {
+    try {
+      const radiologistId = selectedRadiologist;
+      // const consultationId = 3;
+  
+      if (!radiologistId) {
+        setradMessage("Please select a radiologist.");
+        return;
+      }
+  
+      const url = new URL('http://localhost:8085/core/professional/add-radiologist');
+      url.searchParams.append('consultationId', consultationId || testId);
+      // url.searchParams.append('consultationId', consultationId );
+      url.searchParams.append('proRadiologistId', radiologistId);
+  
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const data = await response.text();
+      setradMessage(data);
+      setRadiologistAdded(true);
+      setradAdded(true); // Set flag to indicate radiologist added successfully
+    } catch (error) {
+      console.error('Error adding radiologist:', error);
+      setradMessage("Error adding radiologist. Please try again.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // const consultationId = 2; // Set consultationId param for now
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const finalReport = document.querySelector('.report').value;
+      const response = await fetch(`http://localhost:8085/core/consultation/post-final-report?${idParam}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: finalReport
+      });
+      fetchSubmitStatus();
+      if (!response.ok) {
+        throw new Error('Failed to submit report');
+      }
+      const responseData = await response.text();
+      // Assuming the response data contains the text of the submitted report
+      setsubmitMessage(responseData);
+      setReportSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      // Handle error as needed
+    }
+  };
+
+
+  const handleCloseThread = async () => {
+    try {
+      // const consultationId = 2;
+      const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+      const response = await fetch(`http://localhost:8085/core/consultation/close-consultation?${idParam}`, {
+        method: 'PUT',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to close thread');
+      }
+      const responseData = await response.text();
+      setCloseMessage(responseData);
+      settestClosed(true);
+    } catch (error) {
+      console.error('Error closing thread:', error);
+    }
+  };
+
+  const handleGoBack = () => {
+  //  navigate("/doctor/patient-test-details/:patientId")
+  // // Get the current URL
+  if (userType === "doctor"){
+  const currentUrl = window.location.href;
+
+  // Parse the URL to extract its pathname
+  const url = new URL(currentUrl);
+
+  // Get the pathname and split it into segments
+  let pathname = url.pathname;
+  let segments = pathname.split('/');
+
+  // Remove the last segment (parameter)
+  segments.pop();
+
+  // Reconstruct the URL without the last parameter
+  const newUrl = url.origin + segments.join('/');
+
+  // Navigate to the new URL
+  window.location.href = newUrl;
+  }
+  else if (userType === "radiologist"){
+    navigate("/rad/dashboard")
+  }
+
+  else if (userType === "lab"){
+    navigate("/facility/dashboard")
+  }
+
+  else if (userType === "patient"){
+    navigate("/patient/dashboard")
+  }
+  };
+  
+
+  return (
+    <>
+      <Navbar />
+      <PatientDetails />
+      <DoctorDetails />
+
+      {userType=== "lab"  &&<div className="custom-button-container">
+        <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
+        {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
+      </div>}
+
+      {userType==="doctor" && !labDetailsVisible && (<div className="add-button-container">
+        <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
+       <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
+          <option value="">Select Lab</option>
+          {labs.map((lab) => (
+            <option key={lab.id} value={lab.id}>{lab.name}</option>
+          ))}
+        </select>
+        </div>
+      </div>)
+}
+      < div className='rad-recommend'>
+       {message && <p>{message}</p>}
+      </div>
+
+      {/* <LabDetails /> */}
+      {userType!=="lab" && (labAdded || labDetailsVisible)  && <LabDetails />}
+
+      {/* <div className="custom-button-container">
+        <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
+        <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+          <option value="">Select Radiologist</option>
+          {radiologists.map((radiologist) => (
+            <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+          ))}
+        </select>
+      </div> */}
+
+        {userType==="doctor"&& (!radDetailsVisible || radiologistAdded ) && (
+        <div className="add-button-container">
+         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
+         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+            <option value="">Select Radiologist</option>
+            {radiologists.map((radiologist) => (
+              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+            ))}
+          </select>
+          </div>
+        </div>
+      )}
+
+          <div className='rad-recommend'>
+    {radmessage && <p>{radmessage}</p>}
+      </div>
+
+      
+      {userType!=="lab" && (radAdded || radDetailsVisible) && <RadDetails />}
+
+      {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />}
+    
+     
+      
+
+{userType==="doctor" && submitStatus === null && !reportSubmitted && (radAdded  || radDetailsVisible) && (
+  <>
+    <div className='rad-recommend'>
+      Write Final Report
+    </div>
+
+    <div className="report-container">
+      <input type="text" className="report" placeholder="Enter text" /> {/* Text box */}
+    </div>
+
+    <div className="submit-button-container">
+      <Button onClick={handleSubmit}>SUBMIT</Button>
+    </div>
+
+
+  </>
+)}
+    
+    
+    
+
+      <div className='rad-recommend'>
+    {submitmessage && <p>{submitmessage}</p>}
+      </div>
+
+      {(userType==="doctor" || userType==="patient") && submitStatus !== null &&<div className="submit-button-container">
+      <Button onClick={handleSubmit}>VIEW REPORT</Button>
+    </div>}
+
+     
+     
+     {userType==="doctor" && consultationStatus!== "COMPLETED" &&!testClosed  &&(<div className="submit-button-container">
+      <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
+      </div>)}
+
+      <div className='rad-recommend'>
+    {closeMessage && <p>{closeMessage}</p>}
+      </div>
+      {/* <div className="submit-button-container">
+        <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
+      </div> */}
+     { (<div className="submit-button-container">
+        <Button onClick={handleGoBack}>GO BACK</Button>
+      </div>
+     )
+}
+    </>
+  );
+}
+
+export default TestCase;
 
 
 // import React, { useState } from 'react';
@@ -287,279 +680,279 @@
 // export default TestCase;
 
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import "./Style/TestCase.css";
-import Navbar from "../components/Navbar/LoginNav";
-import PatientDetails from '../components/TestCase/PatientDetails';
-import DoctorDetails from '../components/TestCase/DoctorDetails';
-import LabDetails from '../components/TestCase/LabDetails';
-import Button from '../components/TestCase/Button';
-import LabUpload from '../components/TestCase/LabUpload';
-import RadDetails from '../components/TestCase/RadDetails';
-import MessagingPage from "../components/TestCase/MessagingPage";
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import "./Style/TestCase.css";
+// import Navbar from "../components/Navbar/LoginNav";
+// import PatientDetails from '../components/TestCase/PatientDetails';
+// import DoctorDetails from '../components/TestCase/DoctorDetails';
+// import LabDetails from '../components/TestCase/LabDetails';
+// import Button from '../components/TestCase/Button';
+// import LabUpload from '../components/TestCase/LabUpload';
+// import RadDetails from '../components/TestCase/RadDetails';
+// import MessagingPage from "../components/TestCase/MessagingPage";
 
 
-function TestCase() {
-  const navigate = useNavigate();
-  const [labs, setLabs] = useState([]);
-  const [selectedLab, setSelectedLab] = useState(null);
-  const [radiologists, setRadiologists] = useState([]);
-  const [selectedRadiologist, setSelectedRadiologist] = useState(null);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [radmessage, setradMessage] = useState("");
-  const [submitmessage, setsubmitMessage] = useState("");
-  const [radiologistAdded, setRadiologistAdded] = useState(false);
-  const [reportSubmitted, setReportSubmitted] = useState(false);
-  const [labAdded, setLabAdded] = useState(false);
-  const [radAdded, setradAdded] = useState(false);
-  const [closeMessage, setCloseMessage] = useState("");
-  const [testClosed, settestClosed] = useState(false);
+// function TestCase() {
+//   const navigate = useNavigate();
+//   const [labs, setLabs] = useState([]);
+//   const [selectedLab, setSelectedLab] = useState(null);
+//   const [radiologists, setRadiologists] = useState([]);
+//   const [selectedRadiologist, setSelectedRadiologist] = useState(null);
+//   const [isPopupOpen, setIsPopupOpen] = useState(false);
+//   const [message, setMessage] = useState("");
+//   const [radmessage, setradMessage] = useState("");
+//   const [submitmessage, setsubmitMessage] = useState("");
+//   const [radiologistAdded, setRadiologistAdded] = useState(false);
+//   const [reportSubmitted, setReportSubmitted] = useState(false);
+//   const [labAdded, setLabAdded] = useState(false);
+//   const [radAdded, setradAdded] = useState(false);
+//   const [closeMessage, setCloseMessage] = useState("");
+//   const [testClosed, settestClosed] = useState(false);
 
 
 
-  useEffect(() => {
-    fetchLabs();
-    fetchRadiologists();
-  }, []);
+//   useEffect(() => {
+//     fetchLabs();
+//     fetchRadiologists();
+//   }, []);
 
-  const fetchLabs = async () => {
-    try {
-      const response = await fetch('http://localhost:8085/core/facility/get-labs');
-      const data = await response.json();
-      setLabs(data);
-    } catch (error) {
-      console.error('Error fetching labs:', error);
-    }
-  };
+//   const fetchLabs = async () => {
+//     try {
+//       const response = await fetch('http://localhost:8085/core/facility/get-labs');
+//       const data = await response.json();
+//       setLabs(data);
+//     } catch (error) {
+//       console.error('Error fetching labs:', error);
+//     }
+//   };
 
-  const fetchRadiologists = async () => {
-    try {
-      const response = await fetch('http://localhost:8085/core/professional/get-radiologists');
-      const data = await response.json();
-      setRadiologists(data);
-    } catch (error) {
-      console.error('Error fetching radiologists:', error);
-    }
-  };
+//   const fetchRadiologists = async () => {
+//     try {
+//       const response = await fetch('http://localhost:8085/core/professional/get-radiologists');
+//       const data = await response.json();
+//       setRadiologists(data);
+//     } catch (error) {
+//       console.error('Error fetching radiologists:', error);
+//     }
+//   };
 
-    const handleAddLab = async () => {
-    try {
-      const labId = selectedLab; // Assuming labId is selectedLab
-      const consultationId = 2; // Assuming constant consultationId
+//     const handleAddLab = async () => {
+//     try {
+//       const labId = selectedLab; // Assuming labId is selectedLab
+//       const consultationId = 2; // Assuming constant consultationId
   
-      if (!labId) {
-        setMessage("Please select a lab.");
-        return;
-      }
+//       if (!labId) {
+//         setMessage("Please select a lab.");
+//         return;
+//       }
   
-      const url = new URL('http://localhost:8085/core/facility/add-lab');
-      url.searchParams.append('consultationId', consultationId);
-      url.searchParams.append('labFacId', labId);
+//       const url = new URL('http://localhost:8085/core/facility/add-lab');
+//       url.searchParams.append('consultationId', consultationId);
+//       url.searchParams.append('labFacId', labId);
   
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+//       const response = await fetch(url, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
   
-      const data = await response.text();
-      console.log("Response data:", data); // Log received data
-      setMessage(data); // Update message state
-      setLabAdded(true);
+//       const data = await response.text();
+//       console.log("Response data:", data); // Log received data
+//       setMessage(data); // Update message state
+//       setLabAdded(true);
   
-    } catch (error) {
-      console.error('Error adding lab:', error);
-      setMessage("Error adding lab. Please try again.");
-    }
-  };
-  
-
-  const handleAddRadiologist = async () => {
-    try {
-      const radiologistId = selectedRadiologist;
-      const consultationId = 2;
-  
-      if (!radiologistId) {
-        setradMessage("Please select a radiologist.");
-        return;
-      }
-  
-      const url = new URL('http://localhost:8085/core/professional/add-radiologist');
-      url.searchParams.append('consultationId', consultationId);
-      url.searchParams.append('proRadiologistId', radiologistId);
-  
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      const data = await response.text();
-      setradMessage(data);
-      setRadiologistAdded(true);
-      setradAdded(true); // Set flag to indicate radiologist added successfully
-    } catch (error) {
-      console.error('Error adding radiologist:', error);
-      setradMessage("Error adding radiologist. Please try again.");
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const consultationId = 2; // Set consultationId param for now
-      const finalReport = document.querySelector('.report').value;
-      const response = await fetch(`http://localhost:8085/core/consultation/post-final-report?consultationId=${consultationId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        body: finalReport
-      });
-      if (!response.ok) {
-        throw new Error('Failed to submit report');
-      }
-      const responseData = await response.text();
-      // Assuming the response data contains the text of the submitted report
-      setsubmitMessage(responseData);
-      setReportSubmitted(true);
-    } catch (error) {
-      console.error('Error submitting report:', error);
-      // Handle error as needed
-    }
-  };
-
-
-  const handleCloseThread = async () => {
-    try {
-      const consultationId = 2;
-      const response = await fetch(`http://localhost:8085/core/consultation/close-consultation?consultationId=${consultationId}`, {
-        method: 'PUT',
-      });
-      if (!response.ok) {
-        throw new Error('Failed to close thread');
-      }
-      const responseData = await response.text();
-      setCloseMessage(responseData);
-      settestClosed(true);
-    } catch (error) {
-      console.error('Error closing thread:', error);
-    }
-  };
-
-  const handleGoBack = () => {
-   navigate("/doctor/patient-test-details/:patientId")
-  };
+//     } catch (error) {
+//       console.error('Error adding lab:', error);
+//       setMessage("Error adding lab. Please try again.");
+//     }
+//   };
   
 
-  return (
-    <>
-      <Navbar />
-      <PatientDetails />
-      <DoctorDetails />
+//   const handleAddRadiologist = async () => {
+//     try {
+//       const radiologistId = selectedRadiologist;
+//       const consultationId = 2;
+  
+//       if (!radiologistId) {
+//         setradMessage("Please select a radiologist.");
+//         return;
+//       }
+  
+//       const url = new URL('http://localhost:8085/core/professional/add-radiologist');
+//       url.searchParams.append('consultationId', consultationId);
+//       url.searchParams.append('proRadiologistId', radiologistId);
+  
+//       const response = await fetch(url, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
+  
+//       const data = await response.text();
+//       setradMessage(data);
+//       setRadiologistAdded(true);
+//       setradAdded(true); // Set flag to indicate radiologist added successfully
+//     } catch (error) {
+//       console.error('Error adding radiologist:', error);
+//       setradMessage("Error adding radiologist. Please try again.");
+//     }
+//   };
 
-      <div className="custom-button-container">
-        <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
-        {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
-      </div>
+//   const handleSubmit = async () => {
+//     try {
+//       const consultationId = 2; // Set consultationId param for now
+//       const finalReport = document.querySelector('.report').value;
+//       const response = await fetch(`http://localhost:8085/core/consultation/post-final-report?consultationId=${consultationId}`, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'text/plain'
+//         },
+//         body: finalReport
+//       });
+//       if (!response.ok) {
+//         throw new Error('Failed to submit report');
+//       }
+//       const responseData = await response.text();
+//       // Assuming the response data contains the text of the submitted report
+//       setsubmitMessage(responseData);
+//       setReportSubmitted(true);
+//     } catch (error) {
+//       console.error('Error submitting report:', error);
+//       // Handle error as needed
+//     }
+//   };
 
-      <div className="add-button-container">
-        <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
-       <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
-          <option value="">Select Lab</option>
-          {labs.map((lab) => (
-            <option key={lab.id} value={lab.id}>{lab.name}</option>
-          ))}
-        </select>
-        </div>
-      </div>
 
-      < div className='rad-recommend'>
-       {message && <p>{message}</p>}
-      </div>
+//   const handleCloseThread = async () => {
+//     try {
+//       const consultationId = 2;
+//       const response = await fetch(`http://localhost:8085/core/consultation/close-consultation?consultationId=${consultationId}`, {
+//         method: 'PUT',
+//       });
+//       if (!response.ok) {
+//         throw new Error('Failed to close thread');
+//       }
+//       const responseData = await response.text();
+//       setCloseMessage(responseData);
+//       settestClosed(true);
+//     } catch (error) {
+//       console.error('Error closing thread:', error);
+//     }
+//   };
 
-      {/* <LabDetails /> */}
-      {labAdded && <LabDetails />}
+//   const handleGoBack = () => {
+//    navigate("/doctor/patient-test-details/:patientId")
+//   };
+  
 
-      {/* <div className="custom-button-container">
-        <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
-        <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
-          <option value="">Select Radiologist</option>
-          {radiologists.map((radiologist) => (
-            <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
-          ))}
-        </select>
-      </div> */}
+//   return (
+//     <>
+//       <Navbar />
+//       <PatientDetails />
+//       <DoctorDetails />
 
-        {!radiologistAdded && (
-        <div className="add-button-container">
-         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
-         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
-            <option value="">Select Radiologist</option>
-            {radiologists.map((radiologist) => (
-              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
-            ))}
-          </select>
-          </div>
-        </div>
-      )}
+//       <div className="custom-button-container">
+//         <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
+//         {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
+//       </div>
 
-            <div className='rad-recommend'>
-    {radmessage && <p>{radmessage}</p>}
-      </div>
+//       <div className="add-button-container">
+//         <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
+//        <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
+//           <option value="">Select Lab</option>
+//           {labs.map((lab) => (
+//             <option key={lab.id} value={lab.id}>{lab.name}</option>
+//           ))}
+//         </select>
+//         </div>
+//       </div>
+
+//       < div className='rad-recommend'>
+//        {message && <p>{message}</p>}
+//       </div>
+
+//       {/* <LabDetails /> */}
+//       {labAdded && <LabDetails />}
+
+//       {/* <div className="custom-button-container">
+//         <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
+//         <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+//           <option value="">Select Radiologist</option>
+//           {radiologists.map((radiologist) => (
+//             <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+//           ))}
+//         </select>
+//       </div> */}
+
+//         {!radiologistAdded && (
+//         <div className="add-button-container">
+//          <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
+//          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+//             <option value="">Select Radiologist</option>
+//             {radiologists.map((radiologist) => (
+//               <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+//             ))}
+//           </select>
+//           </div>
+//         </div>
+//       )}
+
+//             <div className='rad-recommend'>
+//     {radmessage && <p>{radmessage}</p>}
+//       </div>
 
       
-      {radAdded && <RadDetails />}
+//       {radAdded && <RadDetails />}
 
-      {radAdded && <MessagingPage />}
+//       {radAdded && <MessagingPage />}
     
      
       
 
-{!reportSubmitted && radAdded && (
-  <>
-    <div className='rad-recommend'>
-      Write Final Report
-    </div>
+// {!reportSubmitted && radAdded && (
+//   <>
+//     <div className='rad-recommend'>
+//       Write Final Report
+//     </div>
 
-    <div className="report-container">
-      <input type="text" className="report" placeholder="Enter text" /> {/* Text box */}
-    </div>
+//     <div className="report-container">
+//       <input type="text" className="report" placeholder="Enter text" /> {/* Text box */}
+//     </div>
 
-    <div className="submit-button-container">
-      <Button onClick={handleSubmit}>SUBMIT</Button>
-    </div>
-  </>
-)}
+//     <div className="submit-button-container">
+//       <Button onClick={handleSubmit}>SUBMIT</Button>
+//     </div>
+//   </>
+// )}
 
 
-      <div className='rad-recommend'>
-    {submitmessage && <p>{submitmessage}</p>}
-      </div>
+//       <div className='rad-recommend'>
+//     {submitmessage && <p>{submitmessage}</p>}
+//       </div>
 
-     {!testClosed && <div className="submit-button-container">
-      <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
-      </div>}
+//      {!testClosed && <div className="submit-button-container">
+//       <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
+//       </div>}
 
-      <div className='rad-recommend'>
-    {closeMessage && <p>{closeMessage}</p>}
-      </div>
-      {/* <div className="submit-button-container">
-        <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
-      </div> */}
-     {testClosed && (<div className="submit-button-container">
-        <Button onClick={handleGoBack}>GO BACK</Button>
-      </div>
-     )
-}
-    </>
-  );
-}
+//       <div className='rad-recommend'>
+//     {closeMessage && <p>{closeMessage}</p>}
+//       </div>
+//       {/* <div className="submit-button-container">
+//         <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
+//       </div> */}
+//      {testClosed && (<div className="submit-button-container">
+//         <Button onClick={handleGoBack}>GO BACK</Button>
+//       </div>
+//      )
+// }
+//     </>
+//   );
+// }
 
-export default TestCase;
+// export default TestCase;
 
 
 

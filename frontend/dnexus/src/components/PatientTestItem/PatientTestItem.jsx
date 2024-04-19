@@ -12,10 +12,11 @@ const PatientTestItem = ({ test, onTestClick }) => {
     };
 
     const testStatusColor = () => {
-      switch (test.status) {
-        case 'Completed':
+      const lowerCaseStatus = test.status.toLowerCase(); // Convert status to lowercase
+      switch (lowerCaseStatus) {
+        case 'completed':
           return '#D6F0E0';
-        case 'Ongoing':
+        case 'ongoing':
           return '#FEFFD6';
         case 'upcoming':
           return '#FFD3D3';

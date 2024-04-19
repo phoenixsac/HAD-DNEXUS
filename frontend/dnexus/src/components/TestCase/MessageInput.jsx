@@ -133,13 +133,14 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState , useParams} from 'react';
 import "./MessageInput.css";
 import { sendPrivateMessage } from './WebSocket'; 
 
 function MessageInput({ users, onSubmit, onConnect ,connected}) {
   const [message, setMessage] = useState('');
-  const [receiverId, setReceiverId] = useState('');
+  // const [receiverId, setReceiverId] = useState('');
+  const { consultationId, testId } = useParams(); 
 
   const handleSubmit = (e) => {
     e.preventDefault();

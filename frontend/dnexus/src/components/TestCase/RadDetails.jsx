@@ -80,18 +80,21 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import "./RadDetails.css";
 
 function RadDetails() {
   const [radDetails, setRadDetails] = useState(null);
   const [showFullPrescription, setShowFullPrescription] = useState(false);
+  const { testId, consultationId } = useParams();
+  const [userType, setUserType] = useState("");
 
   useEffect(() => {
     // Consultation ID
-    const consultationId = 2; // Replace with the dynamic value if available
-
+    // const consultationId = 2; // Replace with the dynamic value if available
     // Make the GET request with consultationId as a request param
-    fetch(`http://localhost:8085/core/consultation/radiologist-detail-for-consultation?consultationId=${consultationId}`)
+    const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+    fetch(`http://localhost:8085/core/consultation/radiologist-detail-for-consultation?${idParam}`)
       .then(response => response.json())
       .then(data => {
         // Update state with received data
@@ -100,7 +103,12 @@ function RadDetails() {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  }, []); // Empty dependency array to run effect only once on mount
+  }, [testId,consultationId]); 
+
+  useEffect(() => {
+    const userTypeFromStorage = sessionStorage.getItem('userType');
+    setUserType(userTypeFromStorage);
+  }, []);
 
   const togglePrescription = () => {
     setShowFullPrescription(!showFullPrescription);
@@ -114,12 +122,15 @@ function RadDetails() {
     <div className="mri-info-container">
       <div className="header">
         <span className="rad-name">{radDetails ? radDetails.fullName : ''}</span>
+        
         <br />
         <span className="specialization">{radDetails ? radDetails.systemOfMedicine : ''}</span>
         <br />
-        <span >
+
+        {userType!=="patient" && <span >
           <button className='lab-button' onClick={handleClick}>View Annotated Images</button>
-        </span>
+        </span>}
+
       </div>
 
       <div className="prescription">
