@@ -28,7 +28,7 @@ const LoginNav = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <NavLink to="/AdminDashboard" className="navbar-logo">
+        <NavLink to="/" className="navbar-logo">
           {/* LOGO */}
           <img className="logo" src={logoImage} alt="Logo" />
         </NavLink>
@@ -36,21 +36,25 @@ const LoginNav = () => {
       <div className="list">
         <ul className="nav-menu">
           <li className="nav-item">
-            <NavLink to="/AdminDashboard" className="nav-links">
-              Home
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-links">About Us</NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-links">Contact Us</NavLink>
-          </li>
-          <li className="nav-item">
-            <button onClick={handleLogout} className="nav-button">
-              Logout
-            </button>
-          </li>
+              <NavLink to="/about-us" className="nav-links">
+                About Us
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/privacy-policy" className="nav-links">
+                Privacy Policy
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/contact" className="nav-links">
+                Contact Us
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <button onClick={handleLogout} className="nav-button">
+                Logout
+              </button>
+            </li>
         </ul>
       </div>
     </nav>
