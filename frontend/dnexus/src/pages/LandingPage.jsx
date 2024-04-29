@@ -1,6 +1,8 @@
 import React from "react";
 import ConditionalNavbar from "../components/Navbar/ConditionalNavbar";
+import Footer from "../components/Footer/Footer";
 // import { useNavigate } from "react-router-dom";
+
 
 
 import "./Style/LandingPage.css";
@@ -26,6 +28,8 @@ function LandingPage() {
           onClick={handleClick}>
           LogIn
       </button> */}
+
+      <Footer/>
       
     </div>
   );
