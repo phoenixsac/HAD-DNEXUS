@@ -8,10 +8,13 @@ import Funfact from "../components/FunFacts/FunFacts";
 import sectionImg from '../components/assets/StockImages/section-img.png';
 import contactImg from '../components/assets/StockImages/contact-img.png';
 
+import Footer from "../components/Footer/Footer";
+// import { useNavigate } from "react-router-dom";
 
 import "./Style/LandingPage.css";
 
 function LandingPage() {
+
   //const navigate = useNavigate();
   return (
     <div>
@@ -65,8 +68,7 @@ Experience the future of healthcare collaboration with DNexus, where innovation 
         </section>
 
 
-
-
+      <Footer/>
     </div>
   );
 }
