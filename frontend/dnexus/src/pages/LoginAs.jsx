@@ -3,6 +3,7 @@ import React from "react";
 import ConditionalNavbar from "../components/Navbar/ConditionalNavbar";
 import "./Style/LoginAs.css";
 import { useNavigate } from "react-router-dom";
+import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 
 function LoginAs() {
   const navigate = useNavigate();
@@ -36,13 +37,14 @@ function LoginAs() {
   };
 
   return (
-    <div className="login-as">
-      <ConditionalNavbar />
+    
+//       {/* <ConditionalNavbar /> */}
       
-      <div className="heading">
-        <h2>LOGIN AS</h2>
-      </div>
 
+<div>
+<Breadcrumbs pageTitle="Login As" />
+
+ <div className="login-as">
       <div className="login-container">
 
         <div className="section">
@@ -78,6 +80,7 @@ function LoginAs() {
 
       </div>
 
+    </div>
     </div>
   );
 }

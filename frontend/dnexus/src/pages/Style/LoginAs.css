@@ -1,5 +1,9 @@
 /* login-as.css */
 
+.login-as{
+  position: relative;
+}
+
 .heading{
  
   padding: 20px 10px;
@@ -19,14 +23,19 @@
 
   padding: 30px;
   margin: 30px;
+
+  display: flex;
+  flex-direction: column;
 }
+
 
 .login-card .placeholder {
   
-  color: #110505;
+  color: #2c3239;
+  background-color: transparent;
   font-family: "Inter-Regular", Helvetica;
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0;
   line-height: 31px;
   position: absolute;
@@ -71,10 +80,10 @@
     padding: 30px 20px;
     margin: 10px 10px;
 
-    position: absolute;
+    /* position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
   }
   
 
