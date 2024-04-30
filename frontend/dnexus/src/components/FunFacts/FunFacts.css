@@ -274,6 +274,8 @@ body{
 .fun-facts .single-fun p{
 	color:#fff;
 	font-size:20px;
+	position: relative; /* Ensure the position is set to relative */
+	z-index: 2; /* Set a higher z-index for the h2 tag */
 }
 
 
