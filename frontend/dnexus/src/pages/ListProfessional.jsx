@@ -7,6 +7,8 @@ import "./Style/ListProfessional.css"
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar";
 import ProfessionalList from '../components/ProfessionalLIst/ProfessionalList';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
 
 
 const ListProfessional = () => {
@@ -73,9 +75,9 @@ const ListProfessional = () => {
     setSearchTerm(event.target.value.toLowerCase()); // Lowercase for case-insensitive search
   };
 
-  const handleBack = () => {
-    navigate("/admin/dashboard");
-  }
+  // const handleBack = () => {
+  //   navigate("/admin/dashboard");
+  // }
 
 
   // Change page handler for Pagination component
@@ -88,6 +90,9 @@ const ListProfessional = () => {
   return (
     <div>
         <Navbar/>
+
+        <Breadcrumbs pageTitle="Professional List"/>
+
         <div className="doctors-list">
           
           <div className='search-back'>
@@ -100,9 +105,9 @@ const ListProfessional = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <button onClick={handleBack}>Back</button>
-            </div>
+            </div> */}
             
           </div>
 
@@ -146,6 +151,8 @@ const ListProfessional = () => {
           </div>
 
         </div>
+
+        <Footer/>
     </div>
   );
 };
