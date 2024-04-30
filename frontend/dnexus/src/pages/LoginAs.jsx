@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 import Footer from "../components/Footer/Footer";
 
+import Footer from "../components/Footer/Footer";
+
 function LoginAs() {
   const navigate = useNavigate();
 
