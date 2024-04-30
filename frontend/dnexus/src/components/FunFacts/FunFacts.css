@@ -194,6 +194,13 @@ body{
 /*=======================
 	Start Fun Facts CSS
 =========================*/
+
+.fun{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .overlay:before {
     position: absolute;
     content: "";
@@ -207,9 +214,11 @@ body{
 
 .fun-facts{
 	position:relative;
+	
 }
 .fun-facts.section{
 	padding:120px 0;
+	display: block;
 }
 .fun-facts{
 	background:url('../assets/StockImages/fun-bg.jpg');
@@ -222,7 +231,7 @@ body{
 .fun-facts .single-fun i {
 	position: absolute;
 	left: 0;
-	font-size: 62px;
+	font-size: 70px;
 	color: #fff;
 	height: 70px;
 	width: 70px;
@@ -260,10 +269,14 @@ body{
 	display: block;
 	margin-bottom: 7px;
 }
+
+
 .fun-facts .single-fun p{
 	color:#fff;
-	font-size:15px;
+	font-size:20px;
 }
+
+
 /*===================
 	End Fun Facts
 =====================*/
