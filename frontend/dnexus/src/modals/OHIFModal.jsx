@@ -3,14 +3,31 @@ import React, { useEffect } from 'react';
 import './OHIFModal.css';
 
 function OHIFModal({ url, onClose }) {
-  useEffect(() => {
-    const newTab = window.open(url, '_blank');
-    return () => {
-      newTab.close();
-    };
-  }, [url]);
+  const closeModal = () => {
+    onClose();
+  };
 
-  return null; // Modal doesn't render anything directly
+  useEffect(() => {
+    document.body.classList.add('modal-open');
+
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
+
+  return (
+    <div className="modal-overlay" onClick={closeModal}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <button className="close-button" onClick={closeModal}>&times;</button>
+        <div className="modal-header">
+          <button className="cancel-button" onClick={closeModal}>Cancel</button>
+        </div>
+        <div className="modal-content">
+          <iframe src={url} title="modal" width="100%" height="100%" style={{ border: 0 }} />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default OHIFModal;
