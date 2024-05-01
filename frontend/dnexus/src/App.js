@@ -30,6 +30,9 @@ import DetailsPatient from "./pages/DetailsPatient";
 import FacilityDashboard from "./pages/FacilityDashboard";
 
 import TestCase from "./pages/TestCase";
+import AboutUs from "./pages/AboutUs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ContactUs from "./pages/ContactUs";
 
 
 function App() {
@@ -43,6 +46,9 @@ function App() {
             <Route path="/LoginAs" element={<LoginAs />} />
             <Route path="/Login" element={<Login />} /> 
             <Route path="/unauthorized" element={<Unauthorized />} /> 
+            <Route path="/about-us" element={<AboutUs />} /> 
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} /> 
+            <Route path="/contact-us" element={<ContactUs />} /> 
             
             <Route
               path="/admin/dashboard"
