@@ -40,7 +40,7 @@
   }
 
 .heading-bg{
-  background-color: #3B5865;
+  background-color: #053e77;
   color: white;
   font-size: 20px;
   font-weight: bold;
@@ -49,14 +49,15 @@
 }
 
 .list-bg{
-  background-color: #D3E1EB;
+  background-color: #b8d6f3;
   color: black;
   font-size: 18px;
 
 }
 
 .list-bg:hover{
-  background-color: #c2d8e7;
+  background-color: white;
+  /* color: black; */
 
 }
   

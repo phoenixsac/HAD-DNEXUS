@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import "./Style/AdminDashboard.css";
 import ConditionalNavbar from "../components/Navbar/ConditionalNavbar";
+import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 
 import { FaUserDoctor } from "react-icons/fa6";
 import { HiUsers } from "react-icons/hi";
 import { RiBodyScanFill } from "react-icons/ri";
+import Footer from "../components/Footer/Footer";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -43,6 +45,8 @@ function AdminDashboard() {
   return (
     <div>
       <ConditionalNavbar />
+
+      <Breadcrumbs pageTitle="Admin Dashboard" />
 
       <div className="admin-dashboard">
 
@@ -88,6 +92,7 @@ function AdminDashboard() {
 
       </div>
 
+        <Footer/>
     </div>
   );
 }

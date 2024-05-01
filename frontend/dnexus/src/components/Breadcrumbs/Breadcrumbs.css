@@ -1,0 +1,31 @@
+
+.overlay{
+	position:relative;
+}
+/* Bread Crumbs */
+.breadcrumbs {
+	background-image: url('../assets/StockImages/bread-bg.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: relative;
+	padding: 120px 0px;
+}
+
+.breadcrumbs h2{
+	color: #fff;
+	text-transform:capitalize;
+	font-size: 38px;
+	font-weight: 700;
+	margin: 0;
+	padding: 0;
+    opacity: 1;
+	position: relative; /* Ensure the position is set to relative */
+	z-index: 2; /* Set a higher z-index for the h2 tag */
+}
+
+.overlay{
+	position:relative;
+	z-index: 1; /* Increase the z-index of the overlay */
+}
+
