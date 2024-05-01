@@ -266,9 +266,9 @@ const PatientDetails = () => {
 
   return (
     
-    <div className="breadcrumbs overlay">
+    <div className='patient-breadcrumbs'>
       {patientData ? (
-        <div>
+        <div className='breadcrumbs overlay'>
         <div className='title'> 
         <h2>{patientData.name} {patientData.age}/{patientData.gender} </h2>
         </div>
