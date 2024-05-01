@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar/ConditionalNavbar';
 
 import "./Style/AddFacility.css";
+import contactImg from '../components/assets/StockImages/contact-img.png';
+
 import Success from '../components/SuccesOrFailure/Success';
 import Failure from '../components/SuccesOrFailure/Failure';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
 
 const AddFacility = () => {
   const [isVerified, setIsVerified] = useState(false);
@@ -71,27 +75,45 @@ const AddFacility = () => {
   return (
     <div>
       <Navbar/>
+
+      <Breadcrumbs pageTitle="Add Facility"/>
+
       <div>
         <div className="lab-verification-container">          
-          <div className='facilityId-field'>
-            <input
-              type="text"
-              placeholder="Enter Unique Facility ID"
-              value={facilityId}
-              onChange={handleChange}
-            />
-          </div>
-          <div className='verify-button'>
-            <button onClick={handleVerify}>
-              Verify
-            </button>
+          <div className="facility">
+            <div className='facilityId-field'>
+              <input
+                type="text"
+                placeholder="Enter Unique Facility ID"
+                value={facilityId}
+                onChange={handleChange}
+              />
+            
+              <div className='verify-button'>
+                <button onClick={handleVerify}>
+                  Verify
+                </button>
+              </div>
+
+              <div>
+                {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)}
+              </div>
+
+            </div>
+
+            <div className='image'>
+                <img src={contactImg} alt="#" />
+            </div>
           </div>
 
            {/* Render success/failure component based on isVerified */}
-           {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)}
+           {/* {showResult && (isVerified ? <Success message={message} /> : <Failure message={message} />)} */}
            
         </div>
       </div>
+
+      <Footer/>
+
     </div>
   );
 };

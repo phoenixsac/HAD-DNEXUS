@@ -2,11 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import "./Style/PatientTestDetails.css";
+import "./Style/FacilityDashboard.css";
 
 import { AuthContext } from '../components/Authentication/AuthContext';
 import Navbar from '../components/Navbar/ConditionalNavbar';
 import PatientTestItem from '../components/PatientTestItem/PatientTestItem';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
 
 const FacilityDashboard = () => {
   const navigate = useNavigate();
@@ -103,27 +105,35 @@ const FacilityDashboard = () => {
   return (
     <div>
       <Navbar/>
+
+      <Breadcrumbs pageTitle="Facility Dashboard"/>
+
+      <div className='fac-dashboard-container'>
       <div className='search-back'>
 
-          <div className='search-field'>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
+        <div className='search-field'>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
 
+        </div>
+        <div className="test-test-details">
+
+        <div className="test-list">
+          {tests.map((test) => (
+            <PatientTestItem key={test.id} test={test} onTestClick={handleTestClick} />
+          ))}
+        </div>
+
+        </div>
       </div>
-      <div className="test-test-details">
-        
-          <div className="test-list">
-            {tests.map((test) => (
-              <PatientTestItem key={test.id} test={test} onTestClick={handleTestClick} />
-            ))}
-          </div>
-        
-      </div>
+
+      <Footer/>
+
     </div>
   );
 };

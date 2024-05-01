@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import "./Style/RadDashboard.css";
+import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
+import Footer from "../components/Footer/Footer";
 
 import { AuthContext } from '../components/Authentication/AuthContext';
 import Navbar from '../components/Navbar/ConditionalNavbar';
@@ -104,9 +106,13 @@ const RadDashboard = () => {
   return (
     <div>
       <Navbar/>
-      <div className='search-back'>
 
-          <div className='search-field'>
+      <Breadcrumbs pageTitle="Radiologist Dashboard"/>
+      
+      <div className="rad-dashboard-container">
+        <div className='search-patient'>
+
+          <div className='field'>
             <input
               type="text"
               placeholder="Search..."
@@ -115,16 +121,19 @@ const RadDashboard = () => {
             />
           </div>
 
-      </div>
-      <div className="test-test-details">
-        
+          </div>
+          <div className="test-test-details">
+
           <div className="test-list">
             {tests.map((test) => (
               <PatientTestItem key={test.id} test={test} onTestClick={handleTestClick} />
             ))}
           </div>
-        
-      </div>
+
+          </div>
+        </div>
+
+        <Footer/>
     </div>
   );
 };

@@ -7,6 +7,8 @@ import "./Style/ListPatient.css"
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar";
 import AdminPatientList from '../components/AdminPatientList/AdminPatientList';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
 
 
 const ListPatient = () => {
@@ -85,6 +87,9 @@ const ListPatient = () => {
   return (
     <div>
         <Navbar/>
+
+        <Breadcrumbs pageTitle="Patient List"/>
+
         <div className="patients-list">
           
           <div className='search-back'>
@@ -97,9 +102,9 @@ const ListPatient = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <button onClick={handleBack}>Back</button>
-            </div>
+            </div> */}
             
           </div>
 
@@ -142,6 +147,8 @@ const ListPatient = () => {
           </div>
 
         </div>
+        
+        <Footer/>
     </div>
   );
 };

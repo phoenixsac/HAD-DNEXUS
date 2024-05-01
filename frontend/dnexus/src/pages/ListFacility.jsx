@@ -7,6 +7,8 @@ import "./Style/ListFacility.css"
 import Pagination from '../components/Pagination/Pagination'; 
 import Navbar from "../components/Navbar/ConditionalNavbar";
 import FacilityList from '../components/FacilityList/FacilityList';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
 
 
 const ListFacility = () => {
@@ -82,6 +84,9 @@ const ListFacility = () => {
   return (
     <div>
         <Navbar/>
+
+        <Breadcrumbs pageTitle="Facility List"/>
+
         <div className="labs-list">
           
           <div className='search-back'>
@@ -94,9 +99,9 @@ const ListFacility = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <button onClick={handleBack}>Back</button>
-            </div>
+            </div> */}
             
           </div>
 
@@ -139,6 +144,8 @@ const ListFacility = () => {
           </div>
 
         </div>
+
+        <Footer/>
     </div>
   );
 };

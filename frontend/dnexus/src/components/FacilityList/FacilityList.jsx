@@ -8,7 +8,7 @@ const FacilityList = ({ facilities }) => {
   return (
     <div className="facility-list" >
 
-      <div className="facility-card heading-bg">
+      <div className="facility-card heading-card">
         <div className="field">
           <p>Facility ID</p>
         </div>
@@ -30,7 +30,7 @@ const FacilityList = ({ facilities }) => {
         to={`/admin/facility/${facility.facilityId}`}
         >  
           
-          <div className="facility-card list-bg">
+          <div className="facility-card facility-list-bg">
             <div className="field">
               <p>{facility.facilityUFID}</p>
             </div>
