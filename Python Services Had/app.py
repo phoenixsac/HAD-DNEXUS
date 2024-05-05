@@ -103,6 +103,4 @@ def convert_and_transcribe(input_file):
 if __name__ == '__main__':
     app.run(debug=True)
 
-if __name__ == '__main__':
-    # Run the Flask app
-    app.run(debug=True)
+
