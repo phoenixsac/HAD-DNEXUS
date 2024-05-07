@@ -6,6 +6,9 @@ import "./Style/PatientDashboard.css";
 
 import { AuthContext } from '../components/Authentication/AuthContext';
 import Navbar from '../components/Navbar/ConditionalNavbar';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
+
 
 
 function PatientDashboard() {  
@@ -72,35 +75,89 @@ function PatientDashboard() {
   return (
     <div>
       <Navbar />
-      <div className='container'>
-      <div className='childcontainer'>
-        <div>
-                <div className='card'>
-                  <div className='cardId'><p>ConsultationId</p></div>
-                  <div className='cardName'><p>Name</p></div>
-                  <div className='datecreated'><p>DateCreated</p></div>
-                  <div className='cardStatus'><p>Status</p></div>
-                </div>
+
+      <Breadcrumbs pageTitle="Patient Dashboard"/>
+
+      <div className="dashboard-container" >
+
+          <div className="patient-card heading-card">
+            <div className="field">
+              <p>Consultation ID</p>
             </div>
-        </div>
-        <div className='childcontainer'>
-          {error && <p>{error}</p>}
+            <div className="field">
+              <p>Consultation Name</p>
+            </div>
+            <div className="field">
+              <p>Date Created</p>
+            </div>
+            <div className="field">
+              <p>Status</p>
+            </div>  
+          </div>
+
           {consultations.map((consultation) => (
-            <div key={consultation.consultationId}>
-              <Link to={`/patient/patient-test-details/${consultation.consultationId}`} className="link-no-underline">
-                <div className='card'>
-                  <div className='cardId'><p>{consultation.consultationId}</p></div>
-                  <div className='cardName'><p>{consultation.name}</p></div>
-                  <div className='date'><p>{consultation.dateCreated}</p></div>
-                  <div className='cardStatus'><p>{consultation.status}</p></div>
+
+            <Link className='patient-card-link' 
+            key={consultation.consultationId} 
+            to={`/patient/patient-test-details/${consultation.consultationId}`}
+            >  
+              
+              <div className="patient-card patient-list-bg">
+                <div className="field">
+                  <p>{consultation.consultationId}</p>
                 </div>
-              </Link>
-            </div>
+                <div className="field">
+                  <p>{consultation.name}</p>
+                </div>
+                <div className="field">
+                  <p>{consultation.dateCreated}</p>
+                </div>
+                <div className="field">
+                  <p>{consultation.status}</p>
+                </div>  
+              </div>
+              
+          </Link>
+
           ))}
-        </div>
-      </div>
-    </div>
+
+
+          </div>
+
+      <Footer/>
+    </>
+
   );
 }
 
 export default PatientDashboard;
+
+      // {/* <div className='dashboard-container'>
+      //   <div className='child-container'>
+      //     <div>
+      //             <div className='card'>
+      //               <div className='cardId'><p>ConsultationId</p></div>
+      //               <div className='cardName'><p>Name</p></div>
+      //               <div className='datecreated'><p>DateCreated</p></div>
+      //               <div className='cardStatus'><p>Status</p></div>
+      //             </div>
+      //     </div>
+      //   </div>
+
+      //   <div className='child-container'>
+      //       {error && <p>{error}</p>}
+      //       {consultations.map((consultation) => (
+      //         <div key={consultation.consultationId}>
+      //           <Link to={`/patient/patient-test-details/${consultation.consultationId}`} className="link-no-underline">
+      //             <div className='card'>
+      //               <div className='cardId'><p>{consultation.consultationId}</p></div>
+      //               <div className='cardName'><p>{consultation.name}</p></div>
+      //               <div className='date'><p>{consultation.dateCreated}</p></div>
+      //               <div className='cardStatus'><p>{consultation.status}</p></div>
+      //             </div>
+      //           </Link>
+      //         </div>
+      //       ))}
+      //   </div>
+
+      // </div> */}

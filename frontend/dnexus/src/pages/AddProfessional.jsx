@@ -32,6 +32,7 @@ const AddProfessional = () => {
       });
 
       if (response.ok) {
+
         console.log("response:",response.data);
 
         const data = await response.text();
@@ -55,13 +56,11 @@ const AddProfessional = () => {
         console.log("isVerified:",isVerified);
 
       } else {
+        // If response is not ok, handle the error
         setIsVerified(false);
         setMessage('Failed to verify. Please try again.');
+        setShowResult(true);
       }
-
-      // Clear input field after displaying message
-      sethpId('');
-      setShowResult(true); // Show the result after receiving the response
     } catch (error) {
       console.error('Error occurred during verification:', error);
       setMessage('An error occurred during verification');

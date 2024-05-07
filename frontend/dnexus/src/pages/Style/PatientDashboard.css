@@ -1,63 +1,71 @@
-.container{
-    position: absolute;
-    top: 0;
-    left: 0;
+.dashboard-container {
     display: flex;
+    /* flex-wrap: wrap; */
     flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    /* background-color: aqua; */
-    justify-content: center;
+    justify-content: center; /* Distribute cards evenly */
     align-items: center;
-}
+    width: 100%;
 
-.childcontainer{
-    display: flex;
-    width: 70%;
-    
-    flex-direction: column;
-    justify-content: center; /* Center horizontally */
-    
-    /* background-color: blueviolet; */
-}
-
-.card{
-    display: flex;
-    /* flex-direction: row; */
-    margin: 0.5rem;
-    /* padding: 1rem; */
-    padding: 15px;
-    background-color: #DCF0EF;
-    /* border: 1px solid rgb(71, 70, 70); */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-}
-.card:nth-child(1) {
-    background-color: #ECE6E6;
-}
-
-.cardId {
-    flex-grow: 1;
-    /* background-color: aqua; */
-}
-
-.cardName{
-    flex-grow: 8;
-    /* background-color: rgb(15, 114, 114); */
-}
-
-.datecreated{
-    flex-grow: 1;
-}
-
-.cardStatus {
-    flex-grow: 2;
-    /* background-color: rgba(2, 26, 26, 0.973); */
-}
-
-.link-no-underline {
-    text-decoration: none;
-    color: #000;
+    margin: 50px 10px;
+    padding: 20px 10px;
   }
+
+  .patient-card-link{
+    /* width: 85vw; */
+
+    text-decoration: none;
+  }
+
+  .patient-card-link.patient-card{
+    display: flex;
+    justify-content: space-between;
+
+    padding: 1rem;
+    margin-bottom: 1rem;
+    /* Adjust width for 4 columns with some spacing */
+    /* width: calc(25% - 1.5rem);  */
+    cursor: pointer; 
+  }
+  
+  .patient-card {
+    display: flex;
+    justify-content: space-between;
+    
+
+    width: 85vw;
+    padding: 1rem;
+    border-radius: 0.8rem;
+    margin-bottom: 1rem;
+    
+  }
+
+.heading-card{
+  background-color: #053e77;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+
+  /* margin-left: 28px; */
+}
+
+.patient-list-bg{
+  background-color: #b8d6f3;
+  color: black;
+  font-size: 18px;
+
+}
+
+.patient-list-bg:hover{
+  background-color: white;
+  /* color: black; */
+
+}
+  
+ .field{
+  padding: 5px;
+  /* text-align: left; */
+
+  height: 30px;
+  width: 300px;
+ }
   

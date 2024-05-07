@@ -4,6 +4,8 @@
     margin-bottom: 1rem;
     width: calc(100% - 1.5rem); /* Adjust width for 3 columns with some spacing */
     cursor: pointer; /* Style for clickable test items */
+
+    color: black;
   }
   
   .test-list-item p {

@@ -1,3 +1,4 @@
+
 // import React from 'react';
 // import "./PatientDetails.css";
 
@@ -57,6 +58,8 @@
 
 // export default PatientDetails;
 
+
+import "./PatientDetails.css";
 
 // import React, { useState, useEffect } from 'react';
 // import "./PatientDetails.css";
@@ -236,11 +239,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
 import './PatientDetails.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 const PatientDetails = () => {
   const [patientData, setPatientData] = useState(null);
+
+  // const { testId } = useParams(); // Get consultationId from URL parameter
+
   const { testId, consultationId } = useParams();
 
   //Fetch patient details from backend API
@@ -262,7 +270,9 @@ const PatientDetails = () => {
     };
 
     fetchPatientDetails();
-  }, [testId,consultationId]); 
+
+  }, [testId,consultationId]); // Include consultationId in the dependency array
+
 
   return (
     

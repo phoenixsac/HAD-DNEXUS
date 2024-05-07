@@ -1,5 +1,4 @@
 .labs-list {
-  width: 98%;
   margin: 20px 20px;
 }
 
@@ -9,19 +8,24 @@
   width:95vw;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+
+  margin-left: 60px;
 }
 
 .search-field{
   height: 50px;
   width: 500px;
 
+  padding-left: 10px;
+
 }
 
 .search-field input{
   border-radius: 15;
   height: 40px;
+  padding-left: 10px;
 }
 
 .search-back button {
@@ -41,23 +45,6 @@
   font-size: 2rem;
 }
 
-.table-container{
-  padding: 10px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 95%;
-  overflow-x: auto; 
-
-  position: relative;
-}
-
-.table {
-  border-collapse: collapse;
-  width: 100%;
-}
 
 .facility-list{
   padding: 10px;
@@ -70,25 +57,6 @@
   /* overflow-x: auto;  */
 
   /* position: relative;   */
-}
-
-.labs-list th,
-.labs-list td {
-  padding: 10px;
-  border: 1px solid #ebe9e9;
-  text-align: left;
-}
-
-.labs-list input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  margin: 5px 0;
-}
-
-.view-link{
-  text-decoration: none;
-  color: black;
 }
 
 .pagination-container {

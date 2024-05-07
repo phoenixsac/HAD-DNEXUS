@@ -31,9 +31,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './LabDetails.css';
+import OHIFModal from '../../modals/OHIFModal';
 
 const LabDetails = () => {
     const [labData, setLabData] = useState(null);
+    const [modalUrl, setModalUrl] = useState(null);
     const description = "Description";
     const { testId, consultationId } = useParams();
     const [userType, setUserType] = useState("");
@@ -60,6 +62,12 @@ const LabDetails = () => {
     };
 
     const handleClick = () => {
+        // Generate the URL for the modal here (assuming it depends on labData)
+        const modalUrl = `http://localhost:3000/viewer/dicomjson?url=http://localhost:9191/dicom-files/LIDC-IDRI-0001.json`; // Modify this URL as needed
+        setModalUrl(modalUrl);
+    };
+
+    const handleViewClick = () => {
         alert("Button clicked!");
     };
 
@@ -82,6 +90,8 @@ const LabDetails = () => {
             <div className="description">
                 <p>{description}</p> {/* Leave description as dummy data */}
             </div>
+            {/* Render the OHIFModal component conditionally */}
+            {modalUrl && <OHIFModal url={modalUrl} onClose={() => setModalUrl(null)} />}
         </div>
     );
 };

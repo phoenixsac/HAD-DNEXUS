@@ -7,6 +7,8 @@ import Navbar from '../components/Navbar/ConditionalNavbar';
 import { AuthContext } from '../components/Authentication/AuthContext';
 import PatientTestItem from '../components/PatientTestItem/PatientTestItem';
 import DoctorCreateCaseModal from '../modals/DoctorCreateCase/DoctorCreateCaseModal';
+import BreadcrumbsPatientData from '../components/BreadcrumbsPatientData/BreadcrumbsPatientData';
+import Footer from '../components/Footer/Footer';
 
 
 const DocPatientTestDetails = () => {
@@ -98,16 +100,19 @@ const DocPatientTestDetails = () => {
   return (
     <div>
       <Navbar />
+
+      <BreadcrumbsPatientData/>
+
       <div className="patient-test-details">
         <div className='header'>
-          <div className='patient-data'>
+          {/* <div className='patient-data'>
             <p>{patient?.id}</p>
             <p>{patient?.name}</p>
             <p>{patient?.age} / {patient?.gender}</p>
-          </div>
-          <div className='create-button'>
+          </div> */}
+          <div className='create-case-button'>
             <button onClick={handleCreateCase}>Create Case</button>
-            <button onClick={handleGoBack}>Go Back</button>
+            {/* <button onClick={handleGoBack}>Go Back</button> */}
           </div>
         </div>
         {tests && tests.length > 0 && (
@@ -121,6 +126,8 @@ const DocPatientTestDetails = () => {
           <DoctorCreateCaseModal onClose={handleModalClose} patientId={patientId} />
         )}
       </div>
+
+      <Footer/>
     </div>
   );
 };
