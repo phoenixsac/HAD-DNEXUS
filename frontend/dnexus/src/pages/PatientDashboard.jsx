@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar/ConditionalNavbar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import Footer from '../components/Footer/Footer';
 
+
 function PatientDashboard() {  
 
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function PatientDashboard() {
             throw new Error('User type or token not found.');
           }
 
-          const response = await axios.get(`http://localhost:8080/patient/consultation-list?patientId=2`, {
+          const response = await axios.get(`http://localhost:8080/patient/consultation-list?patientId=${actorIdState}`, {
             headers: {
               'Authorization': `Bearer ${jwtToken}`
             }
@@ -71,7 +72,7 @@ function PatientDashboard() {
   }, [actorIdState]); 
 
   return (
-    <>
+    <div>
       <Navbar />
 
       <Breadcrumbs pageTitle="Patient Dashboard"/>
@@ -118,10 +119,12 @@ function PatientDashboard() {
           </Link>
 
           ))}
+
           </div>
 
       <Footer/>
     </>
+
   );
 }
 

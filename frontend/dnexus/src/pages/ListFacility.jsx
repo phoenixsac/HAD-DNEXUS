@@ -16,7 +16,7 @@ const ListFacility = () => {
 
   const [labs, setLabs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [labsPerPage] = useState(6);
+  const [labsPerPage] = useState(20);
   const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   const [filteredLabs, setFilteredLabs] = useState([]);

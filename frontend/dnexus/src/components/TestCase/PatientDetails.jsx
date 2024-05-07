@@ -1,16 +1,22 @@
+
 import "./PatientDetails.css";
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import "./PatientDetails.css";
 
 function PatientDetails() {
   const [patientData, setPatientData] = useState(null);
+  // const { testId } = useParams(); // Get consultationId from URL parameter
+  const { testId, consultationId } = useParams();
 
   // Fetch patient details from backend API
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
-        const consultationId = 2; // Set consultationId param for now
-        const response = await fetch(`http://localhost:8085/core/consultation/patient-details?consultationId=${consultationId}`);
+        // const response = await fetch(`http://localhost:8085/core/consultation/patient-details?consultationId=${testId}`);
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/patient-details?${idParam}`);
         if (!response.ok) {
           throw new Error('Failed to fetch patient details');
         }
@@ -23,7 +29,7 @@ function PatientDetails() {
     };
 
     fetchPatientDetails();
-  }, []); // Empty dependency array ensures the effect runs only once
+  }, [testId,consultationId]); // Include consultationId in the dependency array
 
   // Render patient details
   return (
@@ -51,7 +57,3 @@ function PatientDetails() {
 }
 
 export default PatientDetails;
-
-
-
-

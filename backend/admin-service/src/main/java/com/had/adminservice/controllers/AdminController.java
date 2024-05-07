@@ -91,22 +91,23 @@ public class AdminController {
 
     @PostMapping("/add-professional")
     public ResponseEntity<String> addProfessionalByFacilityId(@RequestParam("hpId") Long hpId) {
-
         try {
             String message = adminService.addProfessional(hpId);
-            if (message.equals("Professional with the provided facility id already exists!")) {
+            if(message.equals("Professional with the provided facility id already exists!")) {
                 return ResponseEntity.badRequest().body(message);
-            }
-            else if(message.equals("Professional associated facility id does not exist in Facility and HFR tables.")){
+            } else if (message.equals("Professional associated facility id does not exist in Facility and HFR tables.")) {
                 return ResponseEntity.badRequest().body(message);
             }else if(message.equals("Success")){
                 return ResponseEntity.ok(message);
+            } else {
+                // Handle any other unexpected message here
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected message: " + message);
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error processing data: " + e.getMessage());
         }
-        return null;
     }
+
 
     @DeleteMapping("/remove-professional")
     public ResponseEntity<String> removeProfessional(@RequestParam Long id) {
