@@ -10,6 +10,7 @@ import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import Footer from '../components/Footer/Footer';
 
 
+
 function PatientDashboard() {  
 
   const navigate = useNavigate();
@@ -119,6 +120,7 @@ function PatientDashboard() {
           </Link>
 
           ))}
+
 
           </div>
 

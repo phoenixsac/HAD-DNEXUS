@@ -71,6 +71,10 @@ const LabDetails = () => {
         alert("Button clicked!");
     };
 
+    const handleViewClick = () => {
+        alert("Button clicked!");
+    };
+
     return (
         <div className="info-container">
             <div className="header">
