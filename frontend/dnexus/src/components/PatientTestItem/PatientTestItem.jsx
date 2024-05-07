@@ -11,14 +11,25 @@ const PatientTestItem = ({ test, onTestClick }) => {
       onTestClick(test.consultationId);
     };
 
+    // const testStatusColor = () => {
+    //   switch (test.status) {
+    //     case 'Completed':
+    //       return '#D6F0E0';
+    //     case 'Ongoing':
+    //       return '#FEFFD6';
+    //     case 'upcoming':
+    //       return '#FFD3D3';
+    //     default:
+    //       return 'white';
+    //   }
+    // };
+
     const testStatusColor = () => {
-      switch (test.status) {
-        case 'Completed':
-          return '#D6F0E0';
-        case 'Ongoing':
-          return '#FEFFD6';
-        case 'upcoming':
-          return '#FFD3D3';
+      switch (test.status.toLowerCase()) {
+        case 'completed':
+          return '#B4D4FF';
+        case 'ongoing':
+          return '#BFCFE7';
         default:
           return 'white';
       }

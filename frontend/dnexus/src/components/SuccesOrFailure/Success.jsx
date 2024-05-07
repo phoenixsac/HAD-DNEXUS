@@ -22,15 +22,15 @@ const Success = ({ loginId, password }) => {
             </div>
             <div className='success-msg'>
               <div className='heading'>
-                <h2>Added Successfully!</h2>
+                <h5>Professional Added Successfully!</h5>
               </div>
-              <div className='credentials'>
+              {/* <div className='credentials'>
                 <p>Credentials send to professional's Email ID</p>
-              </div>
+              </div> */}
             </div>
-            <div className='button-div'>
+            {/* <div className='button-div'>
               <button onClick={handleFinish}>FINISH</button>
-            </div>
+            </div> */}
         </div>
     </div>
   );
