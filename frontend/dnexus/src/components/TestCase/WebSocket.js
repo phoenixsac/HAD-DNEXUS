@@ -43,24 +43,16 @@ export const connectToChat = (senderId, receiverId, consultationId, onMessageRec
 };
 
 const onConnected = async (senderId, receiverId, consultationId, onMessageReceived, onNewMessage) => {
-  // Fetch older messages
-//   try {
-//     const response = await fetchOlderMessages(senderId, receiverId, consultationId);
-//     console.log('response', response);
-//     // Update message list state in the parent component using onMessageReceived callback
-//     onMessageReceived(response.data); // Assuming response.data contains older messages
-//   } catch (error) {
-//     console.error('Error fetching older messages:', error);
-//   }
+
 try {
-    // Fetch older messages
+
     const response = await fetchOlderMessages(senderId, receiverId, consultationId);
     
     if (response.ok) {
       const olderMessages = await response.json();
       console.log('Fetched older messages:', olderMessages);
       
-      // Update message list state in the parent component using onMessageReceived callback
+
       onMessageReceived(olderMessages);
     } else {
       console.error('Failed to fetch older messages:', response.statusText);

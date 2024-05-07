@@ -21,6 +21,7 @@ const RadDashboard = () => {
 
   const [tests, setTests] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  
   const [currentPage, setCurrentPage] = useState(1); // For pagination
   const [testsPerPage] = useState(6);
 
@@ -100,6 +101,8 @@ const RadDashboard = () => {
     // Navigate to test details page with patientId and consultationId as parameters
     navigate(`/rad/patient-test-details/${testId}`);
   };
+
+  
 
   return (
     <div>

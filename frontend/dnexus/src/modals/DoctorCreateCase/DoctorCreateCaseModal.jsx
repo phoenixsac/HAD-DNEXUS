@@ -74,7 +74,7 @@ function DoctorCreateCaseModal({ onClose }) {
             <label>Case Name:</label>
             <input
               type="text"
-              name="Consultation Name"
+              name="consultationName"
               value={formData.consultationName}
               onChange={handleChange}
               placeholder='Consultation Name'
@@ -85,7 +85,7 @@ function DoctorCreateCaseModal({ onClose }) {
             <label>Case Description:</label>
             <input
               type="text"
-              name="Consultation Description"
+              name="test"
               value={formData.test}
               onChange={handleChange}
               placeholder='Consultation Description'

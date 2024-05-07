@@ -1,0 +1,65 @@
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  position: relative;
+  z-index: 1001; /* Set a high z-index value */
+  overflow: auto !important;
+  background-color: white;
+  border-radius: 8px;
+  width: 80%; /* Adjust the width as needed */
+  height: 80%; /* Adjust the height as needed */
+  margin: 20px; /* Adjust the margin as needed */
+}
+
+.modal-content {
+  margin: 0px;
+  width: 1400px;
+  height: 700px;
+  border-radius: 5px;
+}
+
+/* OHIFModal.css */
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start; /* Align items to the top */
+  padding: 10px;
+}
+
+.cancel-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.cancel-button:hover {
+  color: #333;
+}
+
+
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.334);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Set a z-index value lower than the modal */
+}
+
+iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+}

@@ -136,10 +136,12 @@
 import React, { useState } from 'react';
 import "./MessageInput.css";
 import { sendPrivateMessage } from './WebSocket'; 
+import { useParams } from 'react-router-dom';
 
 function MessageInput({ users, onSubmit, onConnect ,connected}) {
   const [message, setMessage] = useState('');
-  const [receiverId, setReceiverId] = useState('');
+  // const [receiverId, setReceiverId] = useState('');
+  const { consultationId, testId } = useParams(); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -161,16 +163,66 @@ function MessageInput({ users, onSubmit, onConnect ,connected}) {
     setMessage(e.target.value);
   };
   
-  const handleSendClick = (e) => {
-   
-    const consultationId = 1
-    if (!message.trim()) return;
-    // onSubmit({ message, receiverId });
-    sendPrivateMessage('1', '2', message, consultationId); // Pass consultationId
-    setMessage(''); 
-    // Reset message input field
-  };
+  // const handleSendClick = (e) => {
+    
+  //   // const consultationId = 1
+  //   if (!message.trim()) return;
+  //   // onSubmit({ message, receiverId });
+  //   sendPrivateMessage('6', '1', message, consultationId || testId); // Pass consultationId
+  //   setMessage(''); 
+  //   // Reset message input field
+  // };
   // Other input handlers and JSX here...
+
+  const handleSendClick = async (e) => {
+    try {
+      let senderId;
+      let receiverId;
+      // Get userType from sessionStorage
+      const userType = sessionStorage.getItem('userType');
+  
+      // If userType is "doctor"
+      if (userType === "doctor") {
+        // Get senderId from local storage
+        senderId = localStorage.getItem('actorId');
+  
+        // Fetch receiverId from backend using consultationId
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/radiologist-detail-for-consultation?${idParam}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch receiverId');
+        }
+        const data = await response.json();
+        receiverId = data.id;
+         
+        
+      }
+      else if (userType === "radiologist") {
+        senderId = localStorage.getItem('actorId');
+  
+        // Fetch receiverId from backend using consultationId
+        const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+        const response = await fetch(`http://localhost:8085/core/consultation/doctor-details-by-consultation?${idParam}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch receiverId');
+        }
+        const data = await response.json();
+        receiverId = data.id;
+        
+      } 
+      // Handle other userTypes here
+  
+      // Reset message input field
+      if (!message.trim()) return;
+        // Send private message
+      sendPrivateMessage(senderId, receiverId, message, consultationId || testId);
+      setMessage(''); 
+    } catch (error) {
+      console.error('Error handling sending message:', error);
+      // Handle error as needed
+    }
+  };
+  
 
   return (
     <form className="message-input-form" onSubmit={handleSubmit}>
