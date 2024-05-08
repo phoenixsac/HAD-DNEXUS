@@ -49,10 +49,7 @@
 //     </div>
 //   );
 // }
-
 // export default DoctorDetails;
-
-
 // 
 
 import React, { useState, useEffect } from 'react';
@@ -84,7 +81,7 @@ function DoctorDetails() {
     };
 
     fetchDoctorDetails();
-  }, []); // Empty dependency array ensures the effect runs only once
+  }, []); 
 
   // Fetch prescription from backend API
   useEffect(() => {
