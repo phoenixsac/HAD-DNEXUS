@@ -7,6 +7,10 @@ dicom-service/src/main/resources/dicom-files/
 dicom-service/src/main/resources/dicom-json/
 dicom-service/src/main/resources/annotations/
 
+frontend/dnexus/package.json
+frontend/dnexus/package-lock.json
+
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
