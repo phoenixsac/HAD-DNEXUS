@@ -39,8 +39,8 @@
     
   }
 
-.heading-bg{
-  background-color: #3B5865;
+.heading-card{
+  background-color: #053e77;
   color: white;
   font-size: 20px;
   font-weight: bold;
@@ -48,15 +48,16 @@
   /* margin-left: 28px; */
 }
 
-.list-bg{
-  background-color: #D3E1EB;
+.patient-list-bg{
+  background-color: #b8d6f3;
   color: black;
   font-size: 18px;
 
 }
 
-.list-bg:hover{
-  background-color: #c2d8e7;
+.patient-list-bg:hover{
+  background-color: white;
+  /* color: black; */
 
 }
   

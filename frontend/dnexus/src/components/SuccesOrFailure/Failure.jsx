@@ -22,15 +22,12 @@ const Failure = ({ loginId, password }) => {
             </div>
             <div className='failure-msg'>
               <div className='heading'>
-                <h2>ERROR <br/> Proffessional already Added!</h2>
+                <h5>ERROR <br/> Proffessional already Added!</h5>
               </div>
-              {/* <div className='credentials'>
-                <p>Credenti</p>
-              </div> */}
             </div>
-            <div className='button-div'>
+            {/* <div className='button-div'>
               <button onClick={handleFinish}>FINISH</button>
-            </div>
+            </div> */}
         </div>
     </div>
   );

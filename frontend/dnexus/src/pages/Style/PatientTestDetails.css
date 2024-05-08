@@ -7,7 +7,10 @@
   padding: 15px;
 
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  align-items: flex-end;
+
+  margin-right: 20px;
 }
 
 .patient-data{
@@ -27,8 +30,18 @@
   padding: 2px;
 }
 
-.create-button button{
-  background-color: #001B79;
+.create-case-button button{
+  /* background-color: #1A76D1; */
+  background-color: white;
+  color: #1A76D1;
+  border: 1px solid #1A76D1;
+  border-radius: 2rem;
+  min-width: 250px;
+}
+
+.create-case-button button:hover{
+  background: #2C2D3F;
+    transition: all 0.3s;
 }
 
 .test-list{

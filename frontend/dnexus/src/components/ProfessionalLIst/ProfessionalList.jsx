@@ -8,7 +8,7 @@ const ProfessionalList = ({ professionals }) => {
   return (
     <div className="professional-list" >
 
-      <div className="professional-card heading-bg">
+      <div className="professional-card heading-card">
         <div className="field">
           <p>Professional ID</p>
         </div>
@@ -30,7 +30,7 @@ const ProfessionalList = ({ professionals }) => {
         to={`/admin/professional/${professional.professionalId}`}
         >  
           
-          <div className="professional-card list-bg">
+          <div className="professional-card patient-list-bg">
             <div className="field">
               <p>{professional.professionalId}</p>
             </div>

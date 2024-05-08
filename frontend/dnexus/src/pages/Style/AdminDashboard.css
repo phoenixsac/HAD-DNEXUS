@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 90vh;
+  min-height: 60vh;
 }
 
 .button-container {
@@ -20,7 +20,7 @@
   border-radius: 8px;
   box-shadow: 10px 5px 5px rgb(216, 216, 216);
 
-  color: #033b77;
+  color: #1A76D1;
   font-size: 28px;
 
   justify-content: space-between;
@@ -32,7 +32,7 @@
 
 .dash-icon{
   font-size: 70px;
-  color: #0652a4;
+  color: #1A76D1;
 }
 
 .buttons {
@@ -44,51 +44,27 @@ button {
   padding: 10px 20px;
   border: none;
   border-radius: 6px;
-  background-color:#1056a2;
+  background-color:#1A76D1;
   color: white;
   cursor: pointer;
   font-size: 22px;
 }
 
 .btn{
+  color: white;
   cursor:pointer;
     position:relative;
     padding:10px 20px;
-    background:#1056a2;
-    font-size:28px;
-    border-top-right-radius:10px;
-    border-bottom-left-radius:10px;
-    transition:all 1s;
-    &:after,&:before{
-      content:" ";
-      width:10px;
-      height:10px;
-      position:absolute;
-      border :0px solid #fff;
-      transition:all 1s;
-      }
-    &:after{
-      top:-1px;
-      left:-1px;
-      border-top:5px solid black;
-      border-left:5px solid black;
-    }
-    &:before{
-      bottom:-1px;
-      right:-1px;
-      border-bottom:5px solid black;
-      border-right:5px solid black;
-    }
-    &:hover{
-      border-top-right-radius:0px;
-    border-bottom-left-radius:0px;
-       /* background:rgba(0,0,0,.5); */
-       /* color:white; */
-      &:before,&:after{
-        
-        width:100%;
-        height:100%;
-         /* border-color:white; */
-      }
-    }
+    background:#1A76D1;
+    font-size:22px;
+    /* border-top-right-radius:10px;
+    border-bottom-left-radius:10px; */
+    
+  }
+
+  .btn:hover{
+    color: white;
+      background-color: #2C2D3F;
+      transition: all 0.4s ease;
+      
   }
