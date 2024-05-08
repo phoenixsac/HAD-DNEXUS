@@ -23,7 +23,7 @@ create table health_facility_registry (
                                           sub_district varchar(255),
                                           facility_ownership varchar(20),
                                           facility_type varchar(50),
-                                          contact_number varchar(20), -- using varchar for storing phone number with country code
+                                          contact_number varchar(20),
                                           country varchar(255),
                                           district varchar(255),
                                           facility_region varchar(10)
@@ -129,6 +129,24 @@ CREATE TABLE message (
                          message_content TEXT,
                          created_at DATETIME
 );
+
+
+CREATE TABLE consultation_dicom (
+                                   uid INT AUTO_INCREMENT PRIMARY KEY,
+                                   consultationId BIGINT,
+                                   dicomFileUid VARCHAR(255),
+                                   remarks VARCHAR(255),
+                                   FOREIGN KEY (consultationId) REFERENCES consultation(id)
+);
+
+
+CREATE TABLE consultation_annotations (
+                                         uid INT AUTO_INCREMENT PRIMARY KEY,
+                                         consultationId BIGINT,
+                                         annotationUid INT,
+                                         FOREIGN KEY (consultationId) REFERENCES consultation(id)
+);
+
 
 ALTER TABLE `patient`
     ADD CONSTRAINT `fk_patient_user`
@@ -290,3 +308,7 @@ INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, c
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Im concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Let me review the scan again and get back to you.', '2024-04-06 12:25:00');
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, Ill wait for your response.', '2024-04-06 12:30:00');
+
+
+INSERT INTO consultation_dicom (consultationId, dicomFileUid) VALUES (1, 'dicom123');
+INSERT INTO consultation_annotations (consultationId, annotationUid) VALUES (1, 1);

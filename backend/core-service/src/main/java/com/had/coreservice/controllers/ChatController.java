@@ -37,14 +37,6 @@ public class ChatController {
         return savedMessage;
     }
 
-//    @GetMapping("/chat/get-messages/{consultationId}")
-//    public ResponseEntity<List<MessageDTO>> getMessagesByConsultationId(
-//            @PathVariable Long consultationId,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size) {
-//        List<MessageDTO> messages = messageService.getMessagesByConsultationId(consultationId, page, size);
-//        return ResponseEntity.ok(messages);
-//    }
 
     @GetMapping("/chat/get-messages/{consultationId}")
     public ResponseEntity<List<MessageDTO>> getMessagesByConsultationId(
