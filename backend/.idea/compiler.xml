@@ -7,17 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="discovery-server" />
+        <module name="dicom-service" />
         <module name="api-gateway" />
         <module name="user-auth-service" />
         <module name="patient-service" />
-        <module name="discovery-server" />
         <module name="admin-service" />
         <module name="core-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="dicom-service" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

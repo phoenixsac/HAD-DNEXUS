@@ -137,7 +137,7 @@ function MessagingPage() {
         onSubmit={handleMessageSubmit}
         messageInput={messageInput}
         setMessageInput={setMessageInput}
-        onConnect={handleConnect} // Pass connect handler to MessageInput component
+        onConnect={handleConnect} 
         connected={connected} 
       />
     </div>
