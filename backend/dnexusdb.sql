@@ -133,18 +133,18 @@ CREATE TABLE message (
 
 CREATE TABLE consultation_dicom (
                                    uid INT AUTO_INCREMENT PRIMARY KEY,
-                                   consultationId BIGINT,
-                                   dicomFileUid VARCHAR(255),
+                                   consultation_id BIGINT,
+                                   dicom_file_uid VARCHAR(255),
                                    remarks VARCHAR(255),
-                                   FOREIGN KEY (consultationId) REFERENCES consultation(id)
+                                   FOREIGN KEY (consultation_id) REFERENCES consultation(id)
 );
 
 
 CREATE TABLE consultation_annotations (
                                          uid INT AUTO_INCREMENT PRIMARY KEY,
-                                         consultationId BIGINT,
-                                         annotationUid INT,
-                                         FOREIGN KEY (consultationId) REFERENCES consultation(id)
+                                         consultation_id BIGINT,
+                                         annotation_uid INT,
+                                         FOREIGN KEY (consultation_id) REFERENCES consultation(id)
 );
 
 
@@ -310,5 +310,5 @@ INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, c
 INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, Ill wait for your response.', '2024-04-06 12:30:00');
 
 
-INSERT INTO consultation_dicom (consultationId, dicomFileUid) VALUES (1, 'dicom123');
-INSERT INTO consultation_annotations (consultationId, annotationUid) VALUES (1, 1);
+INSERT INTO consultation_dicom (consultation_id, dicom_file_uid) VALUES (1, 'dicom123');
+INSERT INTO consultation_annotations (consultation_id, annotation_uid) VALUES (1, 1);

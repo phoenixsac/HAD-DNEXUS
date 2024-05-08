@@ -3,11 +3,15 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+dicom-service/src/main/resources/dicom-files/
+dicom-service/src/main/resources/dicom-json/
+dicom-service/src/main/resources/annotations/
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
-.idea/libraries/
+dicom.idea/libraries/
 
 .idea/**
 

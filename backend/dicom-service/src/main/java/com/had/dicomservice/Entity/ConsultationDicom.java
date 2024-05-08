@@ -14,6 +14,7 @@ public class ConsultationDicom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long uid;
 
     @Column(name = "consultationId")

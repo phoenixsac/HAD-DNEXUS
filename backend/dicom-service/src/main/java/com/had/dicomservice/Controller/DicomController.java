@@ -76,8 +76,9 @@ public class DicomController {
         consultationDicom.setConsultationId(Long.valueOf(consultationId));
         consultationDicom.setRemarks(remarks);
         consultationDicom.setDicomFileUid(directoryUid);
-        consultationDicomRepository.save(consultationDicom);
-        logger.info("ConsultationDicom : ",consultationDicom);
+        ConsultationDicom newConsultationDicom = consultationDicomRepository.save(consultationDicom);
+        logger.info("ConsultationDicom : ",consultationDicom.getConsultationId(),consultationDicom.getDicomFileUid());
+        logger.info("New ConsultationDicom : ",newConsultationDicom.getConsultationId(),newConsultationDicom.getDicomFileUid());
 
         logger.info("Directories are being saved and DICOM metadata extraction process is scheduled.");
 
