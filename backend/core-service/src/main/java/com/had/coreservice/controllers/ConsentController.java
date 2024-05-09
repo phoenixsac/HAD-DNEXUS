@@ -29,8 +29,6 @@ public class ConsentController {
                                            @RequestParam String consentType) {
         try {
             Consent consent = consentService.createConsent(consultationId, patientId, entityId, entityType, consentType);
-
-
             return ResponseEntity.ok(consent);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating consent: " + e.getMessage());

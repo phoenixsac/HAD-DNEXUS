@@ -26,7 +26,7 @@ public class ConsultationController {
     ConsentController consentController;
 
 
-    public static String DOCTOR_CASE_CONSENT="doctor_case_consent";
+
 
 
     private static final String CONSENT_CREATION_ENDPOINT = "http://your-consent-service-url/consents/create";
@@ -54,11 +54,11 @@ public class ConsultationController {
         }
 
         Long patientId = requestBody.getPatientId();
-        Long professionalDocId = requestBody.getProfessionalDocId();
-        String consentType = DOCTOR_CASE_CONSENT;
-        String entityType = "DOCTOR";
+        Long entityId = requestBody.getProfessionalDocId();
+        String consentType = Constants.DOCTOR_CASE_CONSENT;
+        String entityType = Constants.ENTITY_TYPE_DOCTOR;
 
-        ResponseEntity<?> consentResponse = consentController.createConsent(patientId, professionalDocId, entityType, consultationId, consentType);
+        ResponseEntity<?> consentResponse = consentController.createConsent(patientId, entityId, entityType, consultationId, consentType);
 
         if (consentResponse.getStatusCode() == HttpStatus.OK) {
             return new ResponseEntity<>("Consultation created successfully", HttpStatus.OK);

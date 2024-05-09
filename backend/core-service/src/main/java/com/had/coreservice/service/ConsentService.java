@@ -1,5 +1,6 @@
 package com.had.coreservice.service;
 
+import ch.qos.logback.core.joran.spi.ElementSelector;
 import com.had.coreservice.constants.Constants;
 import com.had.coreservice.entity.Consent;
 import com.had.coreservice.entity.ConsentStatus;
@@ -48,25 +49,27 @@ public class ConsentService {
     public Consent createConsent(Long consultationId, Long patientId, Long entityId, String entityType, String consentType) {
         Consultation consultation = consultationRepository.findById(consultationId).orElseThrow(() -> new IllegalArgumentException("Consultation not found with ID: " + consultationId));
 
-        if (!"DOCTOR".equalsIgnoreCase(entityType)) {
-            throw new IllegalArgumentException("Entity type must be DOCTOR to create consent");
+        String entityName = null;
+
+        if("DOCTOR".equalsIgnoreCase(entityType)) {
+            Optional<String> doctorNameOptional = professionalRepository.findNameById(entityId);
+            String doctorName = doctorNameOptional.orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + entityId));
         }
-
-//        Optional<Object[]> doctorNameOptional = professionalRepository.findNameById(entityId);
-//        String doctorName = doctorNameOptional.map(nameArray -> nameArray[0] + " " + nameArray[1])
-//                .orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + entityId));
-//
-//        Optional<Object[]> patNameOptional = patientRepository.findNameById(patientId);
-//        String patientName = patNameOptional.map(nameArray -> nameArray[0] + " " + nameArray[1])
-//                .orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + patientId));
-
-        Optional<String> doctorNameOptional = professionalRepository.findNameById(entityId);
-        String doctorName = doctorNameOptional.orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + entityId));
+        else if("LAB".equalsIgnoreCase(entityType)) {
+            Optional<String> entityNameOptional = professionalRepository.findNameById(entityId);
+            entityName = entityNameOptional.orElseThrow(() -> new IllegalArgumentException("Lab not found with ID: " + entityId));
+        }
+        else if ("RADIOLOGIST".equalsIgnoreCase(entityType)) {
+            Optional<String> entityNameOptional = professionalRepository.findNameById(entityId);
+            entityName = entityNameOptional.orElseThrow(() -> new IllegalArgumentException("Radiologist not found with ID: " + entityId));
+        }
+        else{
+            throw new IllegalArgumentException("Entity type must be DOCTOR or LAB or RADIOLOGIST to create consent");
+        }
 
 
         Optional<String> patNameOptional = patientRepository.findNameById(patientId);
         String patientName = patNameOptional.orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + patientId));
-
 
 
         Consent consent = new Consent();
@@ -82,7 +85,7 @@ public class ConsentService {
 
         Consent savedConsent = consentRepository.save(consent);
         if (savedConsent != null) {
-            mailingService.sendConsentEmail(savedConsent, patientName, doctorName, patientId);
+            mailingService.sendConsentEmail(savedConsent, patientName, entityName, patientId);
         }
         return consent;
     }
