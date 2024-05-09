@@ -17,5 +17,5 @@ public interface ConsentRepository extends JpaRepository<Consent, Long> {
     @Query("SELECT c FROM Consent c WHERE c.patientId = :patientId")
     Optional<List<Consent>> findListOfConsentsByPatientId(@Param("patientId") Long patientId);
 
-
+    List<Consent> findByConsultationId(Long consultationId);
 }

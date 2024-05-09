@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query("SELECT u.email FROM User u JOIN Patient p ON u.id = p.user.id WHERE p.id = :patientId")
-    Optional<String> findPatientEmailByUserId(@Param("patientId") Long patientId);
+    Optional<String> findPatientEmailByPatientId(@Param("patientId") Long patientId);
 
 
     @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Patient p ON p.user.id = u.id WHERE p.id = :patientId")

@@ -47,26 +47,13 @@ public class ConsentController {
     }
 
 
-//    @PutMapping("/{consentId}/status")
-//    public ResponseEntity<?> updateConsentStatus(@PathVariable Long consentId, @RequestParam ConsentStatus newStatus) {
-//        try {
-//            // Assuming you have a method in ConsentService to update the status of a consent
-//            Consent consent = consentService.updateConsentStatus(consentId, newStatus);
-//            return ResponseEntity.ok(consent);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating consent status: " + e.getMessage());
-//        }
-//    }
-
     @PutMapping("/{consentId}/status")
     public ResponseEntity<?> updateConsentStatus(@PathVariable Long consentId, @RequestParam ConsentStatus newStatus) {
         try {
-            // Check if the new status is valid
             if (!isValidConsentStatus(newStatus)) {
                 throw new IllegalArgumentException("Invalid consent status value: " + newStatus);
             }
 
-            // Update the consent status
             Consent consent = consentService.updateConsentStatus(consentId, newStatus);
             return ResponseEntity.ok(consent);
         } catch (IllegalArgumentException e) {
@@ -109,6 +96,17 @@ public class ConsentController {
             return ResponseEntity.ok(consentDetails);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving consent details: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{consultationId}")
+    public ResponseEntity<List<ConsentDetailResponseBody>> getConsentsByConsultationId(@PathVariable Long consultationId) {
+        try {
+            List<ConsentDetailResponseBody> consentDetailResponseBodies = consentService.getConsentsByConsultationId(consultationId);
+            return ResponseEntity.ok(consentDetailResponseBodies);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
         }
     }
 

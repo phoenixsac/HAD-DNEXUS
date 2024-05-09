@@ -44,8 +44,12 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
 //    @Query("SELECT u.firstName, u.lastName FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId")
 //    Optional<Object[]> findNameById(@Param("professionalId") Long professionalId);
 
-    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId")
-    Optional<String> findNameById(@Param("professionalId") Long professionalId);
+//    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId")
+//    Optional<String> findNameById(@Param("professionalId") Long professionalId);
+
+    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId AND LOWER(u.type) = LOWER(:entityType)")
+    Optional<String> findNameById(@Param("professionalId") Long professionalId, @Param("entityType") String entityType);
+
 
 }
 

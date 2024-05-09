@@ -35,45 +35,45 @@ public class MailingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(senderEmail);
 
-            Optional<String> patientEmailOptional = patientRepository.findPatientEmailByUserId(patientId);
+            Optional<String> patientEmailOptional = patientRepository.findPatientEmailByPatientId(patientId);
             String patientEmail = patientEmailOptional.orElseThrow(() -> new IllegalArgumentException("Patient email not found for ID: " + patientId));
 
             helper.setTo(patientEmail);
+
+            helper.setSubject(Constants.SUB_DOCTOR_ACCESS_CONSENT);
             if("DOCTOR".equalsIgnoreCase(consent.getEntityType())) {
                 helper.setSubject(Constants.SUB_DOCTOR_ACCESS_CONSENT);
-                helper.setText(buildEmailContentForDoc(consent), true);
             }
             else if("LAB".equalsIgnoreCase(consent.getEntityType())){
                 helper.setSubject(Constants.SUB_LAB_ACCESS_CONSENT);
-                helper.setText(buildEmailContentForLab(consent), true);
             }
             else {
                 helper.setSubject(Constants.SUB_RADIOLOGIST_ACCESS_CONSENT);
-                helper.setText(buildEmailContentForRadiologist(consent), true);
             }
+            helper.setText(buildEmailContent(consent, patientName), true);
             javaMailSender.send(message);
         } catch (jakarta.mail.MessagingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String buildEmailContentForDoc(Consent consent) {
+    private String buildEmailContent(Consent consent, String patientName) {
         String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
-        String htmlContent = "<p>Dear Patient,</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
+        String htmlContent = "<p>Dear " + patientName + ",</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
         return htmlContent;
     }
 
-    private String buildEmailContentForLab(Consent consent) {
-        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
-        String htmlContent = "<p>Dear Patient,</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
-        return htmlContent;
-    }
-
-
-    private String buildEmailContentForRadiologist(Consent consent) {
-        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
-        String htmlContent = "<p>Dear Patient,</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
-        return htmlContent;
-    }
+//    private String buildEmailContentForLab(Consent consent) {
+//        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
+//        String htmlContent = "<p>Dear Patient,</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
+//        return htmlContent;
+//    }
+//
+//
+//    private String buildEmailContentForRadiologist(Consent consent) {
+//        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
+//        String htmlContent = "<p>Dear Patient,</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
+//        return htmlContent;
+//    }
 
 }

@@ -47,7 +47,7 @@ public class FacilityController {
             }
             
             Long patientId = null;
-            Optional<Long> patientIdOpt = consultationRepository.getPatientIdFromConsultation(consultationId);
+            Optional<Long> patientIdOpt = consultationRepository.findPatientIdByConsultationId(consultationId);
             if(patientIdOpt.isPresent())
                 patientId=patientIdOpt.get();
 

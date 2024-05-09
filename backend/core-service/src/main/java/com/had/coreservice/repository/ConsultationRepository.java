@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
     List<Consultation> findByProfessionalsId(Long docId);
 
-    @Query("SELECT c.patientId FROM Consultation c WHERE c.id = :consultationId")
-    Optional<Long> getPatientIdFromConsultation(@Param("consultationId") Long consultationId);
+    @Query("SELECT c.patient.id FROM Consultation c WHERE c.consultationId = :consultationId")
+    Optional<Long> findPatientIdByConsultationId(Long consultationId);
+
 }
