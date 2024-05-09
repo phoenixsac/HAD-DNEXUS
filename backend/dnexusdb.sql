@@ -147,6 +147,27 @@ CREATE TABLE consultation_annotations (
                                          FOREIGN KEY (consultation_id) REFERENCES consultation(id)
 );
 
+CREATE TABLE consent (
+                         consent_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                         patient_id BIGINT,
+                         entity_id BIGINT,
+                         entity_type varchar(50),
+                         consultation_id BIGINT,
+                         consent_type varchar(50),
+                         consent_status VARCHAR(50),
+                         consent_date DATETIME,
+                         consent_expires DATETIME,
+                         consent_message TEXT,
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE consent
+    ADD CONSTRAINT fk_consultation_id
+        FOREIGN KEY (consultation_id) REFERENCES consultation(id);
+
+
 
 ALTER TABLE `patient`
     ADD CONSTRAINT `fk_patient_user`

@@ -1,5 +1,6 @@
 package com.had.coreservice.controllers;
 
+import com.had.coreservice.constants.Constants;
 import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/core/consultation")
@@ -20,9 +22,75 @@ public class ConsultationController {
     @Autowired
     ConsultationService consultationService;
 
+    @Autowired
+    ConsentController consentController;
+
+
+    public static String DOCTOR_CASE_CONSENT="doctor_case_consent";
+
+
+    private static final String CONSENT_CREATION_ENDPOINT = "http://your-consent-service-url/consents/create";
+
+
+//    @PostMapping("/create")
+//    public ResponseEntity<String> createConsultation(@RequestBody CreateConsultationRequestBody requestBody) {
+//        return consultationService.createConsultation(requestBody);
+//    }
+
+
     @PostMapping("/create")
     public ResponseEntity<String> createConsultation(@RequestBody CreateConsultationRequestBody requestBody) {
-        return consultationService.createConsultation(requestBody);
+        ResponseEntity<String> consultationResponse = consultationService.createConsultation(requestBody);
+
+        if (consultationResponse.getStatusCode() != HttpStatus.CREATED) {
+            return consultationResponse;
+        }
+
+        String responseBody = consultationResponse.getBody();
+        Long consultationId = extractConsultationIdFromResponse(responseBody);
+
+        if (consultationId == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to extract consultation ID");
+        }
+
+        Long patientId = requestBody.getPatientId();
+        Long professionalDocId = requestBody.getProfessionalDocId();
+        String consentType = DOCTOR_CASE_CONSENT;
+        String entityType = "DOCTOR";
+
+        ResponseEntity<?> consentResponse = consentController.createConsent(patientId, professionalDocId, entityType, consultationId, consentType);
+
+        if (consentResponse.getStatusCode() == HttpStatus.OK) {
+            return new ResponseEntity<>("Consultation created successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to create consent", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+//    private Long extractConsultationId(String responseBody) {
+//        // Assuming responseBody contains only the consultation ID
+//        try {
+//            return Long.parseLong(responseBody);
+//        } catch (NumberFormatException e) {
+//            return null;
+//        }
+//    }
+
+    private Long extractConsultationIdFromResponse(String responseBody) {
+        // Extract consultation ID from the response body
+        // Example: "Consultation created successfully with ID: 123"
+        String idPrefix = "Consultation created successfully with ID: ";
+        int idIndex = responseBody.indexOf(idPrefix);
+        if (idIndex != -1) {
+            String idString = responseBody.substring(idIndex + idPrefix.length());
+            try {
+                return Long.parseLong(idString);
+            } catch (NumberFormatException e) {
+                return null; // Unable to parse consultation ID
+            }
+        } else {
+            return null; // ID prefix not found in response body
+        }
     }
 
     @PostMapping("/add-final-report")

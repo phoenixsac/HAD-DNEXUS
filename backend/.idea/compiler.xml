@@ -10,8 +10,8 @@
         <module name="discovery-server" />
         <module name="dicom-service" />
         <module name="api-gateway" />
-        <module name="user-auth-service" />
         <module name="patient-service" />
+        <module name="user-auth-service" />
         <module name="admin-service" />
         <module name="core-service" />
       </profile>
