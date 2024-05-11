@@ -11,6 +11,8 @@
     border: 1px solid #888; /* Border around the modal */
     height: 350px;
     width: 800px;
+
+    /* z-index: 2; */
   }
   
   /* Close button */

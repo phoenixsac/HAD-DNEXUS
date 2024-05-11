@@ -73,6 +73,7 @@ function PatientDashboard() {
   }, [actorIdState]); 
 
   return (
+    
     <div>
       <Navbar />
 
@@ -125,7 +126,7 @@ function PatientDashboard() {
           </div>
 
       <Footer/>
-    </>
+    </div>
 
   );
 }

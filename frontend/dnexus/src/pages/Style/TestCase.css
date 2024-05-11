@@ -41,3 +41,8 @@
     
 }
 
+.popup-background {
+    position: relative;
+    z-index: -1; /* Moves the background content behind other elements */
+  }
+

@@ -570,12 +570,23 @@ function TestCase() {
   return (
     <>
       <Navbar />
-      <PatientDetails />
+      
+
+      <div className={isPopupOpen ? "popup-background" : ""}>
+      { <PatientDetails />}
+
+      </div>
+      
       <DoctorDetails />
 
       {userType=== "lab"  &&<div className="custom-button-container">
         <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
-        {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
+        {isPopupOpen && (
+      <div>
+    <LabUpload onClose={() => setIsPopupOpen(false)} />
+     </div>
+     )}
+        {/* {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />} */}
       </div>}
 
       {userType==="doctor" && !labDetailsVisible && (<div className="add-button-container">
@@ -677,12 +688,15 @@ function TestCase() {
       </div>
      )
 }
-<Footer/>
+{/* <Footer/> */}
+
+<div className={isPopupOpen ? "popup-background" : ""}>
+(<Footer/>)
+</div>
     </>
   );
 }
 
 export default TestCase;
-
 
 
