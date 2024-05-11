@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsultationService {
@@ -42,31 +44,35 @@ public class ConsultationService {
         }
 
         // Fetch professional from database
-        Professional professional = professionalRepository.findById(Long.parseLong(String.valueOf(requestBody.getProfessionalDocId()))).orElse(null);
+        Professional professional = professionalRepository.findById(requestBody.getProfessionalDocId()).orElse(null);
         if (professional == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Professional not found");
         }
 
         // Check if professional is a doctor
         if (!"Doctor".equalsIgnoreCase(professional.getSpecialization())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Professional is not authorized to create consultations(Not of doctor type)");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Professional is not authorized to create consultations (Not of doctor type)");
         }
 
         // Create consultation object
         Consultation consultation = Consultation.builder()
                 .name(requestBody.getConsultationName())
                 .patient(patient)
-                .docProfesionalId(Long.parseLong(String.valueOf(requestBody.getProfessionalDocId())))
+                .docProfesionalId(requestBody.getProfessionalDocId())
                 .dateCreated(new Date())
                 .status("Ongoing")
                 .test(requestBody.getTest())
                 .build();
 
-        // Save consultation to database
-        consultationRepository.save(consultation);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Consultation created successfully");
 
+        Consultation createdConsultation = consultationRepository.save(consultation);
+        if (createdConsultation != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Consultation created successfully with ID: " + createdConsultation.getConsultationId());
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create consultation");
+        }
     }
+
 
     @Transactional
     public void addFinalReportToConsultation(Long professionalDocId, Long consultancyId, String finalReport) {
@@ -81,6 +87,29 @@ public class ConsultationService {
 
         consultation.setFinalReport(finalReport);
         consultationRepository.save(consultation);
+    }
+
+    public Set<ProfessionalRadiologistResponseBody> getAllRadiologistsByConsultationId(Long consultationId) {
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
+
+        try {
+            return consultation.getProfessionals().stream()
+                    .filter(professional -> "radiologist".equalsIgnoreCase(professional.getSpecialization()))
+                    .map(this::mapProfessionalToProfessionalRadiologistResponseBody)
+                    .collect(Collectors.toSet());
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while retrieving radiologists for the consultation.", e);
+        }
+    }
+
+    private ProfessionalRadiologistResponseBody mapProfessionalToProfessionalRadiologistResponseBody(Professional professional) {
+        ProfessionalRadiologistResponseBody responseBody = new ProfessionalRadiologistResponseBody();
+        responseBody.setId(professional.getId());
+        responseBody.setFullName(professional.getUser().getFirstName() + " " + professional.getUser().getLastName());
+        responseBody.setSystemOfMedicine(professional.getSystemOfMedicine());
+        // Set other fields as needed
+        return responseBody;
     }
 
     public String getTestByConsultationId(Long consultationId) {

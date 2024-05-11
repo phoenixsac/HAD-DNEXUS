@@ -63,7 +63,7 @@ const LabDetails = () => {
 
     const handleClick = () => {
         // Generate the URL for the modal here (assuming it depends on labData)
-        const modalUrl = `http://localhost:3000/viewer/dicomjson?url=http://localhost:9191/dicom-files/LIDC-IDRI-0001.json`; // Modify this URL as needed
+        const modalUrl = `http://localhost:3000/viewer/dicomjson?url=http://localhost:9191/dicom-json/5aea04b3.json`; // Modify this URL as needed
         setModalUrl(modalUrl);
     };
 
@@ -95,4 +95,3 @@ const LabDetails = () => {
 };
 
 export default LabDetails;
-

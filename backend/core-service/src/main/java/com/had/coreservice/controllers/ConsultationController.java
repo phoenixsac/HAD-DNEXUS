@@ -1,5 +1,7 @@
 package com.had.coreservice.controllers;
 
+import com.had.coreservice.constants.Constants;
+import com.had.coreservice.entity.Professional;
 import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/core/consultation")
@@ -20,9 +25,55 @@ public class ConsultationController {
     @Autowired
     ConsultationService consultationService;
 
+    @Autowired
+    ConsentController consentController;
+
+    private static final String CONSENT_CREATION_ENDPOINT = "http://your-consent-service-url/consents/create";
+
     @PostMapping("/create")
     public ResponseEntity<String> createConsultation(@RequestBody CreateConsultationRequestBody requestBody) {
-        return consultationService.createConsultation(requestBody);
+        ResponseEntity<String> consultationResponse = consultationService.createConsultation(requestBody);
+
+        if (consultationResponse.getStatusCode() != HttpStatus.CREATED) {
+            return consultationResponse;
+        }
+
+        String responseBody = consultationResponse.getBody();
+        Long consultationId = extractConsultationIdFromResponse(responseBody);
+
+        if (consultationId == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to extract consultation ID");
+        }
+
+        Long patientId = requestBody.getPatientId();
+        Long entityId = requestBody.getProfessionalDocId();
+        String consentType = Constants.DOCTOR_CASE_CONSENT;
+        String entityType = Constants.ENTITY_TYPE_DOCTOR;
+
+        ResponseEntity<?> consentResponse = consentController.createConsent(patientId, entityId, entityType, consultationId, consentType);
+
+        if (consentResponse.getStatusCode() == HttpStatus.OK) {
+            return new ResponseEntity<>("Consultation created successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to create consent", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Long extractConsultationIdFromResponse(String responseBody) {
+        // Extract consultation ID from the response body
+        // Example: "Consultation created successfully with ID: 123"
+        String idPrefix = "Consultation created successfully with ID: ";
+        int idIndex = responseBody.indexOf(idPrefix);
+        if (idIndex != -1) {
+            String idString = responseBody.substring(idIndex + idPrefix.length());
+            try {
+                return Long.parseLong(idString);
+            } catch (NumberFormatException e) {
+                return null; // Unable to parse consultation ID
+            }
+        } else {
+            return null; // ID prefix not found in response body
+        }
     }
 
     @PostMapping("/add-final-report")
@@ -39,6 +90,18 @@ public class ConsultationController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + ex.getMessage());
+        }
+    }
+
+    @GetMapping("/{consultationId}/radiologists")
+    public ResponseEntity<?> getAllRadiologistsByConsultationId(@PathVariable Long consultationId) {
+        try {
+            Set<ProfessionalRadiologistResponseBody> radiologists = consultationService.getAllRadiologistsByConsultationId(consultationId);
+            return ResponseEntity.ok(radiologists);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consultation with given id does not exist");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving radiologists");
         }
     }
 
@@ -121,15 +184,15 @@ public class ConsultationController {
         }
     }
 
-    @GetMapping("/radiologist-detail-for-consultation")
-    public ResponseEntity<?> getPatientDetailsByConsultationId(@RequestParam Long consultationId) {
-        try {
-            ProfessionalRadiologistResponseBody professionalResponse = consultationService.getProfessionalDetailsByConsultationId(consultationId);
-            return ResponseEntity.ok(professionalResponse);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
+//    @GetMapping("/radiologist-detail-for-consultation")
+//    public ResponseEntity<?> getPatientDetailsByConsultationId(@RequestParam Long consultationId) {
+//        try {
+//            ProfessionalRadiologistResponseBody professionalResponse = consultationService.getProfessionalDetailsByConsultationId(consultationId);
+//            return ResponseEntity.ok(professionalResponse);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
 
     @GetMapping("/doctor-details-by-consultation")
     public ResponseEntity<DoctorDetailResponseBody> getDoctorDetails(@RequestParam Long consultationId) {

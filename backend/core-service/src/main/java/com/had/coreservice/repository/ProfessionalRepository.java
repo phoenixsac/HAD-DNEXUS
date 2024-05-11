@@ -1,13 +1,13 @@
 package com.had.coreservice.repository;
 
-
-import com.had.coreservice.entity.Consultation;
 import com.had.coreservice.entity.Professional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProfessionalRepository extends JpaRepository<Professional, Long> {
@@ -41,6 +41,24 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
             "ORDER BY c.dateCreated DESC")
     List<Object[]> findConsultationDetailsByProfessionalId(Long professionalId);
 
+//    @Query("SELECT u.firstName, u.lastName FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId")
+//    Optional<Object[]> findNameById(@Param("professionalId") Long professionalId);
 
+//    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId")
+//    Optional<String> findNameById(@Param("professionalId") Long professionalId);
+
+//    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.userId = u.id WHERE p.id = :professionalId AND LOWER(u.type) = LOWER(:entityType)")
+//    Optional<String> findNameById(@Param("professionalId") Long professionalId, @Param("entityType") String entityType);
+
+
+//    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM Professional p JOIN p.user u WHERE p.id = :professionalId")
+//    String findFullNameByProfessionalId(@Param("professionalId") Long professionalId);
+
+    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM Professional p JOIN p.user u WHERE p.id = :professionalId AND LOWER(u.type) = LOWER(:entityType)")
+    Optional<String> findFullNameByProfessionalIdAndUserType(@Param("professionalId") Long professionalId, @Param("entityType") String entityType);
 
 }
+
+
+
+

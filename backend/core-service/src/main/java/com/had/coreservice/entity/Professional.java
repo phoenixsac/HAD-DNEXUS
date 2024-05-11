@@ -49,5 +49,4 @@ public class Professional {
     @ManyToMany(mappedBy = "professionals")
     private Set<Consultation> consultations;
 
-    // Getters and setters
 }

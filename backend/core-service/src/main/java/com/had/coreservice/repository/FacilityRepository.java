@@ -22,4 +22,6 @@ public interface FacilityRepository extends JpaRepository<Facility, Long> {
             "ORDER BY c.dateCreated DESC")
     List<Object[]> findConsultationDetailsForLab(@Param("facilityId") Long facilityId);
 
+    @Query("SELECT u.firstName FROM User u JOIN Facility f ON f.user.id = u.id WHERE f.id = :facilityId AND LOWER(u.type) = LOWER(:entityType)")
+    Optional<String> findFacNameById(@Param("facilityId") Long facilityId, @Param("entityType") String entityType);
 }

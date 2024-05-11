@@ -1,10 +1,13 @@
 package com.had.coreservice.controllers;
 
+import com.had.coreservice.constants.Constants;
+import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
 import com.had.coreservice.responseBody.DoctorDetailResponseBody;
 import com.had.coreservice.responseBody.PatientCardDetailResponseBody;
 import com.had.coreservice.responseBody.ProfessionalRadiologistResponseBody;
 import com.had.coreservice.service.ProfessionalService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +15,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/core/professional")
 public class ProfessionalController {
 
     private final ProfessionalService professionalService;
+
+    @Autowired
+    ConsultationRepository consultationRepository;
+
+    @Autowired
+    ConsentController consentController;
 
     public ProfessionalController(ProfessionalService professionalService) {
         this.professionalService = professionalService;
@@ -38,9 +48,30 @@ public class ProfessionalController {
     public ResponseEntity<?> addRadiologistToConsultation(@RequestParam Long consultationId, @RequestParam Long proRadiologistId) {
         try {
             professionalService.addRadiologistToConsultation(consultationId, proRadiologistId);
-            return ResponseEntity.ok("Radiologist added to the consultation successfully");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + ex.getMessage());
+
+            if (consultationId == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to extract consultation ID");
+            }
+
+            Long patientId = null;
+            Optional<Long> patientIdOpt = consultationRepository.findPatientIdByConsultationId(consultationId);
+            if(patientIdOpt.isPresent())
+                patientId=patientIdOpt.get();
+
+            String consentType = Constants.RADIOLOGIST_ADD_CONSENT;
+            String entityType = Constants.ENTITY_TYPE_RADIOLOGIST;
+
+            ResponseEntity<?> consentResponse = consentController.createConsent(patientId, proRadiologistId, entityType, consultationId, consentType);
+
+            if (consentResponse.getStatusCode() == HttpStatus.OK) {
+                return new ResponseEntity<>("Radiologist added to consultation successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to create consent for radiologist addition", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request");
         }
     }
 

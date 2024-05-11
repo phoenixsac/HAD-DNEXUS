@@ -1,5 +1,7 @@
 package com.had.coreservice.controllers;
 
+import com.had.coreservice.constants.Constants;
+import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.responseBody.ConsultationCardDetailResponseBody;
 import com.had.coreservice.responseBody.LabDetailsResponseBody;
 import com.had.coreservice.responseBody.LabFacilityDropdownResponseBody;
@@ -9,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/core/facility")
@@ -20,6 +19,12 @@ public class FacilityController {
 
     @Autowired
     FacilityService facilityService;
+
+    @Autowired
+    ConsentController consentController;
+
+    @Autowired
+    ConsultationRepository consultationRepository;
 
     @GetMapping("/get-labs")
     public ResponseEntity<List<LabFacilityDropdownResponseBody>> getLabFacilities() {
@@ -35,7 +40,28 @@ public class FacilityController {
     public ResponseEntity<String> addLabToConsultation(@RequestParam Long consultationId, @RequestParam Long labFacId) {
         try {
             facilityService.addLabToConsultation(consultationId, labFacId);
-            return ResponseEntity.ok("Lab added to consultation successfully");
+
+
+            if (consultationId == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to extract consultation ID");
+            }
+            
+            Long patientId = null;
+            Optional<Long> patientIdOpt = consultationRepository.findPatientIdByConsultationId(consultationId);
+            if(patientIdOpt.isPresent())
+                patientId=patientIdOpt.get();
+
+            String consentType = Constants.LAB_ADD_CONSENT;
+            String entityType = Constants.ENTITY_TYPE_LAB;
+
+            ResponseEntity<?> consentResponse = consentController.createConsent(patientId, labFacId, entityType, consultationId, consentType);
+
+            if (consentResponse.getStatusCode() == HttpStatus.OK) {
+                return new ResponseEntity<>("Lab added to consultation successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to create consent for lab addition", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

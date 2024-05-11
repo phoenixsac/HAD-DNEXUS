@@ -299,6 +299,7 @@ import LabUpload from '../components/TestCase/LabUpload';
 import RadDetails from '../components/TestCase/RadDetails';
 import MessagingPage from "../components/TestCase/MessagingPage";
 import { useParams } from 'react-router-dom';
+
 import Footer from "../components/Footer/Footer";
 
 
@@ -688,11 +689,13 @@ function TestCase() {
       </div>
      )
 }
+
 {/* <Footer/> */}
 
 <div className={isPopupOpen ? "popup-background" : ""}>
 (<Footer/>)
 </div>
+
     </>
   );
 }
