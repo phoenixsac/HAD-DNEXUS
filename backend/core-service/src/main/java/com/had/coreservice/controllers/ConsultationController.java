@@ -184,15 +184,15 @@ public class ConsultationController {
         }
     }
 
-//    @GetMapping("/radiologist-detail-for-consultation")
-//    public ResponseEntity<?> getPatientDetailsByConsultationId(@RequestParam Long consultationId) {
-//        try {
-//            ProfessionalRadiologistResponseBody professionalResponse = consultationService.getProfessionalDetailsByConsultationId(consultationId);
-//            return ResponseEntity.ok(professionalResponse);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
-//    }
+    @GetMapping("/radiologist-detail-for-consultation")
+    public ResponseEntity<?> getPatientDetailsByConsultationId(@RequestParam Long consultationId) {
+        try {
+            ProfessionalRadiologistResponseBody professionalResponse = consultationService.getProfessionalDetailsByConsultationId(consultationId);
+            return ResponseEntity.ok(professionalResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/doctor-details-by-consultation")
     public ResponseEntity<DoctorDetailResponseBody> getDoctorDetails(@RequestParam Long consultationId) {
