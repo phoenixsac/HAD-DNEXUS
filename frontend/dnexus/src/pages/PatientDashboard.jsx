@@ -73,7 +73,7 @@ function PatientDashboard() {
   }, [actorIdState]); 
 
   return (
-    <div>
+    <>
       <Navbar />
 
       <Breadcrumbs pageTitle="Patient Dashboard"/>

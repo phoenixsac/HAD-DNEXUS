@@ -54,23 +54,13 @@ function DoctorCreateCaseModal({ onClose }) {
   const navigate = useNavigate();
 
   return (
-    <div className="modal">
-      <div className="modal-content">
+
+    <div className="create-case-modal-overlay">
+      <div className="create-case-modal-content">
         <span className="close" onClick={onClose}>&times;</span>
         <h2>Create Case</h2>
-        <form onSubmit={handleSubmit}>
-          {/* <div className='form-input'>
-            <label>Patient ID:</label>
-            <input
-              type="text"
-              name="patientId"
-              value={formData.patientId}
-              onChange={handleChange}
-              placeholder='Patient ID'
-              required
-            />
-          </div> */}
-          <div className='form-input'>
+        <form className="create-case-modal-form" onSubmit={handleSubmit}>
+          <div className='create-case-form-input'>
             <label>Case Name:</label>
             <input
               type="text"
@@ -81,7 +71,7 @@ function DoctorCreateCaseModal({ onClose }) {
               required
             />
           </div>
-          <div className='form-input'>
+          <div className='create-case-form-input'>
             <label>Case Description:</label>
             <input
               type="text"
@@ -96,6 +86,50 @@ function DoctorCreateCaseModal({ onClose }) {
         </form>
       </div>
     </div>
+
+    
+    // <div className="create-case-modal">
+    //   <div className="create-case-modal-content">
+    //     <span className="close" onClick={onClose}>&times;</span>
+    //     <h2>Create Case</h2>
+    //     <form onSubmit={handleSubmit}>
+    //       {/* <div className='form-input'>
+    //         <label>Patient ID:</label>
+    //         <input
+    //           type="text"
+    //           name="patientId"
+    //           value={formData.patientId}
+    //           onChange={handleChange}
+    //           placeholder='Patient ID'
+    //           required
+    //         />
+    //       </div> */}
+    //       <div className='create-case-form-input'>
+    //         <label>Case Name:</label>
+    //         <input
+    //           type="text"
+    //           name="consultationName"
+    //           value={formData.consultationName}
+    //           onChange={handleChange}
+    //           placeholder='Consultation Name'
+    //           required
+    //         />
+    //       </div>
+    //       <div className='create-case-form-input'>
+    //         <label>Case Description:</label>
+    //         <input
+    //           type="text"
+    //           name="test"
+    //           value={formData.test}
+    //           onChange={handleChange}
+    //           placeholder='Consultation Description'
+    //           required
+    //         />
+    //       </div>
+    //       <button type="submit">CREATE</button>
+    //     </form>
+    //   </div>
+    // </div>
   );
 }
 
