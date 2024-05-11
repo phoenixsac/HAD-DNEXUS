@@ -351,6 +351,7 @@ function TestCase() {
               firstOrSecondConditionMet = true;
               console.log("consent accept",labConsentStatusAccept);
               setlabConsentMessage("Lab Consent is Accepted");
+              setlabShow(true);
 
             }
             
@@ -652,7 +653,7 @@ function TestCase() {
        { labConsentMessage && <p>{labConsentMessage}</p>}
       </div>
 
-      {userType==="doctor" && !labAdded   && !labShow && (<div className="add-button-container">
+      {userType==="doctor" && !labAdded && !labConsentStatusPending  && !labShow && (<div className="add-button-container">
         <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
        <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
           <option value="">Select Lab</option>
