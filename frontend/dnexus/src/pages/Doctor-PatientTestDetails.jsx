@@ -82,6 +82,8 @@ const DocPatientTestDetails = () => {
     // Open the modal when the "Create Case" button is clicked
     setDoctorCreateCaseModalOpen(true);
     // Add blur effect to the background
+    console.log("create case clicked");
+    console.log("isDoctorCreateCaseModalOpen:",isDoctorCreateCaseModalOpen);
     // document.body.classList.add('modal-open');
     document.body.classList.add('modal-open');
   }
