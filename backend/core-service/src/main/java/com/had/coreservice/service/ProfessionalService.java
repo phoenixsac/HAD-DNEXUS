@@ -25,6 +25,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
 
@@ -103,9 +104,12 @@ public class ProfessionalService {
         Consultation consultation = consultationRepository.findById(consultationId)
                 .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
 
-        if (isRadiologistAlreadyAdded(consultation)) {
-            throw new IllegalArgumentException("A radiologist has already been added to this consultation");
-        }
+
+        validateIfRadiologistAlreadyAdded(consultation, proRadiologistId);
+
+//        if (isRadiologistAlreadyAdded(consultation)) {
+//            throw new IllegalArgumentException("A radiologist has already been added to this consultation");
+//        }
 
         Professional professional = professionalRepository.findById(proRadiologistId)
                 .orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
@@ -116,6 +120,18 @@ public class ProfessionalService {
 
         consultation.getProfessionals().add(professional);
         consultationRepository.save(consultation);
+    }
+
+
+
+
+
+    private void validateIfRadiologistAlreadyAdded(Consultation consultation, Long proRadiologistId) {
+        for (Professional professional : consultation.getProfessionals()) {
+            if (professional.getId().equals(proRadiologistId)) {
+                throw new IllegalArgumentException("The radiologist is already part of this consultation");
+            }
+        }
     }
 
     private boolean isRadiologistAlreadyAdded(Consultation consultation) {

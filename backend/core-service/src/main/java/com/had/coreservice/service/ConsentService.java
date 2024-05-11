@@ -52,7 +52,7 @@ public class ConsentService {
         String entityName = null;
 
         if("DOCTOR".equalsIgnoreCase(entityType)) {
-            Optional<String> doctorNameOptional = professionalRepository.findNameById(entityId, entityType);
+            Optional<String> doctorNameOptional = professionalRepository.findFullNameByProfessionalIdAndUserType(entityId, entityType);
             entityName = doctorNameOptional.orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + entityId));
         }
         else if("LAB".equalsIgnoreCase(entityType)) {
@@ -60,7 +60,7 @@ public class ConsentService {
             entityName = entityNameOptional.orElseThrow(() -> new IllegalArgumentException("Lab not found with ID: " + entityId));
         }
         else if ("RADIOLOGIST".equalsIgnoreCase(entityType)) {
-            Optional<String> entityNameOptional = professionalRepository.findNameById(entityId, entityType);
+            Optional<String> entityNameOptional = professionalRepository.findFullNameByProfessionalIdAndUserType(entityId, entityType);
             entityName = entityNameOptional.orElseThrow(() -> new IllegalArgumentException("Radiologist not found with ID: " + entityId));
         }
         else{
@@ -71,9 +71,8 @@ public class ConsentService {
         Optional<String> patNameOptional = patientRepository.findNameById(patientId);
         String patientName = patNameOptional.orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + patientId));
 
-        Optional<String> docNameOptional = professionalRepository.findNameById(consultation.getDocProfesionalId(), "DOCTOR");
+        Optional<String> docNameOptional = professionalRepository.findFullNameByProfessionalIdAndUserType(consultation.getDocProfesionalId(), "DOCTOR");
         String docName = docNameOptional.orElseThrow(() -> new IllegalArgumentException("Doc not found with in this consultation: " + consultation.getDocProfesionalId()));
-
 
         Consent consent = new Consent();
         consent.setConsultationId(consultationId);
@@ -86,9 +85,9 @@ public class ConsentService {
         if(Constants.ENTITY_TYPE_DOCTOR.equalsIgnoreCase(entityType))
             consentMessage = String.format(Constants.DOCTOR_CASE_CONSENT_TEMPLATE, entityName, entityName);
         else if(Constants.ENTITY_TYPE_LAB.equalsIgnoreCase(entityType))
-            consentMessage = String.format(Constants.LAB_CASE_CONSENT_TEMPLATE, docName, entityName);
+            consentMessage = String.format(Constants.LAB_CASE_CONSENT_TEMPLATE, docName, entityName, entityName);
         else if(Constants.ENTITY_TYPE_RADIOLOGIST.equalsIgnoreCase(entityType))
-            consentMessage = String.format(Constants.RADIOLOGIST_CASE_CONSENT_TEMPLATE, docName, entityName);
+            consentMessage = String.format(Constants.RADIOLOGIST_CASE_CONSENT_TEMPLATE, docName, entityName, entityName);
 
         consent.setConsentMessage(consentMessage);
         consent.setConsentStatus(ConsentStatus.NONE);
@@ -132,7 +131,7 @@ public class ConsentService {
 
         String entityName = null;
         if(consent.getEntityType().equalsIgnoreCase("DOCTOR")){
-            Optional<String> doctorNameOptional = professionalRepository.findNameById(consent.getEntityId(), "DOCTOR");
+            Optional<String> doctorNameOptional = professionalRepository.findFullNameByProfessionalIdAndUserType(consent.getEntityId(), "DOCTOR");
             entityName = doctorNameOptional.orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + consent.getEntityId()));
         }
 
