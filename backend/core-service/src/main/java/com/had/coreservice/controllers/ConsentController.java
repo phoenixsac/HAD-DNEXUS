@@ -92,7 +92,7 @@ public class ConsentController {
         }
     }
 
-    @GetMapping("/{consentId}")
+    @GetMapping("/details/{consentId}")
     public ResponseEntity<?> getConsentDetails(@PathVariable Long consentId) {
         try {
             // Call ConsentService to retrieve the consent details
@@ -106,7 +106,7 @@ public class ConsentController {
         }
     }
 
-    @GetMapping("/{consultationId}")
+    @GetMapping("/all/{consultationId}")
     public ResponseEntity<List<ConsentDetailResponseBody>> getConsentsByConsultationId(@PathVariable Long consultationId) {
         try {
             List<ConsentDetailResponseBody> consentDetailResponseBodies = consentService.getConsentsByConsultationId(consultationId);
