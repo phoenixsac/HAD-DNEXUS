@@ -58,7 +58,7 @@ public class MailingService {
     }
 
     private String buildEmailContent(Consent consent, String patientName) {
-        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
+        String link = "http://localhost:5000/core" + "/consents/" + consent.getId() + "/response";
         String htmlContent = "<p>Dear " + patientName + ",</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
         return htmlContent;
     }

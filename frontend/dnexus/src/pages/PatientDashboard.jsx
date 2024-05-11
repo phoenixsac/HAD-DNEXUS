@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 
 import "./Style/PatientDashboard.css";
@@ -22,6 +23,8 @@ function PatientDashboard() {
 
   const [consultations, setconsultations] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedConsent, setSelectedConsent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   // const [searchTerm, setSearchTerm] = useState('');
   // const [currentPage, setCurrentPage] = useState(1); // For pagination
@@ -72,6 +75,34 @@ function PatientDashboard() {
     }
   }, [actorIdState]); 
 
+  const handleViewConsent = async (consultationId) => {
+    console.log("handleViewConsent clicked");
+    try {
+      // const jwtToken = localStorage.getItem('jwtToken');
+
+      // if (!jwtToken) {
+      //   throw new Error('JWT token not found.');
+      // }
+
+      const response = await axios.get(`http://localhost:8085/core/consent/all/${consultationId}`, {
+        headers: {
+          // 'Authorization': `Bearer ${jwtToken}`
+        }
+      });
+
+      console.log("response2:",response.data);
+
+      setSelectedConsent(response.data);
+      console.log('selectedConsent:',selectedConsent);
+
+      setShowModal(true);
+
+    } catch (error) {
+      console.error('Error fetching consents:', error);
+      setError('Error fetching consents. Please try again.');
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -93,6 +124,9 @@ function PatientDashboard() {
             <div className="field">
               <p>Status</p>
             </div>  
+            <div className="field">
+              <p>Consent</p>
+            </div> 
           </div>
 
           {consultations.map((consultation) => (
@@ -115,11 +149,57 @@ function PatientDashboard() {
                 <div className="field">
                   <p>{consultation.status}</p>
                 </div>  
+                <div className="field">
+                  <Link className='consent-view-link' onClick={() => handleViewConsent(consultation.consultationId)}>View</Link>
+                </div> 
               </div>
               
           </Link>
 
           ))}
+
+          {/* {showModal && (
+                    <div className="consent-view-modal-overlay">
+                      <div className="consent-modal-content">
+                        <span className="consent-close" onClick={() => setShowModal(false)}>&times;</span>
+                        {selectedConsent && selectedConsent.map((consent) => (
+                          <div key={consent.id}>
+                            <p>Entity Name: {consent.entityName}</p>
+                            <p>Consent Status: {consent.consentStatus}</p>
+                            <button>Withdraw</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )} */}
+          
+          {showModal && (
+            <div className="consent-view-modal-overlay">
+              <div className="consent-modal-content">
+                <span className="consent-close" onClick={() => setShowModal(false)}>&times;</span>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Entity Name</th>
+                      <th>Entity Type</th>
+                      <th>Consent Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedConsent && selectedConsent.map((consent) => (
+                      <tr key={consent.id}>
+                        <td>{consent.entityName}</td>
+                        <td>{consent.entityType}</td>
+                        <td>{consent.consentStatus}</td>
+                        <td><Link className='consent-withdraw-link'>Withdraw</Link></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
 
           </div>
@@ -132,32 +212,4 @@ function PatientDashboard() {
 
 export default PatientDashboard;
 
-      // {/* <div className='dashboard-container'>
-      //   <div className='child-container'>
-      //     <div>
-      //             <div className='card'>
-      //               <div className='cardId'><p>ConsultationId</p></div>
-      //               <div className='cardName'><p>Name</p></div>
-      //               <div className='datecreated'><p>DateCreated</p></div>
-      //               <div className='cardStatus'><p>Status</p></div>
-      //             </div>
-      //     </div>
-      //   </div>
-
-      //   <div className='child-container'>
-      //       {error && <p>{error}</p>}
-      //       {consultations.map((consultation) => (
-      //         <div key={consultation.consultationId}>
-      //           <Link to={`/patient/patient-test-details/${consultation.consultationId}`} className="link-no-underline">
-      //             <div className='card'>
-      //               <div className='cardId'><p>{consultation.consultationId}</p></div>
-      //               <div className='cardName'><p>{consultation.name}</p></div>
-      //               <div className='date'><p>{consultation.dateCreated}</p></div>
-      //               <div className='cardStatus'><p>{consultation.status}</p></div>
-      //             </div>
-      //           </Link>
-      //         </div>
-      //       ))}
-      //   </div>
-
-      // </div> */}
+     

@@ -33,6 +33,8 @@ import TestCase from "./pages/TestCase";
 import AboutUs from "./pages/AboutUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
+import ConsentPage from "./pages/ConsentPage";
+
 
 
 function App() {
@@ -49,6 +51,9 @@ function App() {
             <Route path="/about-us" element={<AboutUs />} /> 
             <Route path="/privacy-policy" element={<PrivacyPolicy />} /> 
             <Route path="/contact-us" element={<ContactUs />} /> 
+
+            {/* Consent */}
+            <Route path="/core/consents/:consentId/response" element={<ConsentPage/>} />
             
             <Route
               path="/admin/dashboard"
