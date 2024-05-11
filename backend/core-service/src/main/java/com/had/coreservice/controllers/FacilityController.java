@@ -59,7 +59,7 @@ public class FacilityController {
             if (consentResponse.getStatusCode() == HttpStatus.OK) {
                 return new ResponseEntity<>("Lab added to consultation successfully", HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Failed to create consent", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Failed to create consent for lab addition", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
         } catch (IllegalArgumentException e) {

@@ -326,6 +326,60 @@ function TestCase() {
   const [consultationStatus, setConsultationStatus] = useState("");
   const [submitStatus, setSubmitStatus] = useState("");
   const [userType, setUserType] = useState("");
+  const [labConsentStatusAccept, setlabConsentStatusAccept] = useState(false);
+  const [labConsentStatusPending, setlabConsentStatusPending] = useState(false);
+  const [labConsentStatusReject, setlabConsentStatusReject] = useState(false);
+  const [labConsentMessage, setlabConsentMessage] = useState("");
+  const [labShow, setlabShow] = useState(false);
+  
+
+
+
+
+  useEffect(() => {
+    async function fetchLabConsentDetails() {
+      try {
+        // Fetch consent data
+        const idParam = testId ? testId : consultationId;
+        const response = await fetch(`http://localhost:8085/core/consent/all/${idParam}`);
+        if (response.ok) {
+          const data = await response.json();
+          let firstOrSecondConditionMet = false;
+          data.forEach(entity => {
+            if (entity.entityType === "LAB" && entity.consentStatus === "ACCEPT") {
+              setlabConsentStatusAccept(true); 
+              firstOrSecondConditionMet = true;
+              console.log("consent accept",labConsentStatusAccept);
+              setlabConsentMessage("Lab Consent is Accepted");
+              setlabShow(true);
+
+            }
+            
+            else if (entity.entityType === "LAB" && entity.consentStatus === "NONE") {
+              setlabConsentStatusPending(true);
+              firstOrSecondConditionMet = true;
+              console.log("consent pending",labConsentStatusPending);
+              setlabConsentMessage("Lab Consent is Pending");
+            }
+
+            else if (!firstOrSecondConditionMet && entity.entityType === "LAB" && entity.consentStatus === "REJECT") {
+              setlabConsentStatusReject(true);
+              console.log("consent reject",labConsentStatusReject);
+              setlabConsentMessage("Lab Consent is Rejected. Please select another Lab");
+              setLabAdded(false);
+              setlabShow(false);
+            }
+          });
+        } else {
+          console.error('Failed to fetch consent data:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching consent data:', error);
+      }
+    }
+
+     fetchLabConsentDetails();
+  }, [consultationId]);
 
   useEffect(() => {
     async function fetchRadiologistDetails() {
@@ -343,7 +397,8 @@ function TestCase() {
     }
 
     fetchRadiologistDetails();
-  }, [consultationId]);
+  }, [consultationId,testId]);
+  
 
   useEffect(() => {
     const userTypeFromStorage = sessionStorage.getItem('userType');
@@ -386,6 +441,7 @@ function TestCase() {
         const response = await fetch(`http://localhost:8085/core/facility/lab-details?${idParam}`);
         if (response.ok) {
           setlabDetailsVisible(true);
+          setlabShow(true);
         } else {
           console.error('Failed to fetch radiologist details:', response.status);
         }
@@ -447,6 +503,9 @@ function TestCase() {
       console.log("Response data:", data); // Log received data
       setMessage(data); // Update message state
       setLabAdded(true);
+      setlabConsentMessage("Consent Is Pending")
+      console.log("lab added", labAdded);
+      
   
     } catch (error) {
       console.error('Error adding lab:', error);
@@ -571,15 +630,30 @@ function TestCase() {
   return (
     <>
       <Navbar />
-      <PatientDetails />
+      
+
+      <div className={isPopupOpen ? "popup-background" : ""}>
+      { <PatientDetails />}
+
+      </div>
+      
       <DoctorDetails />
 
       {userType=== "lab"  &&<div className="custom-button-container">
         <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
-        {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />}
+        {isPopupOpen && (
+      <div>
+    <LabUpload onClose={() => setIsPopupOpen(false)} />
+     </div>
+     )}
+        {/* {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />} */}
       </div>}
 
-      {userType==="doctor" && !labDetailsVisible && (<div className="add-button-container">
+      < div className='rad-recommend'>
+       { labConsentMessage && <p>{labConsentMessage}</p>}
+      </div>
+
+      {userType==="doctor" && !labAdded && !labConsentStatusPending  && !labShow && (<div className="add-button-container">
         <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
        <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
           <option value="">Select Lab</option>
@@ -590,12 +664,14 @@ function TestCase() {
         </div>
       </div>)
 }
-      < div className='rad-recommend'>
+      {/* < div className='rad-recommend'>
        {message && <p>{message}</p>}
-      </div>
+      </div> */}
+      
+      
 
       {/* <LabDetails /> */}
-      {userType!=="lab" && (labAdded || labDetailsVisible)  && <LabDetails />}
+      {userType!=="lab" && labConsentStatusAccept  && <LabDetails />}
 
       {/* <div className="custom-button-container">
         <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
@@ -607,7 +683,7 @@ function TestCase() {
         </select>
       </div> */}
 
-        {userType==="doctor"&& (!radDetailsVisible || radiologistAdded ) && (
+        {userType==="doctor"&&  labConsentStatusAccept &&(!radDetailsVisible || radiologistAdded ) && (
         <div className="add-button-container">
          <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
@@ -679,8 +755,11 @@ function TestCase() {
      )
 }
 
+{/* <Footer/> */}
 
-<Footer/>
+<div className={isPopupOpen ? "popup-background" : ""}>
+(<Footer/>)
+</div>
 
     </>
   );

@@ -4,8 +4,6 @@ import lombok.Data;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-
-
 @Data
 @Entity
 @Table(name = "consent")

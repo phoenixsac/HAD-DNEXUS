@@ -47,9 +47,15 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
 //    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId")
 //    Optional<String> findNameById(@Param("professionalId") Long professionalId);
 
-    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.user.id = u.id WHERE p.id = :professionalId AND LOWER(u.type) = LOWER(:entityType)")
-    Optional<String> findNameById(@Param("professionalId") Long professionalId, @Param("entityType") String entityType);
+//    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM User u JOIN Professional p ON p.userId = u.id WHERE p.id = :professionalId AND LOWER(u.type) = LOWER(:entityType)")
+//    Optional<String> findNameById(@Param("professionalId") Long professionalId, @Param("entityType") String entityType);
 
+
+//    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM Professional p JOIN p.user u WHERE p.id = :professionalId")
+//    String findFullNameByProfessionalId(@Param("professionalId") Long professionalId);
+
+    @Query("SELECT CONCAT(u.firstName, ' ', u.lastName) FROM Professional p JOIN p.user u WHERE p.id = :professionalId AND LOWER(u.type) = LOWER(:entityType)")
+    Optional<String> findFullNameByProfessionalIdAndUserType(@Param("professionalId") Long professionalId, @Param("entityType") String entityType);
 
 }
 

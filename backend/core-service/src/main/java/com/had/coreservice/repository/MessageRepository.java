@@ -15,4 +15,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 //    Page<Message> findByConsultationId(Long consultationId, Pageable pageable);
     @Query("SELECT m FROM Message m WHERE m.consultationId = ?1")
     Page<Message> findByConsultationId(Long consultationId, Pageable pageable);
+
+    @Query("SELECT m FROM Message m WHERE m.consultationId = ?1 AND (m.senderId = ?2 OR m.receiverId = ?2)")
+    Page<Message> findByConsultationIdAndRadiologistId(Long consultationId, Long radiologistId, Pageable pageable);
 }

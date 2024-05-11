@@ -104,7 +104,10 @@ function PatientDashboard() {
   };
 
   return (
-    <>
+
+    
+    <div>
+
       <Navbar />
 
       <Breadcrumbs pageTitle="Patient Dashboard"/>
@@ -157,21 +160,6 @@ function PatientDashboard() {
           </Link>
 
           ))}
-
-          {/* {showModal && (
-                    <div className="consent-view-modal-overlay">
-                      <div className="consent-modal-content">
-                        <span className="consent-close" onClick={() => setShowModal(false)}>&times;</span>
-                        {selectedConsent && selectedConsent.map((consent) => (
-                          <div key={consent.id}>
-                            <p>Entity Name: {consent.entityName}</p>
-                            <p>Consent Status: {consent.consentStatus}</p>
-                            <button>Withdraw</button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )} */}
           
           {showModal && (
             <div className="consent-view-modal-overlay">
@@ -205,7 +193,7 @@ function PatientDashboard() {
           </div>
 
       <Footer/>
-    </>
+    </div>
 
   );
 }

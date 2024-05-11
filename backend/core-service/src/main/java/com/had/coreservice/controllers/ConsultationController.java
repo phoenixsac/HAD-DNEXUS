@@ -1,6 +1,7 @@
 package com.had.coreservice.controllers;
 
 import com.had.coreservice.constants.Constants;
+import com.had.coreservice.entity.Professional;
 import com.had.coreservice.exception.ConsultationAlreadyClosedException;
 import com.had.coreservice.exception.ConsultationNotFoundException;
 import com.had.coreservice.requestBody.CreateConsultationRequestBody;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/core/consultation")
 public class ConsultationController {
@@ -25,18 +28,7 @@ public class ConsultationController {
     @Autowired
     ConsentController consentController;
 
-
-
-
-
     private static final String CONSENT_CREATION_ENDPOINT = "http://your-consent-service-url/consents/create";
-
-
-//    @PostMapping("/create")
-//    public ResponseEntity<String> createConsultation(@RequestBody CreateConsultationRequestBody requestBody) {
-//        return consultationService.createConsultation(requestBody);
-//    }
-
 
     @PostMapping("/create")
     public ResponseEntity<String> createConsultation(@RequestBody CreateConsultationRequestBody requestBody) {
@@ -66,15 +58,6 @@ public class ConsultationController {
             return new ResponseEntity<>("Failed to create consent", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-//    private Long extractConsultationId(String responseBody) {
-//        // Assuming responseBody contains only the consultation ID
-//        try {
-//            return Long.parseLong(responseBody);
-//        } catch (NumberFormatException e) {
-//            return null;
-//        }
-//    }
 
     private Long extractConsultationIdFromResponse(String responseBody) {
         // Extract consultation ID from the response body
@@ -107,6 +90,18 @@ public class ConsultationController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + ex.getMessage());
+        }
+    }
+
+    @GetMapping("/{consultationId}/radiologists")
+    public ResponseEntity<?> getAllRadiologistsByConsultationId(@PathVariable Long consultationId) {
+        try {
+            Set<ProfessionalRadiologistResponseBody> radiologists = consultationService.getAllRadiologistsByConsultationId(consultationId);
+            return ResponseEntity.ok(radiologists);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consultation with given id does not exist");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving radiologists");
         }
     }
 

@@ -2,6 +2,8 @@ package com.had.coreservice.service;
 
 import com.had.coreservice.constants.Constants;
 import com.had.coreservice.entity.Consent;
+import com.had.coreservice.entity.Token;
+import com.had.coreservice.repository.TokenRepository;
 import com.had.coreservice.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +13,14 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
-
 @Service
 public class MailingService {
 
-
+    private static final int TOKEN_LENGTH = 32;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -26,6 +30,9 @@ public class MailingService {
 
     @Value("${spring.mail.username}")
     private String senderEmail;
+
+    @Autowired
+    TokenRepository tokenRepository;
 
 
 
@@ -50,17 +57,50 @@ public class MailingService {
             else {
                 helper.setSubject(Constants.SUB_RADIOLOGIST_ACCESS_CONSENT);
             }
-            helper.setText(buildEmailContent(consent, patientName), true);
+            helper.setText(buildEmailContent(consent, patientName, patientId), true);
             javaMailSender.send(message);
         } catch (jakarta.mail.MessagingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String buildEmailContent(Consent consent, String patientName) {
-        String link = "http://localhost:5000/core" + "/consents/" + consent.getId() + "/response";
+
+//    private String buildEmailContent(Consent consent, String patientName) {
+//        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response";
+//        String htmlContent = "<p>Dear " + patientName + ",</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
+//        return htmlContent;
+//    }
+
+    private String buildEmailContent(Consent consent, String patientName, Long patientId) {
+        String token = generateTokenForVerification(patientId, consent); // Generate a token for the patient
+        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response?token=" + token;
         String htmlContent = "<p>Dear " + patientName + ",</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
         return htmlContent;
+    }
+
+    private String generateTokenForVerification(Long patientId, Consent consent) {
+
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] tokenBytes = new byte[TOKEN_LENGTH];
+        secureRandom.nextBytes(tokenBytes);
+        String token = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
+
+        Token tokenEntity = new Token();
+        tokenEntity.setToken(token);
+        tokenEntity.setConsentId(consent.getId());
+        tokenEntity.setPatientId(patientId);
+        tokenEntity.setCreatedAt(LocalDateTime.now());
+        tokenEntity.setExpirationTime(LocalDateTime.now().plusHours(1)); // Set expiration time (e.g., 1 hour from now)
+        Token savedToken = tokenRepository.save(tokenEntity); // Save the token in the database
+
+        return savedToken.getToken();
+    }
+
+    public static String generateToken() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] tokenBytes = new byte[TOKEN_LENGTH];
+        secureRandom.nextBytes(tokenBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
     }
 
 //    private String buildEmailContentForLab(Consent consent) {

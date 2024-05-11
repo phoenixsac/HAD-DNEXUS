@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsultationService {
@@ -85,6 +87,29 @@ public class ConsultationService {
 
         consultation.setFinalReport(finalReport);
         consultationRepository.save(consultation);
+    }
+
+    public Set<ProfessionalRadiologistResponseBody> getAllRadiologistsByConsultationId(Long consultationId) {
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
+
+        try {
+            return consultation.getProfessionals().stream()
+                    .filter(professional -> "radiologist".equalsIgnoreCase(professional.getSpecialization()))
+                    .map(this::mapProfessionalToProfessionalRadiologistResponseBody)
+                    .collect(Collectors.toSet());
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while retrieving radiologists for the consultation.", e);
+        }
+    }
+
+    private ProfessionalRadiologistResponseBody mapProfessionalToProfessionalRadiologistResponseBody(Professional professional) {
+        ProfessionalRadiologistResponseBody responseBody = new ProfessionalRadiologistResponseBody();
+        responseBody.setId(professional.getId());
+        responseBody.setFullName(professional.getUser().getFirstName() + " " + professional.getUser().getLastName());
+        responseBody.setSystemOfMedicine(professional.getSystemOfMedicine());
+        // Set other fields as needed
+        return responseBody;
     }
 
     public String getTestByConsultationId(Long consultationId) {

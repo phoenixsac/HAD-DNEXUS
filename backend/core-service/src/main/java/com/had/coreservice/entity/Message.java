@@ -26,6 +26,12 @@ public class Message {
     @Column(name = "sender_id")
     private Long senderId;
 
+    @Column(name = "sender_type")
+    private String senderType;
+
+    @Column(name = "receiver_type")
+    private String receiverType;
+
     @Column(name = "receiver_id")
     private Long receiverId;
 
