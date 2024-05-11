@@ -125,7 +125,9 @@ CREATE TABLE message (
                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
                          consultation_id BIGINT,
                          sender_id BIGINT,
+                         sender_type varchar(55),
                          receiver_id BIGINT,
+                         receiver_type varchar(55),
                          message_content TEXT,
                          created_at DATETIME
 );
@@ -161,6 +163,17 @@ CREATE TABLE consent (
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE token (
+                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       token VARCHAR(255) NOT NULL,
+                       consent_id BIGINT,
+                       patient_id BIGINT NOT NULL, -- Replace user_id with patient_id
+                       expiration_time DATETIME NOT NULL,
+                       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                       UNIQUE(token)
+);
+
 
 
 ALTER TABLE consent
@@ -324,11 +337,20 @@ VALUES
     (5,'consultancy5',2, '2024-04-05 14:00:00', 2, 'Completed', 'Patient discharged.', 'Rest recommended.', 2);
 
 
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'I need some clarification on the test results.', '2024-04-06 12:10:00');
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Sure, could you please specify?', '2024-04-06 12:15:00');
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Im concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 2, 1, 'Let me review the scan again and get back to you.', '2024-04-06 12:25:00');
-INSERT INTO message (consultation_id, sender_id, receiver_id, message_content, created_at) VALUES (1, 1, 2, 'Thank you, Ill wait for your response.', '2024-04-06 12:30:00');
+INSERT INTO message (consultation_id, sender_id, sender_type, receiver_id, receiver_type, message_content, created_at)
+VALUES (1, 1, 'doctor', 2, 'radiologist', 'I need some clarification on the test results.', '2024-04-06 12:10:00');
+
+INSERT INTO message (consultation_id, sender_id, sender_type, receiver_id, receiver_type, message_content, created_at)
+VALUES (1, 2, 'radiologist', 1, 'doctor', 'Sure, could you please specify?', '2024-04-06 12:15:00');
+
+INSERT INTO message (consultation_id, sender_id, sender_type, receiver_id, receiver_type, message_content, created_at)
+VALUES (1, 1, 'doctor', 2, 'radiologist', 'Im concerned about the anomaly in the MRI scan.', '2024-04-06 12:20:00');
+
+INSERT INTO message (consultation_id, sender_id, sender_type, receiver_id, receiver_type, message_content, created_at)
+VALUES (1, 2, 'radiologist', 1, 'doctor', 'Let me review the scan again and get back to you.', '2024-04-06 12:25:00');
+
+INSERT INTO message (consultation_id, sender_id, sender_type, receiver_id, receiver_type, message_content, created_at)
+VALUES (1, 1, 'doctor', 2, 'radiologist', 'Thank you, Ill wait for your response.', '2024-04-06 12:30:00');
 
 
 INSERT INTO consultation_dicom (consultation_id, dicom_file_uid) VALUES (1, 'dicom123');

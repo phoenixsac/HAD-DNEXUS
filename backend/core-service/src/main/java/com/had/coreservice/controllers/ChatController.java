@@ -27,23 +27,40 @@ public class ChatController {
     @Autowired
     MessageService messageService;
 
-    @MessageMapping("/chat/{consultationId}")
-    @SendTo("/topic/{consultationId}/messages")
-    public MessageDTO sendMessage(@DestinationVariable Long consultationId, MessageDTO messageDTO) {
+//    @MessageMapping("/chat/{consultationId}")
+//    @SendTo("/topic/{consultationId}/messages")
+//    public MessageDTO sendMessage(@DestinationVariable Long consultationId, MessageDTO messageDTO) {
+//
+//        System.out.println(messageDTO.getMessageContent());
+//        MessageDTO savedMessage = messageService.saveMessage(consultationId, messageDTO);
+//
+//        return savedMessage;
+//    }
 
+
+//    @GetMapping("/chat/get-messages/{consultationId}")
+//    public ResponseEntity<List<MessageDTO>> getMessagesByConsultationId(
+//            @PathVariable Long consultationId,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "5") int size) { // Change default size to 5
+//        List<MessageDTO> messages = messageService.getMessagesByConsultationId(consultationId, page, size);
+//        return ResponseEntity.ok(messages);
+//    }
+
+    @MessageMapping("/chat/{consultationId}/radiologist/{radiologistId}")
+    @SendTo("/topic/{consultationId}/radiologist/{radiologistId}/messages")
+    public MessageDTO sendMessageToRadiologist(@DestinationVariable Long consultationId, @DestinationVariable Long radiologistId, MessageDTO messageDTO) {
         System.out.println(messageDTO.getMessageContent());
-        MessageDTO savedMessage = messageService.saveMessage(consultationId, messageDTO);
-
-        return savedMessage;
+        return messageService.saveMessage(consultationId, radiologistId, messageDTO);
     }
 
-
-    @GetMapping("/chat/get-messages/{consultationId}")
-    public ResponseEntity<List<MessageDTO>> getMessagesByConsultationId(
+    @GetMapping("/chat/get-messages/{consultationId}/radiologist/{radiologistId}")
+    public ResponseEntity<List<MessageDTO>> getMessagesByConsultationIdAndRadiologistId(
             @PathVariable Long consultationId,
+            @PathVariable Long radiologistId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) { // Change default size to 5
-        List<MessageDTO> messages = messageService.getMessagesByConsultationId(consultationId, page, size);
+            @RequestParam(defaultValue = "5") int size) {
+        List<MessageDTO> messages = messageService.getMessagesByConsultationIdAndRadiologistId(consultationId, radiologistId, page, size);
         return ResponseEntity.ok(messages);
     }
 

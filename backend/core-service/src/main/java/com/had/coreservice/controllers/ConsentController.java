@@ -1,15 +1,19 @@
 package com.had.coreservice.controllers;
 import com.had.coreservice.entity.Consent;
 import com.had.coreservice.entity.ConsentStatus;
+import com.had.coreservice.entity.Token;
 import com.had.coreservice.responseBody.ConsentDetailResponseBody;
 import com.had.coreservice.service.ConsentService;
 import com.had.coreservice.service.MailingService;
+import com.had.coreservice.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/core/consent")
@@ -20,6 +24,9 @@ public class ConsentController {
 
     @Autowired
     MailingService mailingService;
+
+    @Autowired
+    TokenService tokenService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createConsent(@RequestParam Long patientId,
@@ -110,5 +117,28 @@ public class ConsentController {
         }
     }
 
+//    @GetMapping("/validate-token/{consentId}/")
+//    public ResponseEntity<String> getTokenForConsent(@PathVariable Long consentId) {
+//        try {
+//            List<ConsentDetailResponseBody> consentDetailResponseBodies = consentService.getTokenForConsentId(consultationId);
+//            return ResponseEntity.ok(consentDetailResponseBodies);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(null);
+//        }
+//    }
+
+
+    @GetMapping("/validate-token/{consentId}")
+    public ResponseEntity<String> validateTokenByConsentId(@PathVariable Long consentId) {
+        try {
+            return tokenService.validateTokenByConsentId(consentId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
+    }
 
 }
