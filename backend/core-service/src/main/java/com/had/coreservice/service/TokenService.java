@@ -15,17 +15,22 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository; // Assuming you have a TokenRepository injected
 
-    public ResponseEntity<String> validateTokenByConsentId(Long consentId) {
+    public ResponseEntity<String> validateTokenByConsentId(Long consentId, String token) {
         try {
             Optional<Token> tokenOptional = tokenRepository.getTokenByConsentId(consentId);
             if (tokenOptional.isPresent()) {
-                Token token = tokenOptional.get();
+                Token savedToken = tokenOptional.get();
                 // Check if the token is expired
-                if (token.getExpirationTime().isBefore(LocalDateTime.now())) {
+                if (!token.equals(savedToken.getToken()))
+                {
+                    return ResponseEntity.badRequest().body("Token does not match");
+                }
+                else if(savedToken.getExpirationTime().isBefore(LocalDateTime.now())) {
                     return ResponseEntity.badRequest().body("Token has expired");
                 }
-                // Token is valid
-                return ResponseEntity.ok("Token is valid");
+                else{
+                    return ResponseEntity.ok("Token is valid");
+                }
             } else {
                 // Token not found
                 return ResponseEntity.notFound().build();
