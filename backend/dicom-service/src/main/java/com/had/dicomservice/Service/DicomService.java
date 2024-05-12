@@ -205,6 +205,7 @@ public class DicomService {
         return newFileName;
     }
 
+
     public String saveAnnotationJson(String measurementJson) throws IOException {
 
         String folderPath = "src/main/resources/annotations"; // Assuming "annotations" folder is directly inside resources
