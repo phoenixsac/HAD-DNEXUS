@@ -16,6 +16,11 @@
     flex: 1;
     padding: 10px;
   }
+  .selected-image {
+    flex: 1;
+    padding: 10px;
+    margin-top: 70px;
+  }
   
   .chat-window {
     flex: 2;
@@ -39,5 +44,19 @@
   ul li:active {
     background-color: #ccc;
   }
+  
+  .image-thumbnails img {
+    max-width: 100px; /* Set a maximum width for the thumbnail images */
+    height: auto; /* Ensure the height adjusts proportionally */
+    margin-right: 10px; /* Add some spacing between the thumbnail images */
+  }
+
+  .image-thumbnails {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Add margin at the bottom for spacing */
+  }
+  
+  
   
   
