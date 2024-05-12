@@ -37,8 +37,7 @@
 
 .admin-buttons {
   padding: 3px;
-  display: flex;
-  justify-content: center;
+
 }
 
 .admin-buttons button {
@@ -65,10 +64,10 @@
     border-bottom-left-radius:10px; */
 
     width: 140px;
-    /* height: 50px; */
+    height: 50px;
 
-    margin: 5px;
     
+    /* max-width: 50%;  */
   }
 
   .btn:hover{

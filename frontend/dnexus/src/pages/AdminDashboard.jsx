@@ -22,14 +22,6 @@ function AdminDashboard() {
     navigate("/admin/view-professional-list"); 
   };
 
-  // const handleAddRadiologistClick = () => {
-  //   navigate("/admin/add-radiologist"); 
-  // };
-
-  // const handleViewRadiologistsClick = () => {
-  //   navigate("/admin/view-radiologistlist"); 
-  // };
-
   const handleAddFaicilityClick = () => {
     navigate("/admin/add-facility"); 
   };
@@ -60,14 +52,6 @@ function AdminDashboard() {
             <button className="btn" onClick={handleViewProfessionalClick}>View</button>
           </div>
         </div>
-
-        {/* <div className="button-container">
-          <h2>Radiologist</h2>
-          <div className="buttons">
-            <button onClick={handleAddRadiologistClick}>Add</button>
-            <button onClick={handleViewRadiologistsClick}>View</button>
-          </div>
-        </div> */}
 
         <div className="button-container">
           <h2>Facility</h2>

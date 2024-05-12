@@ -22,7 +22,7 @@ const Failure = ({ loginId, password }) => {
             </div>
             <div className='failure-msg'>
               <div className='heading'>
-                <h5>ERROR <br/> Proffessional already Added!</h5>
+                <h5>ERROR <br/> Invalid ID</h5>
               </div>
             </div>
             {/* <div className='button-div'>
