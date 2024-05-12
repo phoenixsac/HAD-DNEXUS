@@ -1,0 +1,51 @@
+.rad-dashboard-container{
+  margin: 50px 30px;
+  padding: 20px;
+  position: relative;
+  height: auto;
+}
+
+.patient-test-details{
+  margin: 15px;
+  padding: 15px;
+}
+
+
+.search-patient{
+  padding: 10px 10px;
+
+  width:80vw;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  margin-bottom: 20px;
+
+}
+
+.field{
+  height: 50px;
+  width: 500px;
+
+}
+
+.field input{
+  border-radius: 15;
+  height: 32px;
+  width: 410px;
+
+  padding: 10px;
+}
+
+
+
+.patient-data p{
+  padding: 2px;
+}
+
+
+.test-list{
+  padding: 15px;
+}
+

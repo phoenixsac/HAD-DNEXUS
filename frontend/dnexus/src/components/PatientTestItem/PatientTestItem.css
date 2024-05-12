@@ -1,0 +1,59 @@
+.test-list-item {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    width: calc(100% - 1.5rem); /* Adjust width for 3 columns with some spacing */
+    cursor: pointer; /* Style for clickable test items */
+
+    color: black;
+  }
+  
+  .test-list-item p {
+    margin-bottom: 0.5rem;
+  }
+  
+  .test-status {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  
+  .test-status.green {
+    background-color: #D6F0E0;
+  }
+  
+  .test-status.yellow {
+    background-color: #FEFFD6;
+  }
+  
+  .test-status.red {
+    background-color: #FFD3D3;
+  }
+
+  .test-list-item:hover,
+  .test-list-item.hovered {
+    box-shadow: 0 0 5px #121101;
+  }
+
+.test-list-item p{
+  padding: 2px;
+}
+
+  .div1{
+    padding: 2px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .div2{
+    padding: 2px;
+    text-align: left;
+  }
+
+  .div-desc{
+    text-align: left;
+  }
+  

@@ -1,0 +1,17 @@
+
+.appointment{
+    padding: 20px;
+    margin: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.image .text {
+    padding: 10px;
+    margin: 20px;
+}
+

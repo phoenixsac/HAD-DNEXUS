@@ -1,0 +1,126 @@
+/* /* .patient-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    
+    margin: 20px auto 0; 
+  }
+  
+  .patient-info,
+  .patient-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+  }
+  
+  .patient-info span {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  .patient-details span{
+    margin-bottom: 0.5rem;
+  }
+  
+  /* .age-gender,
+  .email {
+    font-style: italic;
+  } */
+  
+  
+
+
+
+/* 
+.email,
+.patient-phone,
+.patient-address {
+    margin-bottom: 0.5rem;
+    
+    font-style: italic;
+} */  */
+
+.overlay{
+	position:relative;
+  z-index: 1; 
+}
+
+
+.breadcrumbs {
+  background-image: url('../assets/StockImages/bread-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 80px 0px;
+  text-align: center; /* Center the breadcrumb items */
+}
+
+.breadcrumbs h2 {
+  color: #fff;
+  text-transform: capitalize;
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.breadcrumbs nav {
+  display: inline-block;
+}
+
+.breadcrumbs ol {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumbs li {
+  display: inline-block;
+  list-style: none;
+}
+
+/* .breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  margin: 0 10px;
+} */
+
+.breadcrumb{
+color: #fff;
+text-transform:capitalize;
+font-size: 15px;
+font-weight: 700;
+margin: 0;
+padding: 0;
+  opacity: 1;
+position: relative; /* Ensure the position is set to relative */
+z-index: 2; 
+position: center;
+}
+
+
+
+.title{
+  margin-bottom: 20px;
+}
+
+.breadcrumbs .breadcrumb-item {
+  display: block;
+  color: #fff;
+  
+}
+.breadcrumbs .breadcrumb-item::before {
+  content: none; /* Remove all separators */
+}
+
+
+
+

@@ -1,0 +1,57 @@
+.failure-page{
+    padding: 10px;
+    margin: 10px;
+}
+
+.red-icon{
+    padding: 5px;
+    font-size: 70px;
+    color: rgb(246, 129, 129);
+}
+
+.heading{
+    padding: 10px;
+    margin: 0;
+}
+
+.failure-msg{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.credentials{
+    padding: 10px;
+    font-size: 20px;
+
+    width: 500px;
+    height: 150px;
+
+    background-color: #DEF0F1;
+}
+
+.credentials p{
+    margin: 10px;
+    padding: 10px;
+}
+
+.credentials ul{
+    padding: 10px;
+}
+
+.credentials li{
+    padding: 2px;
+    font-weight: bold;
+
+    list-style: none;
+}
+
+.button-div{
+    padding: 10px;
+}
+
+.button-div button{
+    background-color: #1A76D1;
+}
+

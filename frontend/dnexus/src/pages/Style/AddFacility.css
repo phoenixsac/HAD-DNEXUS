@@ -1,0 +1,38 @@
+.lab-verification-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+
+  padding: 30px;
+  margin: 20px;
+}
+
+.facility{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.facilityId-field{
+  padding: 10px;
+  margin: 5px;
+
+}
+
+.facilityId-field input{
+  font-size: 22px;
+  padding: 10px;
+}
+
+.verify-button{
+  margin: 5px;
+}
+
+.verify-button button:hover{
+  background: #2C2D3F;
+    transition: all 0.3s;
+}
+

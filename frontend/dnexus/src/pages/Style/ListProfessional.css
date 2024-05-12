@@ -1,0 +1,87 @@
+.doctors-list {
+  margin: 20px 20px;
+}
+
+.search-back{
+  padding: 10px;
+
+  width:95vw;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  margin-left: 38px;
+}
+
+.search-field{
+  height: 50px;
+  width: 500px;
+
+  padding-left: 10px;
+
+}
+
+.search-field input{
+  border-radius: 15;
+  height: 40px;
+
+  padding-left: 10px;
+}
+
+.search-back button {
+  
+  cursor: pointer;
+  width: 80px;
+
+  background-color: #001B79;
+
+  /* height: 50px;
+  width: 50px; */
+
+  padding: 8px;
+}
+
+.search-icon {
+  font-size: 2rem;
+}
+
+/* .table-container{
+  padding: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 95%;
+  overflow-x: auto; 
+
+  position: relative;
+} */
+
+.doctor-list{
+  padding: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 98%;
+  /* overflow-x: auto;  */
+
+  /* position: relative;   */
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+
+
+.pagination {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px; 
+}

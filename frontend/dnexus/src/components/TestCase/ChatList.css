@@ -1,0 +1,37 @@
+
+  
+  .chat-list-container {
+    width: 81%;
+    margin: 0 auto; /* Center the component horizontally */
+  }
+
+  .chat-list-item {
+    display: flex;
+    justify-content: space-between; /* Aligns items to the left and right */
+    align-items: center; /* Vertically center items */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .room-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .room-name {
+    font-weight: bold;
+    text-align: left; 
+  }
+  
+  .members {
+    margin-top: 5px;
+  }
+  
+  .date {
+    color: #999;
+    font-size: 0.8rem;
+  }
+  
+  

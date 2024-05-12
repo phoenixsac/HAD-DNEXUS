@@ -1,0 +1,68 @@
+.patients-list {
+    margin: 20px 20px;
+  }
+  
+  .search-back{
+    padding: 10px;
+  
+    width:95vw;
+  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-left: 60px;
+  }
+  
+  .search-field{
+    height: 50px;
+    width: 500px;
+    padding-left: 10px;
+  }
+  
+  .search-field input{
+    border-radius: 15;
+    height: 40px;
+    padding-left: 10px;
+  }
+  
+  .search-back button {
+    
+    cursor: pointer;
+    width: 80px;
+  
+    background-color: #001B79;
+  
+    /* height: 50px;
+    width: 50px; */
+  
+    padding: 8px;
+  }
+  
+
+  
+  .patient-list{
+    padding: 10px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    width: 98%;
+    /* overflow-x: auto;  */
+  
+    /* position: relative;   */
+  }
+  
+  
+  .pagination-container {
+    position: relative; /* Make the container a positioned parent */
+    height: 20px;
+  }
+  
+  .pagination {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  
