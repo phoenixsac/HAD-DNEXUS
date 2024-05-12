@@ -147,10 +147,9 @@ const ChatComponent = () => {
 
   // Sample image paths
   const imagePaths = [
-    "file:/home/srishti/had_testpage/HAD-DNEXUS/backend/dicom-service/target/classes/images/2f6fce8f-9ea4-4ae1-b40f-700b30d8f4bf.jpg",
-    process.env.PUBLIC_URL + '/images/flowers-276014_640.jpg',
-    process.env.PUBLIC_URL + '/images/free-images.jpg',
-    process.env.PUBLIC_URL + '/images/tree-736885_640.jpg'
+    process.env.PUBLIC_URL + '/images/2f6fce8f-9ea4-4ae1-b40f-700b30d8f4bf.jpg',
+    process.env.PUBLIC_URL + '/images/3fa24669-25c6-415b-818e-3b654809ce8b.jpg',
+    process.env.PUBLIC_URL + '/images/6c3901c1-0867-4ed8-8914-7c0035c31efa.jpg'
   ];
 
   return (
