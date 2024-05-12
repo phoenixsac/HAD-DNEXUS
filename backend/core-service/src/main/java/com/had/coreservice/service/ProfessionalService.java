@@ -1,9 +1,7 @@
 package com.had.coreservice.service;
 
-import com.had.coreservice.entity.Consultation;
-import com.had.coreservice.entity.Patient;
-import com.had.coreservice.entity.Professional;
-import com.had.coreservice.entity.User;
+import com.had.coreservice.entity.*;
+import com.had.coreservice.repository.ConsentRepository;
 import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.repository.ProfessionalRepository;
 import com.had.coreservice.repository.UserRepository;
@@ -39,6 +37,9 @@ public class ProfessionalService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ConsentRepository consentRepository;
 
     @Autowired
     ConsultationRepository consultationRepository;
@@ -223,6 +224,8 @@ public class ProfessionalService {
 
         List<Object[]> consultationDetails = professionalRepository.findConsultationDetailsByProfessionalIdAndPatientId(docId, patientId);
 
+
+
         List<ConsultationCardDetailResponseBody> consultationCardDetails = consultationDetails.stream()
                 .map(this::mapToConsultationCardDetail)
                 .collect(Collectors.toList());
@@ -230,7 +233,17 @@ public class ProfessionalService {
         return consultationCardDetails;
     }
 
+//    public List<Consent> findConsentsByTypeAndConsultationId(String consentType, Long consultationId) {
+//        return consentRepository.findByConsentTypeAndConsultationId(consentType, consultationId);
+//    }
+
     private ConsultationCardDetailResponseBody mapToConsultationCardDetail(Object[] row) {
+//        Consent consentObj = new Consent();
+
+//        consentRepository.findConsentStatusByConsultationIdAndType((Long) row[0], "DOCTOR_CASE_CONSENT");
+//        List<Consent> consentObj = findConsentsByTypeAndConsultationId("DOCTOR_CASE_CONSENT", (Long) row[0]);
+
+
         ConsultationCardDetailResponseBody consultationCardDetail = new ConsultationCardDetailResponseBody();
         consultationCardDetail.setConsultationId((Long) row[0]);
         consultationCardDetail.setName((String) row[1]);
@@ -239,9 +252,12 @@ public class ProfessionalService {
         Timestamp timestamp = (Timestamp) row[2];
         LocalDateTime localDateTime = timestamp.toLocalDateTime();
         consultationCardDetail.setDateCreated(localDateTime);
+//        consultationCardDetail.setConsentType("DOCTOR_CASE_CONSENT");
+//        consultationCardDetail.setStatus(consentObj.);
 
         consultationCardDetail.setStatus((String) row[3]);
         return consultationCardDetail;
+
     }
 
 
@@ -290,28 +306,6 @@ public class ProfessionalService {
                 .place_of_work(professional.getPlaceOfWork())
                 .build();
     }
-
-    public DoctorDetailResponseBody getRadiologistDetails(Long radiologistId) {
-        Optional<Professional> optionalProfessional = professionalRepository.findById(radiologistId);
-        if (optionalProfessional.isEmpty()) {
-            throw new RuntimeException("Professional(radiologist) not found with ID: " + radiologistId);
-        }
-
-        Professional professional = optionalProfessional.get();
-        User user = professional.getUser();
-        if (user == null || !user.getType().equals("radiologist")) {
-            throw new RuntimeException("User with ID " + radiologistId + " is not a doctor.");
-        }
-
-        return DoctorDetailResponseBody.builder()
-                .id(professional.getId())
-                .name(user.getFirstName() + " " + user.getLastName())
-                .systemOfMedicine(professional.getSystemOfMedicine())
-                .qualification(professional.getQualification())
-                .place_of_work(professional.getPlaceOfWork())
-                .build();
-    }
-
 
     public DoctorDetailResponseBody getRadiologistDetails(Long radiologistId) {
         Optional<Professional> optionalProfessional = professionalRepository.findById(radiologistId);

@@ -1,5 +1,6 @@
 package com.had.dicomservice.Controller;
 
+import com.had.dicomservice.Dto.AnnotatedEntity;
 import com.had.dicomservice.Dto.DicomMetadataRequestBody;
 import com.had.dicomservice.Dto.SaveDicomRequestBody;
 //import com.had.dicomservice.Service.DicomFrameExtractorService;
@@ -27,9 +28,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 @RestController
 @RequestMapping("/dicom")
@@ -39,6 +43,9 @@ public class DicomController {
 
     @Autowired
     private ConsultationDicomRepository consultationDicomRepository;
+
+    @Autowired
+    private  ResourceLoader resourceLoader;
 
     private String URL = "http://localhost:9191/";
 
@@ -182,6 +189,22 @@ public class DicomController {
                 .body(data);
     }
 
+
+//    @PostMapping("/dicom/img-upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, @RequestBody AnnotatedEntity annotatedEntity) {
+//        try {
+//            // Log user details
+//            logger.info("Annotated Entity Type: {}", annotatedEntity.getUserType());
+//            logger.info("Actor ID: {}", annotatedEntity.getActorId());
+//
+//            String fileName = dicomService.saveImage(file);
+//            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + fileName);
+//        } catch (Exception e) {
+//            logger.error("Failed to upload image", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
+
     @PostMapping("/dicom/img-upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
@@ -192,30 +215,64 @@ public class DicomController {
         }
     }
 
-    @PostMapping("/dicom/save-annotation-json")
-    public ResponseEntity<String> saveAnnotationJson(@RequestBody String measurementJson) {
+//    @PostMapping("/dicom/save-annotation-json")
+//    public ResponseEntity<String> saveAnnotationJson(@RequestBody String measurementJson) {
+//        try {
+//            dicomService.saveAnnotationJson(measurementJson);
+//            return ResponseEntity.ok("Annotation JSON saved successfully");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save Annotation JSON");
+//        }
+//    }
+
+//    @GetMapping("/dicom/get-measurement")
+//    public String getSampleJson() {
+//        try {
+//            // Load the sample JSON file
+//            String content = new String(Files.readAllBytes(Paths.get(ResourceUtils.getFile("classpath:annotations/data.json").toURI())));
+//
+//            // Parse JSON string to JSONObject
+//            JSONObject jsonObject = new JSONObject(content);
+//
+//            // Return JSON string
+//            return jsonObject.toString();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "Error occurred while processing the request";
+//        }
+//    }
+
+    @GetMapping("/dicom/images")
+    public ResponseEntity<List<Resource>> getAllImages() {
         try {
-            dicomService.saveAnnotationJson(measurementJson);
-            return ResponseEntity.ok("Annotation JSON saved successfully");
+            List<Resource> imageResources = new ArrayList<>();
+
+            // Load the directory containing images
+            Resource directoryResource = resourceLoader.getResource("classpath:/images/");
+
+            // Check if the directory exists
+            if (!directoryResource.exists() || !directoryResource.getFile().isDirectory()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Iterate over files in the directory and add image resources to the list
+            File[] files = directoryResource.getFile().listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        Resource imageResource = resourceLoader.getResource("classpath:/images/" + file.getName());
+                        imageResources.add(imageResource);
+                    }
+                }
+            }
+
+            // Return the list of image resources
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(imageResources);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save Annotation JSON");
-        }
-    }
-
-    @GetMapping("/dicom/get-measurement")
-    public String getSampleJson() {
-        try {
-            // Load the sample JSON file
-            String content = new String(Files.readAllBytes(Paths.get(ResourceUtils.getFile("classpath:annotations/data.json").toURI())));
-
-            // Parse JSON string to JSONObject
-            JSONObject jsonObject = new JSONObject(content);
-
-            // Return JSON string
-            return jsonObject.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error occurred while processing the request";
+            // Handle any errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
