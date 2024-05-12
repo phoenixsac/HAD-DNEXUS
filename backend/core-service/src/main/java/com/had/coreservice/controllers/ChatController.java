@@ -47,11 +47,18 @@ public class ChatController {
 //        return ResponseEntity.ok(messages);
 //    }
 
+//    @MessageMapping("/chat/{consultationId}/radiologist/{radiologistId}")
+//    @SendTo("/topic/{consultationId}/radiologist/{radiologistId}/messages")
+//    public MessageDTO sendMessageToRadiologist(@DestinationVariable Long consultationId, @DestinationVariable Long radiologistId, MessageDTO messageDTO) {
+//        System.out.println(messageDTO.getMessageContent());
+//        return messageService.saveMessage(consultationId, radiologistId, messageDTO);
+//    }
+
     @MessageMapping("/chat/{consultationId}/radiologist/{radiologistId}")
     @SendTo("/topic/{consultationId}/radiologist/{radiologistId}/messages")
     public MessageDTO sendMessageToRadiologist(@DestinationVariable Long consultationId, @DestinationVariable Long radiologistId, MessageDTO messageDTO) {
         System.out.println(messageDTO.getMessageContent());
-        return messageService.saveMessage(consultationId, radiologistId, messageDTO);
+        return messageService.saveMessage(consultationId, messageDTO);
     }
 
     @GetMapping("/chat/get-messages/{consultationId}/radiologist/{radiologistId}")

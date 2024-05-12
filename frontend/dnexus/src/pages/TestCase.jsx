@@ -721,7 +721,7 @@ function TestCase() {
       {/* {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />} */}
       
       <div className='chatting'>
-      <h2>Messaging</h2>
+      <h2>Discussion Forum</h2>
       </div>
       <ChatComponent/>
       
