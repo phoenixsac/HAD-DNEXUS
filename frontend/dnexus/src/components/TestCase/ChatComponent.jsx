@@ -92,6 +92,7 @@ const ChatComponent = () => {
   const actorId = localStorage.getItem('actorId');
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageselected, setimageselected] = useState(false);
+  // const [imagePaths, setImagePaths] = useState([]);
 
   useEffect(() => {
     // Fetch radiologists from API based on user type
@@ -108,6 +109,12 @@ const ChatComponent = () => {
         .catch(error => console.error('Error fetching radiologist:', error));
         console.log("raddddd",radiologists);
     }
+
+    // Fetch image paths from the API
+    // fetch('http://localhost:9191/dicom/dicom/images')
+    //   .then(response => response.json())
+    //   .then(data => setImagePaths(data))
+    //   .catch(error => console.error('Error fetching image paths:', error));
   }, [userType, testId, consultationId, actorId]);
   
   // useEffect(() => {
@@ -140,6 +147,7 @@ const ChatComponent = () => {
 
   // Sample image paths
   const imagePaths = [
+    "file:/home/srishti/had_testpage/HAD-DNEXUS/backend/dicom-service/target/classes/images/2f6fce8f-9ea4-4ae1-b40f-700b30d8f4bf.jpg",
     process.env.PUBLIC_URL + '/images/flowers-276014_640.jpg',
     process.env.PUBLIC_URL + '/images/free-images.jpg',
     process.env.PUBLIC_URL + '/images/tree-736885_640.jpg'
