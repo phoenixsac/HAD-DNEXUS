@@ -47,8 +47,8 @@ const DocPatientTestDetails = () => {
         // setTests(data.tests);
         setTests(data);
 
-        // console.log("patient:",patient);
-        // console.log("tests:",tests);
+        console.log("patient:",patient);
+        console.log("tests:",tests);
 
         // Make additional API call to fetch patient details from another URL
         const patientResponse = await fetch(`http://localhost:8085/core/consultation/patient-details-by-patient-id?patientId=${patientId}`);

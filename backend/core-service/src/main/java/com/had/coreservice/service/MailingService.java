@@ -73,7 +73,7 @@ public class MailingService {
 
     private String buildEmailContent(Consent consent, String patientName, Long patientId) {
         String token = generateTokenForVerification(patientId, consent); // Generate a token for the patient
-        String link = "http://localhost:3000/core" + "/consents/" + consent.getId() + "/response?token=" + token;
+        String link = "http://localhost:5000/core" + "/consents/" + consent.getId() + "/response?token=" + token;
         String htmlContent = "<p>Dear " + patientName + ",</p><p>You have a new consent request. Please click <a href=\"" + link + "\">here</a> to respond.</p>";
         return htmlContent;
     }

@@ -54,6 +54,7 @@ function App() {
 
             {/* Consent */}
             <Route path="/core/consents/:consentId/response" element={<ConsentPage/>} />
+
             
             <Route
               path="/admin/dashboard"

@@ -52,8 +52,11 @@ public class ConsultationController {
 
         ResponseEntity<?> consentResponse = consentController.createConsent(patientId, entityId, entityType, consultationId, consentType);
 
+        String successMessage = "Consultation created successfully with ID: " + consultationId;
+
         if (consentResponse.getStatusCode() == HttpStatus.OK) {
-            return new ResponseEntity<>("Consultation created successfully", HttpStatus.OK);
+//            return new ResponseEntity<>("Consultation created successfully", HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.CREATED).body(successMessage);
         } else {
             return new ResponseEntity<>("Failed to create consent", HttpStatus.INTERNAL_SERVER_ERROR);
         }

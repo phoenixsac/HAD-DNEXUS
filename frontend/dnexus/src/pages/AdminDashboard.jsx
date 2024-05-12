@@ -55,7 +55,7 @@ function AdminDashboard() {
           <div className='dash-icon'>
             <FaUserDoctor />
           </div>
-          <div className="buttons">
+          <div className="admin-buttons">
             <button className="btn" onClick={handleAddProfesssionalClick}>Add</button>
             <button className="btn" onClick={handleViewProfessionalClick}>View</button>
           </div>
@@ -74,7 +74,7 @@ function AdminDashboard() {
           <div className='dash-icon'>
             <RiBodyScanFill />
           </div>
-          <div className="buttons">
+          <div className="admin-buttons">
             <button className="btn" onClick={handleAddFaicilityClick}>Add</button>
             <button className="btn" onClick={handleViewFacilityClick}>View</button>
           </div>
@@ -85,7 +85,7 @@ function AdminDashboard() {
           <div className='dash-icon'>
             <HiUsers />
           </div>
-          <div className="buttons">
+          <div className="admin-buttons">
             <button className="btn" onClick={handleViewPatientsClick}>View</button>
           </div>
         </div>
