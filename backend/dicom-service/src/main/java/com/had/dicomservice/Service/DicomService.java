@@ -27,7 +27,7 @@ public class DicomService {
 //    @Autowired
 //    private DicomRepository dicomRepository;
 
-    private static final String UPLOAD_DIR = "src/main/resources/images/";
+    private static final String UPLOAD_DIR = "dicom-service/src/main/resources/images/";
 
     private static final String DICOM_UPLOAD_DIR = "C:\\Users\\sn172\\Desktop\\Projects\\GitHubProjects\\HAD-DNEXUS\\backend\\dicom-service\\src\\main\\resources\\dicom-files";
 
@@ -172,6 +172,7 @@ public class DicomService {
 
     public String saveImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
+            logger.error("File is empty");
             throw new IllegalArgumentException("File is empty");
         }
 
@@ -181,13 +182,23 @@ public class DicomService {
 
         File uploadDir = new File(UPLOAD_DIR);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+            boolean created = uploadDir.mkdirs();
+            if (!created) {
+                logger.error("Failed to create upload directory: {}", UPLOAD_DIR);
+                throw new IOException("Failed to create upload directory");
+            }
         }
 
         File destFile = new File(uploadDir.getAbsolutePath() + File.separator + newFileName);
         try (FileOutputStream fos = new FileOutputStream(destFile)) {
             fos.write(file.getBytes());
+            logger.info("File saved successfully: {}", newFileName);
+
+            // Check file size
+            long fileSize = destFile.length();
+            logger.info("File size: {} bytes", fileSize);
         } catch (IOException e) {
+            logger.error("Failed to save file", e);
             throw new IOException("Failed to save file", e);
         }
 
@@ -214,7 +225,6 @@ public class DicomService {
         for (int i = 0; i < length; i++) {
             randomId.append(characters.charAt(random.nextInt(characters.length())));
         }
-
         return randomId.toString();
     }
 }

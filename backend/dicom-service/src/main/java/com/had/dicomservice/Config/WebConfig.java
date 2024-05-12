@@ -14,5 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/dicom-json/**")
                 .addResourceLocations("classpath:/dicom-json/");
+
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/images/");
     }
 }
