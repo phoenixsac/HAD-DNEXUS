@@ -301,6 +301,7 @@ import MessagingPage from "../components/TestCase/MessagingPage";
 import { useParams } from 'react-router-dom';
 
 import Footer from "../components/Footer/Footer";
+import ChatComponent from '../components/TestCase/ChatComponent';
 
 
 
@@ -683,7 +684,7 @@ function TestCase() {
         </select>
       </div> */}
 
-        {userType==="doctor"&&  labConsentStatusAccept &&(!radDetailsVisible || radiologistAdded ) && (
+        {/* {userType==="doctor"&&  labConsentStatusAccept &&(!radDetailsVisible || radiologistAdded ) && (
         <div className="add-button-container">
          <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
@@ -694,8 +695,22 @@ function TestCase() {
           </select>
           </div>
         </div>
-      )}
+      )} */}
 
+
+        <div className="add-button-container">
+         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
+         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+            <option value="">Select Radiologist</option>
+            {radiologists.map((radiologist) => (
+              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+            ))}
+          </select>
+          </div>
+        </div>
+      
+
+      
           <div className='rad-recommend'>
     {radmessage && <p>{radmessage}</p>}
       </div>
@@ -703,9 +718,12 @@ function TestCase() {
       
       {userType!=="lab" && (radAdded || radDetailsVisible) && <RadDetails />}
 
-      {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />}
-    
-     
+      {/* {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />} */}
+      
+      <div className='chatting'>
+      <h2>Messaging</h2>
+      </div>
+      <ChatComponent/>
       
 
 {userType==="doctor" && submitStatus === null && !reportSubmitted && (radAdded  || radDetailsVisible) && (

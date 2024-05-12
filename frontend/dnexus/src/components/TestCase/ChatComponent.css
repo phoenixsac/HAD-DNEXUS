@@ -1,0 +1,43 @@
+/* ChatComponent.css */
+
+.chat-container {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin: 20px auto 0; 
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+    height: 70vh;
+  }
+  
+  .radiologist-list {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .chat-window {
+    flex: 2;
+    padding: 10px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  ul li {
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  ul li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  ul li:active {
+    background-color: #ccc;
+  }
+  
+  
