@@ -130,9 +130,9 @@ public class ConsentController {
 
 
     @GetMapping("/validate-token/{consentId}")
-    public ResponseEntity<String> validateTokenByConsentId(@PathVariable Long consentId) {
+    public ResponseEntity<String> validateTokenByConsentId(@PathVariable Long consentId, @RequestParam String token) {
         try {
-            return tokenService.validateTokenByConsentId(consentId);
+            return tokenService.validateTokenByConsentId(consentId, token);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

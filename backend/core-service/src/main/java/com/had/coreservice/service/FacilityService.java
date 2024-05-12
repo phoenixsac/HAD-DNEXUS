@@ -53,12 +53,8 @@ public class FacilityService {
         Facility labFacility = facilityRepository.findByIdAndTypeIgnoreCase(labId, "lab").orElse(null);
 
         if (consultation != null && labFacility != null) {
-//            if (consultation.getLabFacility() == null) { // Check if lab facility is null in consultation
                 consultation.setLabFacility(labFacility);
                 consultationRepository.save(consultation);
-//            } else {
-//                throw new IllegalArgumentException("Lab Facility already exists in the consultation");
-//            }
         } else {
             throw new IllegalArgumentException("Consultation or Lab Facility not found(or Facility not of type lab)");
         }
