@@ -292,6 +292,29 @@ public class ProfessionalService {
     }
 
 
+    public DoctorDetailResponseBody getRadiologistDetails(Long radiologistId) {
+        Optional<Professional> optionalProfessional = professionalRepository.findById(radiologistId);
+        if (optionalProfessional.isEmpty()) {
+            throw new RuntimeException("Professional(radiologist) not found with ID: " + radiologistId);
+        }
+
+        Professional professional = optionalProfessional.get();
+        User user = professional.getUser();
+        if (user == null || !user.getType().equals("radiologist")) {
+            throw new RuntimeException("User with ID " + radiologistId + " is not a doctor.");
+        }
+
+        return DoctorDetailResponseBody.builder()
+                .id(professional.getId())
+                .name(user.getFirstName() + " " + user.getLastName())
+                .systemOfMedicine(professional.getSystemOfMedicine())
+                .qualification(professional.getQualification())
+                .place_of_work(professional.getPlaceOfWork())
+                .build();
+    }
+
+
+
 
 
 }

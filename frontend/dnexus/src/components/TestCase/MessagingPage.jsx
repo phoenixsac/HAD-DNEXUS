@@ -194,6 +194,7 @@ function MessagingPage({ selectedRadiologistId }) {
         }
         const data = await response.json();
         receiver = data.id;
+        console.log("recriver is", receiver);
 
 
         }
@@ -233,7 +234,7 @@ function MessagingPage({ selectedRadiologistId }) {
 
   return (
     <div className="messaging-container">
-      <h2>Messaging</h2>
+      {/* <h2>Messaging</h2> */}
       <MessageList messages={messages} />
       <MessageInput
         users={users}

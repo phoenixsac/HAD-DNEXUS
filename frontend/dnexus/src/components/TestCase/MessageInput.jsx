@@ -215,6 +215,7 @@ function MessageInput({senderId,receiverId, users, onSubmit, onConnect ,connecte
       // Reset message input field
       if (!message.trim()) return;
         // Send private message
+      console.log("receiver from input", receiverId);
       sendPrivateMessage(senderId, receiverId, message, consultationId || testId);
       setMessage(''); 
     } catch (error) {

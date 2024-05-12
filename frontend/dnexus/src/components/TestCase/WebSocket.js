@@ -56,6 +56,9 @@ try {
   }
   else if (userType === "radiologist") {
     stompClient.subscribe(`/topic/${consultationId}/radiologist/${senderId}/messages`, (payload) => onPrivateMessage(payload, onNewMessage));
+    console.log(" sender rad id at message", senderId);
+    console.log("recuver id at message", receiverId);
+
   }
 };
 
@@ -95,9 +98,12 @@ const fetchOlderMessages = async (senderId, receiverId, consultationId) => {
 
 
 export const sendPrivateMessage = (senderId, receiverId, messageContent, consultationId) => {
+  const userType = sessionStorage.getItem('userType');
     if (stompClient) {
+      if (userType === "doctor"){
       const senderType = "doctor";
       const receiverType = "radiologist";
+      
       
       const message = {
         senderId,
@@ -109,14 +115,31 @@ export const sendPrivateMessage = (senderId, receiverId, messageContent, consult
       const contentLength = messageContent.length;
       console.log("Message content:", messageContent);
       console.log("Message content length:", contentLength);
-      const userType = sessionStorage.getItem('userType');
+      
 
       
-      if (userType === "doctor"){
+      
       stompClient.send(`/app/chat/${consultationId}/radiologist/${receiverId}`, {}, JSON.stringify(message));
       }
       
       else if (userType === "radiologist") {
+        const senderType = "radiologist";
+        const receiverType = "doctor";
+        
+        
+        const message = {
+          senderId,
+          receiverId,
+          senderType,
+          receiverType,
+          messageContent
+        };
+        const contentLength = messageContent.length;
+        console.log("Message content:", messageContent);
+        console.log("Message content length:", contentLength);
+
+
+
         stompClient.send(`/app/chat/${consultationId}/radiologist/${senderId}`, {}, JSON.stringify(message));
       }
 

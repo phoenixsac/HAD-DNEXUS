@@ -112,4 +112,13 @@ public class ProfessionalController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    @GetMapping("/radiologist-details")
+    public ResponseEntity<?> getDoctorDetailsById(@RequestParam Long radiologistId) {
+        try {
+            DoctorDetailResponseBody radiologistDetails = professionalService.getRadiologistDetails(radiologistId);
+            return ResponseEntity.ok(radiologistDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

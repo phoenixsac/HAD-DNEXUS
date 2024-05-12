@@ -718,10 +718,13 @@ function TestCase() {
       
       {userType!=="lab" && (radAdded || radDetailsVisible) && <RadDetails />}
 
-      {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />}
-    
-     
+      {/* {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />} */}
+      
+      <div className='chatting'>
+      <h2>Messaging</h2>
+      </div>
       <ChatComponent/>
+      
 
 {userType==="doctor" && submitStatus === null && !reportSubmitted && (radAdded  || radDetailsVisible) && (
   <>
