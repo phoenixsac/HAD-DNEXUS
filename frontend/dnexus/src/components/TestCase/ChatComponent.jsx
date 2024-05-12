@@ -157,7 +157,7 @@ const ChatComponent = () => {
          alt={`Thumbnail ${index + 1}`}
          onClick={() => handleImageClick(path)}
           />
-))}
+        ))}
         </div>
         </div>
         <div className='chat-container'>
