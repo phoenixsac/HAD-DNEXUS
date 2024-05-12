@@ -174,7 +174,11 @@ CREATE TABLE token (
                        UNIQUE(token)
 );
 
-
+CREATE TABLE images (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        image_url VARCHAR(2048),
+                        image_data LONGBLOB
+);
 
 ALTER TABLE consent
     ADD CONSTRAINT fk_consultation_id

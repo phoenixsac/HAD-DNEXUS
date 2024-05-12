@@ -5,12 +5,17 @@ import com.had.dicomservice.Dto.DicomMetadataRequestBody;
 import com.had.dicomservice.Dto.SaveDicomRequestBody;
 //import com.had.dicomservice.Service.DicomFrameExtractorService;
 import com.had.dicomservice.Entity.ConsultationDicom;
+import com.had.dicomservice.Entity.ImageEntity;
 import com.had.dicomservice.Repository.ConsultationDicomRepository;
+import com.had.dicomservice.Repository.ImageRepository;
 import com.had.dicomservice.Service.DicomService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -47,12 +52,17 @@ public class DicomController {
     @Autowired
     private  ResourceLoader resourceLoader;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+
     private String URL = "http://localhost:9191/";
 
     public String DICOM_FILE_STORE_PATH = "C:/Users/sn172/Desktop/Projects/GitHubProjects/HAD-DNEXUS/backend/dicom-service/src/main/resources/dicom-files";
 
 
-
+    @Autowired
+    ImageRepository imageRepository;
 
 
 
@@ -205,15 +215,41 @@ public class DicomController {
 //        }
 //    }
 
-    @PostMapping("/dicom/img-upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            String fileName = dicomService.saveImage(file);
-            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + fileName);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
-        }
+//    @PostMapping("/dicom/img-upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+//        try {
+//            String fileName = dicomService.saveImage(file);
+//            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + fileName);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
+
+
+//    @PostMapping("/dicom/img-upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+//        try {
+//            if (file.isEmpty()) {
+//                return ResponseEntity.badRequest().body("File is empty");
+//            }
+//
+//            ImageEntity imageEntity = new ImageEntity();
+//            imageEntity.setFileName(generateUniqueFileName(file.getOriginalFilename()));
+//            imageEntity.setFileData(file.getBytes());
+//            imageRepository.save(imageEntity);
+//
+//            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + imageEntity.getFileName());
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
+
+    private String generateUniqueFileName(String originalFilename) {
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        return UUID.randomUUID().toString() + fileExtension;
     }
+
 
 //    @PostMapping("/dicom/save-annotation-json")
 //    public ResponseEntity<String> saveAnnotationJson(@RequestBody String measurementJson) {
@@ -243,35 +279,24 @@ public class DicomController {
 //    }
 
     @GetMapping("/dicom/images")
-    public ResponseEntity<List<Resource>> getAllImages() {
+    public ResponseEntity<List<String>> getAllImages() {
         try {
-            List<Resource> imageResources = new ArrayList<>();
+            List<String> imageUrls = new ArrayList<>();
 
-            // Load the directory containing images
-            Resource directoryResource = resourceLoader.getResource("classpath:/images/");
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:/images/*");
 
-            // Check if the directory exists
-            if (!directoryResource.exists() || !directoryResource.getFile().isDirectory()) {
-                return ResponseEntity.notFound().build();
+            for (Resource resource : resources) {
+                String imageUrl = resource.getURL().toString();
+                imageUrls.add(imageUrl);
             }
 
-            // Iterate over files in the directory and add image resources to the list
-            File[] files = directoryResource.getFile().listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isFile()) {
-                        Resource imageResource = resourceLoader.getResource("classpath:/images/" + file.getName());
-                        imageResources.add(imageResource);
-                    }
-                }
-            }
-
-            // Return the list of image resources
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(imageResources);
-        } catch (Exception e) {
+                    .body(imageUrls);
+        } catch (IOException e) {
             // Handle any errors
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
