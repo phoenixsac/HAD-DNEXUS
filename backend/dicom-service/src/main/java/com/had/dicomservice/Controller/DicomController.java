@@ -66,7 +66,7 @@ public class DicomController {
 
 
 
-
+    private static final String IMAGES_URL = "C:/Users/sn172/Desktop/Projects/GitHubProjects/HAD-DNEXUS/backend/dicom-service/src/main/resources";
     private static final Logger logger = LoggerFactory.getLogger(DicomController.class);
     private static final String BASE_URL = "dicomweb:http://localhost:8080";
 
@@ -287,7 +287,11 @@ public class DicomController {
             Resource[] resources = resolver.getResources("classpath:/images/*");
 
             for (Resource resource : resources) {
-                String imageUrl = resource.getURL().toString();
+                // Get the filename (relative path within the images directory)
+                String filename = resource.getFilename();
+                // Append the IMAGES_URL before the filename
+                String imageUrl = IMAGES_URL + "/" + filename;
+                // Add the imageUrl to the list of image URLs
                 imageUrls.add(imageUrl);
             }
 
@@ -295,11 +299,13 @@ public class DicomController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(imageUrls);
         } catch (IOException e) {
-            // Handle any errors
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
 }
 
 
