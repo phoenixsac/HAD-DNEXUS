@@ -100,7 +100,7 @@ const DoctorDashboard = () => {
 
       <div className='doctor-container'>
 
-        <div className='search-back'>
+        <div className='doctor-search-back'>
 
           <div className='doctor-search-field'>
             <input
@@ -109,6 +109,10 @@ const DoctorDashboard = () => {
               value={searchTerm}
               onChange={handleSearchChange}
             />
+          </div>
+
+          <div>
+            <button className="doctor-add-new-patient">Add Patient</button>
           </div>
 
         </div>
