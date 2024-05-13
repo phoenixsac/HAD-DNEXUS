@@ -43,9 +43,9 @@
     margin-bottom: 0.5rem;
     
     font-style: italic;
-} */  */
+} */  
 
-.overlay{
+/* .overlay{
 	position:relative;
   z-index: 1; 
 }
@@ -58,7 +58,7 @@
   background-repeat: no-repeat;
   position: relative;
   padding: 80px 0px;
-  text-align: center; /* Center the breadcrumb items */
+  text-align: center; 
 }
 
 .breadcrumbs h2 {
@@ -88,10 +88,6 @@
   list-style: none;
 }
 
-/* .breadcrumbs li:not(:last-child)::after {
-  content: "/";
-  margin: 0 10px;
-} */
 
 .breadcrumb{
 color: #fff;
@@ -101,7 +97,7 @@ font-weight: 700;
 margin: 0;
 padding: 0;
   opacity: 1;
-position: relative; /* Ensure the position is set to relative */
+position: relative; 
 z-index: 2; 
 position: center;
 }
@@ -118,9 +114,77 @@ position: center;
   
 }
 .breadcrumbs .breadcrumb-item::before {
-  content: none; /* Remove all separators */
+  content: none; 
+} */
+
+
+
+.overlay{
+	position:relative;
+}
+/* Bread Crumbs */
+.breadcrumbs-patient {
+	background-image: url('../assets/StockImages/bread-bg.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: relative;
+	padding: 30px 0px;
 }
 
+.breadcrumbs-patient h2{
+	color: #fff;
+	text-transform:capitalize;
+	font-size: 38px;
+	font-weight: 700;
+	margin: 0;
+	padding: 0;
+    opacity: 1;
+	position: relative; /* Ensure the position is set to relative */
+	z-index: 2; /* Set a higher z-index for the h2 tag */
+}
+
+.overlay{
+	position:relative;
+	z-index: 1; /* Increase the z-index of the overlay */
+}
+
+.patient-div{
+	display: flex;
+	flex-direction: column;
+
+	justify-content: center;
+	align-items: center;
+
+	gap: 10px;
+}
+
+.patient-name{
+	color: white;
+	z-index: 2;
+	position: relative;
+	padding: 10px;
+
+	text-align: center;
+
+	min-width: 200px;
+
+}
+
+.patient-bread-details{
+	color: white;
+	z-index: 2;
+	font-size: 18px;
+	position: relative;
+
+	padding: 10px;
+
+	/* display: flex; */
+	align-items: center;
+
+
+	min-width: 200px;
+}
 
 
 
