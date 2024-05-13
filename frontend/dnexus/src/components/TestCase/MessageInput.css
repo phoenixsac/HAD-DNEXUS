@@ -69,6 +69,8 @@
   padding-right: 120px;
   line-height: 180px;
   width: 100%;
+  max-height: 10vh;
+  border-color: #ccc;
   /*Reserve space for dropdown and button */
 }
 
@@ -104,7 +106,7 @@
 
 .send-button{
   position: absolute;
-  top: 150px;
+  top: 10px;
   right: 0;
-  height: 15%;
+  height: 40%;
 }

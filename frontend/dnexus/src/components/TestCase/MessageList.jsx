@@ -73,7 +73,7 @@ function Message({ senderName, receiverName, content,setMessagesLoaded}) {
   
     
     <div className="message">
-      <strong>{senderName}: @{receiverName}</strong>: {content}
+      <strong>{senderName}: @{receiverName}</strong>: <text>{content}</text>
     </div>
     
   );
