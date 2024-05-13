@@ -12,30 +12,30 @@ let radId = null;
 //   stompClient.connect({}, () => onConnected(senderId, receiverId, consultationId, onMessageReceived, onNewMessage), onError);
 // };
 
-export const connectToChat = (senderId, receiverId, consultationId, onMessageReceived, onNewMessage) => {
+export const connectToChat = (senderId, receiverId, consultationId, onMessageReceived, onNewMessage,page) => {
   if (stompClient && stompClient.connected) {
     // If already connected, disconnect first
     stompClient.disconnect(() => {
       // Once disconnected, connect again
-      establishConnection(senderId, receiverId, consultationId, onMessageReceived, onNewMessage);
+      establishConnection(senderId, receiverId, consultationId, onMessageReceived, onNewMessage,page);
     });
   } else {
     // If not connected, just establish connection
-    establishConnection(senderId, receiverId, consultationId, onMessageReceived, onNewMessage);
+    establishConnection(senderId, receiverId, consultationId, onMessageReceived, onNewMessage,page);
   }
 };
 
-const establishConnection = (senderId, receiverId, consultationId, onMessageReceived, onNewMessage) => {
+const establishConnection = (senderId, receiverId, consultationId, onMessageReceived, onNewMessage,page) => {
   const Sock = new SockJS('http://localhost:8085/chat');
   stompClient = over(Sock);
-  stompClient.connect({}, () => onConnected(senderId, receiverId, consultationId, onMessageReceived, onNewMessage), onError);
+  stompClient.connect({}, () => onConnected(senderId, receiverId, consultationId, onMessageReceived, onNewMessage,page), onError);
 };
 
-const onConnected = async (senderId, receiverId, consultationId, onMessageReceived, onNewMessage) => {
+const onConnected = async (senderId, receiverId, consultationId, onMessageReceived, onNewMessage,page) => {
 
 try {
 
-    const response = await fetchOlderMessages(senderId, receiverId, consultationId);
+    const response = await fetchOlderMessages(senderId, receiverId, consultationId,page);
     
     if (response.ok) {
       const olderMessages = await response.json();
@@ -75,11 +75,11 @@ const onError = (err) => {
   console.error(err);
 };
 
-const fetchOlderMessages = async (senderId, receiverId, consultationId) => {
+export const fetchOlderMessages = async (senderId, receiverId, consultationId,page) => {
   // Implement logic to fetch older messages from the server
   // Example using fetch API:
   const userType = sessionStorage.getItem('userType');
-  
+  console.log("page size",page)
   if (userType === "doctor"){
   radId=receiverId; 
   console.log("radid" ,radId)
@@ -87,7 +87,7 @@ const fetchOlderMessages = async (senderId, receiverId, consultationId) => {
   else if (userType === "radiologist") {
   radId=senderId;
   }
-  const response = await fetch(`http://localhost:8085/chat/get-messages/${consultationId}/radiologist/${radId}`);
+  const response = await fetch(`http://localhost:8085/chat/get-messages/${consultationId}/radiologist/${radId}?page=${page}`);
   console.log('Fetched messages function:', response);
   if (!response.ok) {
     throw new Error('Failed to fetch older messages');

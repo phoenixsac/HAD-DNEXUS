@@ -66,7 +66,7 @@ public class DicomController {
 
 
 
-    private static final String IMAGES_URL = "C:/Users/sn172/Desktop/Projects/GitHubProjects/HAD-DNEXUS/backend/dicom-service/src/main/resources";
+    private static final String IMAGES_URL = "/home/srishti/had_testpage/HAD-DNEXUS/backend/dicom-service/src/main/resources";
     private static final Logger logger = LoggerFactory.getLogger(DicomController.class);
     private static final String BASE_URL = "dicomweb:http://localhost:8080";
 

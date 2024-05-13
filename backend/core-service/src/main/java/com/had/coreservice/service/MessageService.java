@@ -15,6 +15,7 @@ import com.had.coreservice.requestBody.MessageDTO;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -28,14 +29,35 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
+//    @Transactional
+//    public MessageDTO saveMessage(Long consultationId, Long receiverId, MessageDTO messageDTO) {
+//
+//        Message message = new Message();
+//        message.setConsultationId(consultationId);
+//        message.setSenderId(messageDTO.getSenderId());
+//        message.setSenderType(messageDTO.getSenderType());
+//        message.setReceiverId(receiverId);
+//        message.setReceiverType(messageDTO.getReceiverType());
+//        message.setMessageContent(messageDTO.getMessageContent());
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String formattedDateTime = LocalDateTime.now().format(formatter);
+//        message.setCreatedAt(formattedDateTime);
+//
+//        // Save the message entity
+//        Message savedMessage = messageRepository.save(message);
+//
+//        return convertToDTO(savedMessage);
+//    }
+
     @Transactional
-    public MessageDTO saveMessage(Long consultationId, Long receiverId, MessageDTO messageDTO) {
+    public MessageDTO saveMessage(Long consultationId, MessageDTO messageDTO) {
 
         Message message = new Message();
         message.setConsultationId(consultationId);
         message.setSenderId(messageDTO.getSenderId());
         message.setSenderType(messageDTO.getSenderType());
-        message.setReceiverId(receiverId);
+        message.setReceiverId(messageDTO.getReceiverId());
         message.setReceiverType(messageDTO.getReceiverType());
         message.setMessageContent(messageDTO.getMessageContent());
 
@@ -77,12 +99,13 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public List<MessageDTO> getMessagesByConsultationIdAndRadiologistId(Long consultationId, Long radiologistId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Message> messagePage = messageRepository.findByConsultationIdAndRadiologistId(consultationId, radiologistId, pageable);
         List<MessageDTO> messageDTOs = new ArrayList<>();
         for (Message message : messagePage.getContent()) {
             messageDTOs.add(convertToDTO(message));
         }
+        Collections.reverse(messageDTOs);
         return messageDTOs;
     }
 
