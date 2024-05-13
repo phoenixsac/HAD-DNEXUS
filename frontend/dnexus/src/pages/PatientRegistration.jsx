@@ -209,13 +209,13 @@ function PatientRegistration() {
                                     <input type="text" id="blood_grp" name="blood_grp" placeholder="Blood Group" onChange={handleChange} required/>
                                 </div>
                                 {/* <label htmlFor="guardian_first_name">Guardian First Name</label> */}
-                                <input type="text" id="guardian_first_name" name="guardian_first_name" placeholder="Gaurdian First Name" onChange={handleChange} required/>
+                                <input type="text" id="guardian_first_name" name="guardian_first_name" placeholder="Guardian First Name" onChange={handleChange} required/>
 
                                 {/* <label htmlFor="guardian_last_name">Guardian Last Name</label> */}
-                                <input type="text" id="guardian_last_name" name="guardian_last_name" placeholder="Gaurdian Last Name" onChange={handleChange} required/>
+                                <input type="text" id="guardian_last_name" name="guardian_last_name" placeholder="Guardian Last Name" onChange={handleChange} required/>
 
                                 {/* <label htmlFor="guardian_contact">Guardian Contact</label> */}
-                                <input type="tel" id="guardian_contact" name="guardian_contact" placeholder="Gaurdian Contact No." onChange={handleChange} required/>
+                                <input type="tel" id="guardian_contact" name="guardian_contact" placeholder="Guardian Contact No." onChange={handleChange} required/>
 
                             </div>
                         </div>

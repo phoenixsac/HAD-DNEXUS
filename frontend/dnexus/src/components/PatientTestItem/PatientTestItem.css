@@ -42,6 +42,11 @@
   padding: 2px;
 }
 
+.test-list-item.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
   .div1{
     padding: 2px;
     display: flex;
@@ -55,5 +60,14 @@
 
   .div-desc{
     text-align: left;
+  }
+
+  .consultation-card-consent-status{
+    display: flex;
+    
+  }
+
+  .consultation-card-consent-status p{
+    padding-right: 15px;
   }
   

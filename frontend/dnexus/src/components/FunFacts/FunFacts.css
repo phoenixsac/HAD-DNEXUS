@@ -278,6 +278,10 @@ body{
 	z-index: 2; /* Set a higher z-index for the h2 tag */
 }
 
+.content{
+	font-size: 22px;
+}
+
 
 /*===================
 	End Fun Facts
