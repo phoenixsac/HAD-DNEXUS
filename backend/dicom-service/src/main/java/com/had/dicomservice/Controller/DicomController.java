@@ -287,11 +287,8 @@ public class DicomController {
             Resource[] resources = resolver.getResources("classpath:/images/*");
 
             for (Resource resource : resources) {
-                // Get the filename (relative path within the images directory)
                 String filename = resource.getFilename();
-                // Append the IMAGES_URL before the filename
                 String imageUrl = IMAGES_URL + "/" + filename;
-                // Add the imageUrl to the list of image URLs
                 imageUrls.add(imageUrl);
             }
 

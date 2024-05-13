@@ -145,6 +145,7 @@ public class ConsentService {
         consentDetailResponseBody.setConsentStatus(consent.getConsentStatus());
         consentDetailResponseBody.setEntityType(consent.getEntityType());
         consentDetailResponseBody.setConsentDate(consent.getConsentDate());
+        consentDetailResponseBody.setEntityId(consent.getEntityId());
 
         return consentDetailResponseBody;
 
@@ -250,4 +251,8 @@ public class ConsentService {
         }
     }
 
+//    public ConsentStatus getAllConsentStatusByConsultationId(Long consultationId) {
+//
+//
+//    }
 }

@@ -92,6 +92,11 @@
             <version>21.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sf.jwatcher</groupId>
+            <artifactId>jwatcher</artifactId>
+            <version>0.8.3</version>
+        </dependency>
 
         <dependency>
             <groupId>org.dcm4che</groupId>
