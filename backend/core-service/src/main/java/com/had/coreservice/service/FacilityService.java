@@ -1,8 +1,10 @@
 package com.had.coreservice.service;
 
+import com.had.coreservice.entity.Consent;
 import com.had.coreservice.entity.Consultation;
 import com.had.coreservice.entity.Facility;
 import com.had.coreservice.entity.User;
+import com.had.coreservice.repository.ConsentRepository;
 import com.had.coreservice.repository.ConsultationRepository;
 import com.had.coreservice.repository.FacilityRepository;
 import com.had.coreservice.repository.PatientRepository;
@@ -30,6 +32,9 @@ public class FacilityService {
 
     @Autowired
     ConsultationRepository consultationRepository;
+
+    @Autowired
+    ConsentRepository consentRepository;
 
     @Transactional(readOnly = true)
     public List<LabFacilityDropdownResponseBody> getLabFacilities() {
@@ -88,7 +93,6 @@ public class FacilityService {
 
     //get consultation list for lab view
     public List<ConsultationCardDetailResponseBody> getConsultationsByFacilityId(Long facilityId) {
-
         Optional<Facility> facilityOptional = facilityRepository.findById(facilityId);
         if (facilityOptional.isEmpty()) {
             throw new RuntimeException("Facility with ID " + facilityId + " not found.");
@@ -97,14 +101,22 @@ public class FacilityService {
         List<Object[]> consultationObjects = facilityRepository.findConsultationDetailsForLab(facilityId);
 
         return consultationObjects.stream()
-                .map(this::mapToConsultationCardDetail)
+                .map(row -> mapToConsultationCardDetail(row, facilityId))
                 .collect(Collectors.toList());
     }
 
-    private ConsultationCardDetailResponseBody mapToConsultationCardDetail(Object[] row) {
+    private ConsultationCardDetailResponseBody mapToConsultationCardDetail(Object[] row, Long facilityId) {
+        Long consultationId = (Long) row[0];
+        String name = (String) row[1];
+
+        Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, facilityId, "FACILITY");
+        if (consent == null) {
+            throw new RuntimeException("Consent not found for consultation ID: " + consultationId + " and facility ID: " + facilityId);
+        }
+
         ConsultationCardDetailResponseBody consultationCardDetail = new ConsultationCardDetailResponseBody();
-        consultationCardDetail.setConsultationId((Long) row[0]);
-        consultationCardDetail.setName((String) row[1]);
+        consultationCardDetail.setConsultationId(consultationId);
+        consultationCardDetail.setName(name);
 
         // Convert Timestamp to LocalDateTime
         Timestamp timestamp = (Timestamp) row[2];
@@ -114,5 +126,6 @@ public class FacilityService {
         consultationCardDetail.setStatus((String) row[3]);
         return consultationCardDetail;
     }
+
 
 }

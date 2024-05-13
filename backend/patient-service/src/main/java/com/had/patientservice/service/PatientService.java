@@ -118,7 +118,6 @@ public class PatientService
         ConsultationCardDetailResponseBody consultationCardDetail = new ConsultationCardDetailResponseBody();
         consultationCardDetail.setConsultationId((Long) row[0]);
         consultationCardDetail.setName((String) row[1]);
-        // Set other properties accordingly
         return consultationCardDetail;
     }
 

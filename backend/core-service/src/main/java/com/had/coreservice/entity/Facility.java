@@ -44,5 +44,4 @@ public class Facility {
     @OneToMany(mappedBy = "labFacility", cascade = CascadeType.ALL)
     private Set<Consultation> consultations;
 
-    // Getters and setters
 }

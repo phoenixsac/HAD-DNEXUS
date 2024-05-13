@@ -73,6 +73,7 @@
     color: white;
     background:#1A76D1;
     font-size: 20px;
+    height: -webkit-fill-available;
 }
 
 .login-btn:hover{

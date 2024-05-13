@@ -22,14 +22,6 @@ function AdminDashboard() {
     navigate("/admin/view-professional-list"); 
   };
 
-  // const handleAddRadiologistClick = () => {
-  //   navigate("/admin/add-radiologist"); 
-  // };
-
-  // const handleViewRadiologistsClick = () => {
-  //   navigate("/admin/view-radiologistlist"); 
-  // };
-
   const handleAddFaicilityClick = () => {
     navigate("/admin/add-facility"); 
   };
@@ -55,26 +47,18 @@ function AdminDashboard() {
           <div className='dash-icon'>
             <FaUserDoctor />
           </div>
-          <div className="buttons">
+          <div className="admin-buttons">
             <button className="btn" onClick={handleAddProfesssionalClick}>Add</button>
             <button className="btn" onClick={handleViewProfessionalClick}>View</button>
           </div>
         </div>
-
-        {/* <div className="button-container">
-          <h2>Radiologist</h2>
-          <div className="buttons">
-            <button onClick={handleAddRadiologistClick}>Add</button>
-            <button onClick={handleViewRadiologistsClick}>View</button>
-          </div>
-        </div> */}
 
         <div className="button-container">
           <h2>Facility</h2>
           <div className='dash-icon'>
             <RiBodyScanFill />
           </div>
-          <div className="buttons">
+          <div className="admin-buttons">
             <button className="btn" onClick={handleAddFaicilityClick}>Add</button>
             <button className="btn" onClick={handleViewFacilityClick}>View</button>
           </div>
@@ -85,7 +69,7 @@ function AdminDashboard() {
           <div className='dash-icon'>
             <HiUsers />
           </div>
-          <div className="buttons">
+          <div className="admin-buttons">
             <button className="btn" onClick={handleViewPatientsClick}>View</button>
           </div>
         </div>
