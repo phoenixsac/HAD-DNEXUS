@@ -4,6 +4,8 @@ import axios from "axios";
 
 import Navbar from "../components/Navbar/ConditionalNavbar";
 import "./Style/PatientRegistration.css";
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import Footer from '../components/Footer/Footer';
 
 function PatientRegistration() {
     const navigate = useNavigate();
@@ -67,12 +69,6 @@ function PatientRegistration() {
         }));
     };
 
-    // const handleSendConsentMail = () => {
-    //     // Perform any actions related to sending consent mail
-    //     // For example, show a popup, send a request, etc.
-    //     setShowOTPField(true); 
-    //     setShowSendButton(false); // Hide the "Send Consent Mail" button
-    // };
 
     const handleSendConsentMail = async () => {
         try {
@@ -85,10 +81,7 @@ function PatientRegistration() {
                 // If consent mail sent successfully, show OTP field and hide the "Send Consent Mail" button
                 setShowOTPField(true);
                 setShowSendButton(false);
-             } //else if (response.status === 401) {
-            //     // If consent mail sending fails, show an alert
-            //     alert('Enter a valid email address');
-            // }
+             } 
         } catch (error) {
             if (error.response.status === 455) {
                 alert('Email Field Empty. Enter Email');
@@ -104,37 +97,9 @@ function PatientRegistration() {
                 alert('OTP could not be sent. Try again Later');
 
              }
-             
-
-            // If an error occurs during sending consent mail, show an alert
-            //  alert('Enter Valid Email Address');
-            //  console.error(error);
         }
     };
-    
-    // const handleSendConsentMail = async () => {
-    //     try {
-    //         // Send a request to the server to send consent mail with email as a query parameter
-    //         const response = await axios.post(`http://localhost:8081/send-otp?email=${formData.email}`);
-            
-    //         if (response.status === 200) {
-    //             // If consent mail sent successfully, show OTP field and hide the "Send Consent Mail" button
-    //             setShowOTPField(true);
-    //             setShowSendButton(false);
-    //         } else {
-    //             // If consent mail sending fails, show an appropriate alert based on response status
-    //             if (response.status === 401) {
-    //                 alert('Enter a valid email address');
-    //             } else {
-    //                 alert('An error occurred');
-    //             }
-    //         }
-    //     } catch (error) {
-    //         // If an error occurs during sending consent mail, show an alert
-    //         alert('An error occurred while sending consent mail');
-    //         console.error(error);
-    //     }
-    // };
+ 
 
     const handleVerifyOTP = async () => {
         try {
@@ -173,9 +138,6 @@ function PatientRegistration() {
                 alert('Bad Request');
 
              }
-            // console.error(error);
-            // // If an error occurs during OTP verification, show an alert
-            // alert('An error occurred during OTP verification');
         }
     };
     
@@ -184,106 +146,88 @@ function PatientRegistration() {
     return (
         <>
             <Navbar />
-            <div className='registrationHeading'><span>Registration Form</span></div>
-            <form onSubmit={handleSubmit}>
-                <div className='formContainer'>
-                    <div className='directionContainer'>
-                        <div className='inputLeft'>
-                            <label htmlFor="first_name">First Name</label>
-                            <input type="text" id="first_name" name="first_name" placeholder="" onChange={handleChange} required/>
+            <Breadcrumbs pageTitle="Patient Registration"/>
+            
+            <div className="registration-form-container">
+                <form onSubmit={handleSubmit}>
+                    <div className='formContainer'>
+                        <div className='directionContainer'>
 
-                            <label htmlFor="last_name">Last Name</label>
-                            <input type="text" id="last_name" name="last_name" placeholder="" onChange={handleChange} required/>
+                            <div className='inputLeft'>
+                                <label htmlFor="first_name">First Name</label>
+                                <input type="text" id="first_name" name="first_name" placeholder="" onChange={handleChange} required/>
 
-                            <label htmlFor="address">Address</label>
-                            <input type="text" id="address" name="address" placeholder="" onChange={handleChange} required/>
+                                <label htmlFor="last_name">Last Name</label>
+                                <input type="text" id="last_name" name="last_name" placeholder="" onChange={handleChange} required/>
 
-                            <label htmlFor="contact">Contact No.</label>
-                            <input type="tel" id="contact" name="contact" placeholder="" onChange={handleChange} required/>
+                                <label htmlFor="address">Address</label>
+                                <input type="text" id="address" name="address" placeholder="" onChange={handleChange} required/>
 
-                            <label htmlFor="email">Email ID</label>
-                            <input type="email" id="email" name="email" placeholder="" onChange={handleChange} required/>
+                                <label htmlFor="contact">Contact No.</label>
+                                <input type="tel" id="contact" name="contact" placeholder="" onChange={handleChange} required/>
 
-                            {/* Your existing form inputs */}
-                    {/* {showSendButton && ( // Render "Send Consent Mail" button only if showSendButton is true
+                                <label htmlFor="email">Email ID</label>
+                                <input type="email" id="email" name="email" placeholder="" onChange={handleChange} required/>
+
+
+                            {!otpVerified && showSendButton && (
+                                    <div className='send-mail-button'>
+                                        <button type="button" onClick={handleSendConsentMail}>Send Consent Mail</button>
+                                    </div>
+                                )}
+                                {showOTPField && !otpVerified && (
+                                    <div>
+                                    <label htmlFor="otp">Enter OTP</label>
+                                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" value={formData.otp} onChange={handleChange} />
+                                    <button type="button" onClick={handleVerifyOTP}>Verify OTP</button>
+                                </div>
+                                )}
+                                {otpVerified && (
+                                    <p>OTP verification successful</p>
+                                )}
+
+                            </div>
+
+                            <div className='inputRight'>
+                                <div className='makerow'>
+                                    <div className='agebox'>
+                                        <label htmlFor="dob">Date of Birth</label>
+                                        <input type="date" id="dob" name="dob" onChange={handleChange} required/>
+                                    </div>
+                                    <div className='makeInline'>
+                                        <div className='makeInlinetext'>Gender</div>
+                                        <input type="radio" id="male" name="gender" value="male" onChange={handleChange} />
+                                        <label className='gender-label' htmlFor="male">Male</label>
+                                        <input type="radio" id="female" name="gender" value="female" onChange={handleChange} />
+                                        <label className='gender-label' htmlFor="female">Female</label>
+                                        <input type="radio" id="others" name="gender" value="others" onChange={handleChange} />
+                                        <label className='gender-label' htmlFor="others">Others</label>
+                                    </div>
+                                </div>
+                                <div className='bloodgroup'>
+                                    <label htmlFor="blood_grp">Blood Group</label>
+                                    <input type="text" id="blood_grp" name="blood_grp" placeholder="" onChange={handleChange} required/>
+                                </div>
+                                <label htmlFor="guardian_first_name">Guardian First Name</label>
+                                <input type="text" id="guardian_first_name" name="guardian_first_name" placeholder="" onChange={handleChange} required/>
+
+                                <label htmlFor="guardian_last_name">Guardian Last Name</label>
+                                <input type="text" id="guardian_last_name" name="guardian_last_name" placeholder="" onChange={handleChange} required/>
+
+                                <label htmlFor="guardian_contact">Guardian Contact</label>
+                                <input type="tel" id="guardian_contact" name="guardian_contact" placeholder="" onChange={handleChange} required/>
+
+                            </div>
+                        </div>
                         <div className='SubmitButton'>
-                            <button type="button" onClick={handleSendConsentMail}>Send Consent Mail</button>
-                        </div>
-                    )} */}
-                    {/* {showOTPField && ( // Show OTP field only when showOTPField is true
-                        <div>
-                        <label htmlFor="otp">Enter OTP</label>
-                        <input type="text" id="otp" name="otp" placeholder="Enter OTP" value={formData.otp} onChange={handleChange} />
-                        <button type="button" onClick={handleVerifyOTP}>Verify OTP</button>
-                    </div>
-                    )} */}
-                            {/* {showOTPField && ( // Show OTP field only when showOTPField is true
-                        <div>
-                            <label htmlFor="otp">Enter OTP</label>
-                            <input type="text" id="otp" placeholder="Enter OTP" />
-                            <button type="submit">Verify OTP</button>
-                        </div>
-                    )}  */}
-
-                        {!otpVerified && showSendButton && (
-                                <div className='SubmitButton'>
-                                    <button type="button" onClick={handleSendConsentMail}>Send Consent Mail</button>
-                                </div>
-                            )}
-                            {showOTPField && !otpVerified && (
-                                <div>
-                                <label htmlFor="otp">Enter OTP</label>
-                                <input type="text" id="otp" name="otp" placeholder="Enter OTP" value={formData.otp} onChange={handleChange} />
-                                <button type="button" onClick={handleVerifyOTP}>Verify OTP</button>
-                            </div>
-                            )}
-                            {otpVerified && (
-                                <p>OTP verification successful</p>
-                            )}
-
-                        </div>
-                        <div className='inputRight'>
-                            <div className='makerow'>
-                                <div className='agebox'>
-                                    <label htmlFor="dob">Date of Birth</label>
-                                    <input type="date" id="dob" name="dob" onChange={handleChange} required/>
-                                </div>
-                                <div className='makeInline'>
-                                    <div className='makeInlinetext'>Gender</div>
-                                    <input type="radio" id="male" name="gender" value="male" onChange={handleChange} />
-                                    <label htmlFor="male">Male</label>
-                                    <input type="radio" id="female" name="gender" value="female" onChange={handleChange} />
-                                    <label htmlFor="female">Female</label>
-                                    <input type="radio" id="others" name="gender" value="others" onChange={handleChange} />
-                                    <label htmlFor="others">Others</label>
-                                </div>
-                            </div>
-                            <div className='bloodgroup'>
-                                <label htmlFor="blood_grp">Blood Group</label>
-                                <input type="text" id="blood_grp" name="blood_grp" placeholder="" onChange={handleChange} required/>
-                            </div>
-                            <label htmlFor="guardian_first_name">Guardian First Name</label>
-                            <input type="text" id="guardian_first_name" name="guardian_first_name" placeholder="" onChange={handleChange} required/>
-
-                            <label htmlFor="guardian_last_name">Guardian Last Name</label>
-                            <input type="text" id="guardian_last_name" name="guardian_last_name" placeholder="" onChange={handleChange} required/>
-
-                            <label htmlFor="guardian_contact">Guardian Contact</label>
-                            <input type="tel" id="guardian_contact" name="guardian_contact" placeholder="" onChange={handleChange} required/>
-
-                            {/* <label htmlFor="otp">OTP</label>
-                            <input type="text" id="otp" placeholder="" /> */}
-                            {/* <div>
-                            <button type="submit">Verify OTP</button>
-                            </div>  */}
+                            <button type="submit" disabled={!otpVerified}>ADD</button>
                         </div>
                     </div>
-                    <div className='SubmitButton'>
-                        {/* <button type="submit">ADD</button> */}
-                        <button type="submit" disabled={!otpVerified}>ADD</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+
+            </div>
+
+            <Footer/>
         </>
     );
 }

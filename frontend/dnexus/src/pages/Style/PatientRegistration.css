@@ -1,3 +1,14 @@
+.registration-form-container{
+  padding: 8px 15px;
+  margin: 5px10px;
+}
+
+form{
+  padding: 5px 30px;
+  margin: 5px;
+
+}
+
 .registrationHeading{
 
   width: 100vw;
@@ -13,14 +24,10 @@
           font-size: 1.5rem;
       
       }
-  
-  
-  
-  .formContainer{
-  
-  
-  }
-  
+
+.formContainer{
+  padding: 5px;
+}
   
   .formContainer label {
       display: block;
@@ -55,10 +62,13 @@
       justify-content: space-evenly;
       align-items: flex-start;
       margin-top: 10vh;
+
+      font-size: 16px;
   }
   
   .inputLeft{
   width: 30%;
+  padding: 10px;
   /* height: 50vh; */
   /* background-color: rgb(43, 88, 88); */
   
@@ -67,6 +77,7 @@
   
   .inputRight{
   width: 35%;
+  padding: 10px;
   /* height: 50vh; */
   /* background-color: blueviolet; */
   }
@@ -97,10 +108,6 @@
   
   .makeInline label {
       display: inline;
-      font-size: 0.8rem;
-      
-      /* margin-bottom: 5px; */
-      /* font-size: 0.8rem; */
       color: #5A607F;
     }
   
@@ -129,20 +136,16 @@
     cursor: pointer;
     font-size: 0.9rem; /* Adjust font size */
     position: absolute; /* Add this line */
-    
-    
-    
-    
 
     }
     
   
-  
-  
     .SubmitButton{
       display: flex;
       justify-content: center;
-      margin-top: 5vh;
+      margin: 10px 0;
+      padding: 10px;
+      position: relative;
     }
     .SubmitButton button{
       background-color: #001b79;
@@ -156,7 +159,8 @@
     }
 
     .SubmitButton button:hover{
-      background-color: #021b36;
+      background: #2C2D3F;
+      transition: all 0.3s;
     }
   
     .makerow {
@@ -166,9 +170,52 @@
     }
 
     .SubmitButton button:disabled {
-      background-color: #ccc; /* Change to grey color */
-      cursor: not-allowed; /* Change cursor to not allowed */
+      background-color: white;
+      color: #1A76D1;
+      border: 1px solid #1A76D1;
+      border-radius: 2rem;
     }
 
   
-  
+  label{
+    color: black;
+    padding: 5px;
+  }
+
+  input{
+    padding: 5px;
+  }
+
+  .makerow{
+    padding: 8px 0;
+    
+    display: flex;
+    align-items: center;
+
+    gap: 50px;
+  }
+
+  .makeInline{
+    padding: 5px;
+  }
+
+  .makeInlinetext{
+    padding: 5px;
+    margin-bottom: 8px;
+  }
+
+  .gender-label{
+    padding: 5px;
+    margin-right: 5px;
+    font-size: 16px;
+  }
+
+  .send-mail-button button{
+    color: white;
+    background-color: #1A76D1;
+  }
+
+  .send-mail-button button:hover{
+    background: #2C2D3F;
+    transition: all 0.2s;
+  }
