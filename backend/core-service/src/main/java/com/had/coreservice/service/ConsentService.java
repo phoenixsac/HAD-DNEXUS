@@ -93,6 +93,7 @@ public class ConsentService {
         consent.setConsentStatus(ConsentStatus.NONE);
         consent.setConsentDate(LocalDateTime.now());
         consent.setCreatedAt(LocalDateTime.now());
+        consent.setConsentExpiry(consent.getCreatedAt().plusHours(1));
 
         Consent savedConsent = consentRepository.save(consent);
         if (savedConsent != null) {
@@ -167,6 +168,86 @@ public class ConsentService {
         return consents.stream()
                 .map(this::mapToConsentDetailResponseBody)
                 .collect(Collectors.toList());
+    }
+
+
+    public ConsentStatus getConsentStatusByConsultationIdAndRadId(Long consultationId, Long radEntityId) {
+        try {
+            // Convert entity type to uppercase for case-insensitive comparison
+            String entityType = "RADIOLOGIST";
+
+            Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, radEntityId, entityType);
+
+            if (consent != null) {
+                // Check if the consent has expired
+                if (consent.getConsentExpiry() != null && consent.getConsentExpiry().isBefore(LocalDateTime.now())) {
+                    return ConsentStatus.EXPIRED;
+                } else {
+                    return consent.getConsentStatus();
+                }
+            } else {
+                return null;
+            }
+        } catch (IllegalArgumentException e) {
+            // If invalid arguments are provided, return BAD_REQUEST (400)
+            throw new IllegalArgumentException("Invalid arguments provided: " + e.getMessage());
+        } catch (Exception e) {
+
+            throw new RuntimeException("Error retrieving consent status: " + e.getMessage());
+        }
+    }
+
+    public ConsentStatus getConsentStatusByConsultationIdAndDocId(Long consultationId, Long docEntityId) {
+        try {
+            // Convert entity type to uppercase for case-insensitive comparison
+            String entityType = "DOCTOR";
+
+            Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, docEntityId, entityType);
+
+            if (consent != null) {
+                // Check if the consent has expired
+                if (consent.getConsentExpiry() != null && consent.getConsentExpiry().isBefore(LocalDateTime.now())) {
+                    return ConsentStatus.EXPIRED;
+                } else {
+                    return consent.getConsentStatus();
+                }
+            } else {
+                return null;
+            }
+        } catch (IllegalArgumentException e) {
+            // If invalid arguments are provided, return BAD_REQUEST (400)
+            throw new IllegalArgumentException("Invalid arguments provided: " + e.getMessage());
+        } catch (Exception e) {
+
+            throw new RuntimeException("Error retrieving consent status: " + e.getMessage());
+        }
+    }
+
+
+    public ConsentStatus getConsentStatusByConsultationIdAndLabId(Long consultationId, Long labEntityId) {
+        try {
+            // Convert entity type to uppercase for case-insensitive comparison
+            String entityType = "LAB";
+
+            Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, labEntityId, entityType);
+
+            if (consent != null) {
+                // Check if the consent has expired
+                if (consent.getConsentExpiry() != null && consent.getConsentExpiry().isBefore(LocalDateTime.now())) {
+                    return ConsentStatus.EXPIRED;
+                } else {
+                    return consent.getConsentStatus();
+                }
+            } else {
+                return null;
+            }
+        } catch (IllegalArgumentException e) {
+            // If invalid arguments are provided, return BAD_REQUEST (400)
+            throw new IllegalArgumentException("Invalid arguments provided: " + e.getMessage());
+        } catch (Exception e) {
+
+            throw new RuntimeException("Error retrieving consent status: " + e.getMessage());
+        }
     }
 
 }

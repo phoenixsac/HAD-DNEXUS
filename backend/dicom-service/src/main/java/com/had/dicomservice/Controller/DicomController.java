@@ -1,15 +1,21 @@
 package com.had.dicomservice.Controller;
 
+import com.had.dicomservice.Dto.AnnotatedEntity;
 import com.had.dicomservice.Dto.DicomMetadataRequestBody;
 import com.had.dicomservice.Dto.SaveDicomRequestBody;
 //import com.had.dicomservice.Service.DicomFrameExtractorService;
 import com.had.dicomservice.Entity.ConsultationDicom;
+import com.had.dicomservice.Entity.ImageEntity;
 import com.had.dicomservice.Repository.ConsultationDicomRepository;
+import com.had.dicomservice.Repository.ImageRepository;
 import com.had.dicomservice.Service.DicomService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -27,9 +33,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 @RestController
 @RequestMapping("/dicom")
@@ -40,16 +49,24 @@ public class DicomController {
     @Autowired
     private ConsultationDicomRepository consultationDicomRepository;
 
+    @Autowired
+    private  ResourceLoader resourceLoader;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+
     private String URL = "http://localhost:9191/";
 
     public String DICOM_FILE_STORE_PATH = "C:/Users/sn172/Desktop/Projects/GitHubProjects/HAD-DNEXUS/backend/dicom-service/src/main/resources/dicom-files";
 
 
+    @Autowired
+    ImageRepository imageRepository;
 
 
 
-
-
+    private static final String IMAGES_URL = "C:/Users/sn172/Desktop/Projects/GitHubProjects/HAD-DNEXUS/backend/dicom-service/src/main/resources";
     private static final Logger logger = LoggerFactory.getLogger(DicomController.class);
     private static final String BASE_URL = "dicomweb:http://localhost:8080";
 
@@ -182,42 +199,113 @@ public class DicomController {
                 .body(data);
     }
 
-    @PostMapping("/dicom/img-upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            String fileName = dicomService.saveImage(file);
-            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + fileName);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
-        }
+
+//    @PostMapping("/dicom/img-upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, @RequestBody AnnotatedEntity annotatedEntity) {
+//        try {
+//            // Log user details
+//            logger.info("Annotated Entity Type: {}", annotatedEntity.getUserType());
+//            logger.info("Actor ID: {}", annotatedEntity.getActorId());
+//
+//            String fileName = dicomService.saveImage(file);
+//            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + fileName);
+//        } catch (Exception e) {
+//            logger.error("Failed to upload image", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
+
+//    @PostMapping("/dicom/img-upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+//        try {
+//            String fileName = dicomService.saveImage(file);
+//            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + fileName);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
+
+
+//    @PostMapping("/dicom/img-upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+//        try {
+//            if (file.isEmpty()) {
+//                return ResponseEntity.badRequest().body("File is empty");
+//            }
+//
+//            ImageEntity imageEntity = new ImageEntity();
+//            imageEntity.setFileName(generateUniqueFileName(file.getOriginalFilename()));
+//            imageEntity.setFileData(file.getBytes());
+//            imageRepository.save(imageEntity);
+//
+//            return ResponseEntity.ok().body("Image uploaded successfully. File name: " + imageEntity.getFileName());
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
+
+    private String generateUniqueFileName(String originalFilename) {
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        return UUID.randomUUID().toString() + fileExtension;
     }
 
-    @PostMapping("/dicom/save-annotation-json")
-    public ResponseEntity<String> saveAnnotationJson(@RequestBody String measurementJson) {
+
+//    @PostMapping("/dicom/save-annotation-json")
+//    public ResponseEntity<String> saveAnnotationJson(@RequestBody String measurementJson) {
+//        try {
+//            dicomService.saveAnnotationJson(measurementJson);
+//            return ResponseEntity.ok("Annotation JSON saved successfully");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save Annotation JSON");
+//        }
+//    }
+
+//    @GetMapping("/dicom/get-measurement")
+//    public String getSampleJson() {
+//        try {
+//            // Load the sample JSON file
+//            String content = new String(Files.readAllBytes(Paths.get(ResourceUtils.getFile("classpath:annotations/data.json").toURI())));
+//
+//            // Parse JSON string to JSONObject
+//            JSONObject jsonObject = new JSONObject(content);
+//
+//            // Return JSON string
+//            return jsonObject.toString();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "Error occurred while processing the request";
+//        }
+//    }
+
+    @GetMapping("/dicom/images")
+    public ResponseEntity<List<String>> getAllImages() {
         try {
-            dicomService.saveAnnotationJson(measurementJson);
-            return ResponseEntity.ok("Annotation JSON saved successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save Annotation JSON");
-        }
-    }
+            List<String> imageUrls = new ArrayList<>();
 
-    @GetMapping("/dicom/get-measurement")
-    public String getSampleJson() {
-        try {
-            // Load the sample JSON file
-            String content = new String(Files.readAllBytes(Paths.get(ResourceUtils.getFile("classpath:annotations/data.json").toURI())));
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:/images/*");
 
-            // Parse JSON string to JSONObject
-            JSONObject jsonObject = new JSONObject(content);
+            for (Resource resource : resources) {
+                // Get the filename (relative path within the images directory)
+                String filename = resource.getFilename();
+                // Append the IMAGES_URL before the filename
+                String imageUrl = IMAGES_URL + "/" + filename;
+                // Add the imageUrl to the list of image URLs
+                imageUrls.add(imageUrl);
+            }
 
-            // Return JSON string
-            return jsonObject.toString();
-        } catch (Exception e) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(imageUrls);
+        } catch (IOException e) {
             e.printStackTrace();
-            return "Error occurred while processing the request";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
 }
 
 
