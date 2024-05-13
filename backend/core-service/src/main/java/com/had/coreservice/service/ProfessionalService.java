@@ -249,6 +249,7 @@ public class ProfessionalService {
                     ConsultationCardDetailResponseBody responseBody = new ConsultationCardDetailResponseBody();
                     responseBody.setConsultationId(consultationId);
                     responseBody.setName(name);
+                    responseBody.setConsentEntityType(consent.getEntityType());
                     responseBody.setDateCreated(dateCreated);
                     responseBody.setStatus(status);
                     responseBody.setConsentType(consent.getConsentType());
@@ -309,6 +310,7 @@ public class ProfessionalService {
 
 
     public List<ConsultationCardDetailResponseBody> getConsultationCardDetailsByRadiologist(Long radiologistId) {
+
         List<Object[]> consultationObjects = professionalRepository.findConsultationDetailsByProfessionalId(radiologistId);
         List<ConsultationCardDetailResponseBody> consultationDetails = new ArrayList<>();
 
@@ -318,12 +320,21 @@ public class ProfessionalService {
             LocalDateTime dateCreated = ((Timestamp) obj[2]).toLocalDateTime();
             String status = (String) obj[3];
 
+
+            Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, radiologistId, "RADIOLOGIST");
+            if (consent == null) {
+                throw new RuntimeException("Consent not found for consultation ID: " + consultationId + " and professional ID: " + radiologistId);
+            }
+
             // Create ConsultationCardDetailResponseBody instance
             ConsultationCardDetailResponseBody responseBody = new ConsultationCardDetailResponseBody();
             responseBody.setConsultationId(consultationId);
             responseBody.setName(name);
             responseBody.setDateCreated(dateCreated);
             responseBody.setStatus(status);
+            responseBody.setConsentType(consent.getConsentType());
+            responseBody.setConsentStatus(String.valueOf(consent.getConsentStatus()));
+            responseBody.setConsentEntityType(consent.getEntityType());
 
             consultationDetails.add(responseBody);
         }

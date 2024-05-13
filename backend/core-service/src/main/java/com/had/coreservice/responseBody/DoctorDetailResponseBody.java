@@ -13,4 +13,5 @@ public class DoctorDetailResponseBody {
     private String systemOfMedicine;
     private String qualification;
     private String place_of_work;
+    private String impressions;
 }

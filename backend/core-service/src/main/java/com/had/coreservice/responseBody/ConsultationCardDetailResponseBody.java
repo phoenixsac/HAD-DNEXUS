@@ -18,4 +18,5 @@ public class ConsultationCardDetailResponseBody {
     private String status;
     private String consentStatus;
     private String consentType;
+    private String consentEntityType;
 }
