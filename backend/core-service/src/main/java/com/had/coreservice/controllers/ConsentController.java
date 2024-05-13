@@ -92,6 +92,51 @@ public class ConsentController {
         }
     }
 
+    @GetMapping("/radiologist-add/status")
+    public ResponseEntity<?> getRadiologistAdditionConsentStatus(@RequestParam Long consultationId, @RequestParam Long radEntityId ) {
+        try {
+            ConsentStatus consentStatus = consentService.getConsentStatusByConsultationIdAndRadId(consultationId, radEntityId);
+            if (consentStatus != null) {
+                return ResponseEntity.ok(consentStatus);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving consent status: " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/lab-add/status")
+    public ResponseEntity<?> getLabAdditionConsentStatus(@RequestParam Long consultationId, @RequestParam Long labEntityId ) {
+        try {
+            ConsentStatus consentStatus = consentService.getConsentStatusByConsultationIdAndLabId(consultationId, labEntityId);
+            if (consentStatus != null) {
+                return ResponseEntity.ok(consentStatus);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving consent status: " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/doc-add/status")
+    public ResponseEntity<?> getDoctorAdditionConsentStatus(@RequestParam Long consultationId, @RequestParam Long docEntityId ) {
+        try {
+            ConsentStatus consentStatus = consentService.getConsentStatusByConsultationIdAndDocId(consultationId, docEntityId);
+            if (consentStatus != null) {
+                return ResponseEntity.ok(consentStatus);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving consent status: " + e.getMessage());
+        }
+    }
+
+
     @GetMapping("/details/{consentId}")
     public ResponseEntity<?> getConsentDetails(@PathVariable Long consentId) {
         try {

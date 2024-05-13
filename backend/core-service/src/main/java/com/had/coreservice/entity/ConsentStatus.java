@@ -4,5 +4,6 @@ public enum ConsentStatus {
     NONE,
     ACCEPT,
     REJECT,
-    WITHDRAWN
+    WITHDRAWN,
+    EXPIRED
 }
