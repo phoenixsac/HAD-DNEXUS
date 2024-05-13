@@ -106,11 +106,15 @@ public class ProfessionalService {
                 .orElseThrow(() -> new IllegalArgumentException("Consultation with given id does not exist"));
 
 
-        validateIfRadiologistAlreadyAdded(consultation, proRadiologistId);
+//        validateNumberOfRadiologistAlreadyAddedWithAcceptConsentStatus(consultation);
 
 //        if (isRadiologistAlreadyAdded(consultation)) {
 //            throw new IllegalArgumentException("A radiologist has already been added to this consultation");
 //        }
+
+        if(consultationRepository.countByConsultationIdAndConsentStatus(consultationId)==2){
+
+        }
 
         Professional professional = professionalRepository.findById(proRadiologistId)
                 .orElseThrow(() -> new IllegalArgumentException("Professional with given id does not exist"));
@@ -127,13 +131,13 @@ public class ProfessionalService {
 
 
 
-    private void validateIfRadiologistAlreadyAdded(Consultation consultation, Long proRadiologistId) {
-        for (Professional professional : consultation.getProfessionals()) {
-            if (professional.getId().equals(proRadiologistId)) {
-                throw new IllegalArgumentException("The radiologist is already part of this consultation");
-            }
-        }
-    }
+//    private void validateNumberOfRadiologistAlreadyAddedWithAcceptConsentStatus(Consultation consultation) {
+//        for (Professional professional : consultation.getProfessionals()) {
+//            if (professional.getId().equals(proRadiologistId)) {
+//                throw new IllegalArgumentException("The radiologist is already part of this consultation");
+//            }
+//        }
+//    }
 
     private boolean isRadiologistAlreadyAdded(Consultation consultation) {
         return !consultation.getProfessionals().isEmpty();
@@ -218,21 +222,62 @@ public class ProfessionalService {
     }
 
 
+
     public List<ConsultationCardDetailResponseBody> getConsultationCardDetails(Long docId, Long patientId) {
         Professional professional = professionalRepository.findById(docId)
                 .orElseThrow(() -> new RuntimeException("Professional not found with ID: " + docId));
 
         List<Object[]> consultationDetails = professionalRepository.findConsultationDetailsByProfessionalIdAndPatientId(docId, patientId);
 
-
-
         List<ConsultationCardDetailResponseBody> consultationCardDetails = consultationDetails.stream()
-                .map(this::mapToConsultationCardDetail)
+                .map(detail -> {
+                    Long consultationId = (Long) detail[0];
+                    String name = (String) detail[1];
+//                    LocalDateTime dateCreated = (LocalDateTime) detail[2];
+                    Timestamp timestamp = (Timestamp) detail[2];
+                    LocalDateTime dateCreated = timestamp.toLocalDateTime();
+
+                    String status = (String) detail[3];
+
+                    // Get consent status
+                    Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, docId, "DOCTOR");
+                    if (consent == null) {
+                        throw new RuntimeException("Consent not found for consultation ID: " + consultationId + " and professional ID: " + docId);
+                    }
+
+                    // Create response body
+                    ConsultationCardDetailResponseBody responseBody = new ConsultationCardDetailResponseBody();
+                    responseBody.setConsultationId(consultationId);
+                    responseBody.setName(name);
+                    responseBody.setDateCreated(dateCreated);
+                    responseBody.setStatus(status);
+                    responseBody.setConsentType(consent.getConsentType());
+                    responseBody.setConsentStatus(String.valueOf(consent.getConsentStatus()));
+
+                    return responseBody;
+                })
                 .collect(Collectors.toList());
 
         return consultationCardDetails;
     }
 
+
+
+
+//    public List<ConsultationCardDetailResponseBody> getConsultationCardDetails(Long docId, Long patientId) {
+//        Professional professional = professionalRepository.findById(docId)
+//                .orElseThrow(() -> new RuntimeException("Professional not found with ID: " + docId));
+//
+//        List<Object[]> consultationDetails = professionalRepository.findConsultationDetailsByProfessionalIdAndPatientId(docId, patientId);
+//
+//
+//
+//        List<ConsultationCardDetailResponseBody> consultationCardDetails = consultationDetails.stream()
+//                .map(this::mapToConsultationCardDetail)
+//                .collect(Collectors.toList());
+//
+//        return consultationCardDetails;
+//    }
 //    public List<Consent> findConsentsByTypeAndConsultationId(String consentType, Long consultationId) {
 //        return consentRepository.findByConsentTypeAndConsultationId(consentType, consultationId);
 //    }

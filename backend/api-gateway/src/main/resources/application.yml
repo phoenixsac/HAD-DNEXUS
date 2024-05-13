@@ -59,6 +59,26 @@ spring:
               args:
                 config: ""
 
+
+        - id: core-route
+          uri: lb://coreService
+          predicates:
+            - Path=/core/**
+          filters:
+            # Apply JWT token validation filter
+            - name: JwtTokenValidationFilter
+              args:
+                config: ""
+        - id: dicom-route
+          uri: lb://dicomService
+          predicates:
+            - Path=/dicom/**
+          filters:
+            # Apply JWT token validation filter
+            - name: JwtTokenValidationFilter
+              args:
+                config: ""
+
 eureka:
   client:
     serviceUrl:
