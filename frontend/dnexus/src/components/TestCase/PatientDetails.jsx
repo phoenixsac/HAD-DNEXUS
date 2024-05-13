@@ -237,6 +237,80 @@ import "./PatientDetails.css";
 // export default PatientDetails;
 
 
+// import React, { useState, useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
+
+// import './PatientDetails.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+// const PatientDetails = () => {
+//   const [patientData, setPatientData] = useState(null);
+
+//   // const { testId } = useParams(); // Get consultationId from URL parameter
+
+//   const { testId, consultationId } = useParams();
+
+//   //Fetch patient details from backend API
+//   useEffect(() => {
+//     const fetchPatientDetails = async () => {
+//       try {
+//         // const response = await fetch(`http://localhost:8085/core/consultation/patient-details?consultationId=${testId}`);
+//         const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+//         const response = await fetch(`http://localhost:8085/core/consultation/patient-details?${idParam}`);
+//         if (!response.ok) {
+//           throw new Error('Failed to fetch patient details');
+//         }
+//         const data = await response.json();
+//         setPatientData(data);
+//       } catch (error) {
+//         console.error('Error fetching patient details:', error);
+//         // Handle error as needed
+//       }
+//     };
+
+//     fetchPatientDetails();
+
+//   }, [testId,consultationId]); // Include consultationId in the dependency array
+
+
+//   return (
+    
+//     <div className='patient-breadcrumbs'>
+//       {patientData ? (
+//         <div className='breadcrumbs overlay'>
+//         <div className='title'> 
+//         <h2>{patientData.name} {patientData.age}/{patientData.gender} </h2>
+//         </div>
+//           {/* <h3>Age: {patientData.age}</h3>
+//               <h3>Gender: {patientData.gender}</h3> */}
+//           <nav aria-label="breadcrumb">
+//             <ol className="breadcrumb">
+//               {patientData && (
+//                 <>
+//                   <li className="breadcrumb-item active" aria-current="page">{patientData.bloodGroup}</li>
+//                   <li className="breadcrumb-item active" aria-current="page">{patientData.contact} </li>
+//                   <li className="breadcrumb-item active" aria-current="page">{patientData.email}</li>
+//                 </>
+//               )}
+//             </ol>
+//           </nav>
+
+//           {/* <li className="breadcrumb-item">{patientData.bloodGroup}</li>
+//           <nav className="breadcrumb-item">{patientData.contact}</nav>
+//           <ol className="breadcrumb-item">{patientData.email}</ol>
+//           <div className="breadcrumb-item">{patientData.email}</div> */}
+//         </div> ) : (
+//          <p>Loading...</p>
+// )}
+//     </div>
+//   );
+// }
+
+// export default PatientDetails;
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -276,31 +350,20 @@ const PatientDetails = () => {
 
   return (
     
-    <div className='patient-breadcrumbs'>
+    <div className="breadcrumbs-patient overlay">
       {patientData ? (
-        <div className='breadcrumbs overlay'>
-        <div className='title'> 
-        <h2>{patientData.name} {patientData.age}/{patientData.gender} </h2>
+        
+        <div className='patient-div'>    
+         <div className="patient-name">
+          <h2>{patientData.name} {patientData.age}/{patientData.gender} </h2>
+         </div>
+         <div className='patient-bread-details'>
+            <p>{patientData.bloodGroup}</p>
+            <p>{patientData.contact} </p>
+            <p>{patientData.email} </p>
+          </div>
         </div>
-          {/* <h3>Age: {patientData.age}</h3>
-              <h3>Gender: {patientData.gender}</h3> */}
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              {patientData && (
-                <>
-                  <li className="breadcrumb-item active" aria-current="page">{patientData.bloodGroup}</li>
-                  <li className="breadcrumb-item active" aria-current="page">{patientData.contact} </li>
-                  <li className="breadcrumb-item active" aria-current="page">{patientData.email}</li>
-                </>
-              )}
-            </ol>
-          </nav>
-
-          {/* <li className="breadcrumb-item">{patientData.bloodGroup}</li>
-          <nav className="breadcrumb-item">{patientData.contact}</nav>
-          <ol className="breadcrumb-item">{patientData.email}</ol>
-          <div className="breadcrumb-item">{patientData.email}</div> */}
-        </div> ) : (
+      ) : (
          <p>Loading...</p>
 )}
     </div>
