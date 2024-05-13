@@ -36,7 +36,7 @@ public class Consent {
     private LocalDateTime consentDate;
 
     @Column(name = "consent_expires")
-    private LocalDateTime consentExpires;
+    private LocalDateTime consentExpiry;
 
     @Column(name = "consent_message", columnDefinition = "TEXT")
     private String consentMessage; // New field for storing consent message
