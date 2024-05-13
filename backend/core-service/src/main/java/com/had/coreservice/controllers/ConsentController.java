@@ -106,6 +106,20 @@ public class ConsentController {
         }
     }
 
+//    @GetMapping("/radiologist-add-all/status")
+//    public ResponseEntity<?> getAllRadiologistAdditionConsentStatus(@RequestParam Long consultationId) {
+//        try {
+//            ConsentStatus consentStatus = consentService.getAllConsentStatusByConsultationId(consultationId);
+//            if (consentStatus != null) {
+//                return ResponseEntity.ok(consentStatus);
+//            } else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving consent status: " + e.getMessage());
+//        }
+//    }
+
 
     @GetMapping("/lab-add/status")
     public ResponseEntity<?> getLabAdditionConsentStatus(@RequestParam Long consultationId, @RequestParam Long labEntityId ) {
