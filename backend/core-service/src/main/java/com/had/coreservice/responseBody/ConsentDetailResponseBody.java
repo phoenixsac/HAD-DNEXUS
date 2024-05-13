@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class ConsentDetailResponseBody {
     private Long id;
     private String patientName;
+    private Long entityId;
     private String entityName;
     private String entityType;
     private Long consultationId;

@@ -139,6 +139,7 @@ public class ConsentService {
         ConsentDetailResponseBody consentDetailResponseBody = new ConsentDetailResponseBody();
         consentDetailResponseBody.setId(consent.getId());
         consentDetailResponseBody.setPatientName(patientName);
+        consentDetailResponseBody.setEntityId(consent.getEntityId());
         consentDetailResponseBody.setEntityName(entityName);
         consentDetailResponseBody.setConsultationId(consent.getConsultationId());
         consentDetailResponseBody.setConsentMessage(consent.getConsentMessage());
