@@ -15,14 +15,12 @@ function OHIFModal({ url, onClose }) {
   }, []);
 
   return (
-    <div className="modal-overlay" onClick={closeModal}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-container">
-          <button className="close-button" onClick={closeModal}>&times;</button>
-          <div className="modal-header">
-            <button className="cancel-button" onClick={closeModal}>Cancel</button>
-          </div>
-          <div className="modal-content">
+    <div className="ohif-modal-overlay" onClick={closeModal}>
+      <div className="ohif-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="ohif-modal-container">
+          <button className="ohif-modal-close-button" onClick={closeModal}>&times;</button>
+         
+          <div className="ohif-modal-content">
             <iframe src={url} title="modal" width="100%" height="100%" style={{ border: 0 }} />
           </div>
         </div>

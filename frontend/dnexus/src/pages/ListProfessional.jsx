@@ -21,6 +21,7 @@ const ListProfessional = () => {
 
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
+  const baseUrl = "http://localhost:8080/";
 
   useEffect(() => {
   
@@ -28,7 +29,7 @@ const ListProfessional = () => {
       try {
         const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
 
-        const response = await axios.get('http://localhost:8080/admin/all-professionals', {
+        const response = await axios.get('${baseUrl}admin/all-professionals', {
           headers: {
             'Authorization': `Bearer ${token}` // Include JWT token in headers
           }

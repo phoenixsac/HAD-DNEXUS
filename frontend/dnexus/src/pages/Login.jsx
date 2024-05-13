@@ -13,6 +13,7 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const baseUrl = "http://localhost:8080/";
 
   const userType = sessionStorage.getItem("userType"); // Access userType from state
 
@@ -42,7 +43,7 @@ function Login() {
       
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/issue-jwt",
+          `${baseUrl}auth/issue-jwt`,
           {
             email: email,
             password: password,

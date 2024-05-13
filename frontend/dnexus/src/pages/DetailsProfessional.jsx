@@ -19,6 +19,8 @@ const DetailsProfessional = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
 
+  const baseUrl = "http://localhost:8080/";
+
   console.log("id:", id);
   console.log("parsedid:", parsedid);
 
@@ -31,7 +33,7 @@ const DetailsProfessional = () => {
       try {
         const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
   
-        const response = await axios.get('http://localhost:8080/admin/professional-by-id', {
+        const response = await axios.get('${baseUrl}admin/professional-by-id', {
           params: { id: parsedid }, // Send id as request parameter
           headers: {
             'Authorization': `Bearer ${token}` // Include JWT token in headers
@@ -65,7 +67,7 @@ const DetailsProfessional = () => {
 
     try {
       const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
-      const response = await axios.delete(`http://localhost:8080/admin/delete-professional/${parsedid}`, {
+      const response = await axios.delete(`${baseUrl}admin/delete-professional/${parsedid}`, {
         headers: {
           'Authorization': `Bearer ${token}` // Include JWT token in headers
         }

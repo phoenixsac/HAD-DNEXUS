@@ -249,11 +249,18 @@ public class ProfessionalService {
                     ConsultationCardDetailResponseBody responseBody = new ConsultationCardDetailResponseBody();
                     responseBody.setConsultationId(consultationId);
                     responseBody.setName(name);
-                    responseBody.setConsentEntityType(consent.getEntityType());
+//                    responseBody.setConsentEntityType(consent.getEntityType());
                     responseBody.setDateCreated(dateCreated);
+
+                    LocalDateTime consentExpiry = consent.getConsentExpiry();
+//                    if (consentExpiry != null && LocalDateTime.now().isAfter(consentExpiry)) {
+//                        responseBody.setConsentStatus("TIMEOUT");
+//                    }
+//                    else{
+//                        responseBody.setConsentStatus(String.valueOf(consent.getConsentStatus()));
+//                    }
                     responseBody.setStatus(status);
-                    responseBody.setConsentType(consent.getConsentType());
-                    responseBody.setConsentStatus(String.valueOf(consent.getConsentStatus()));
+//                    responseBody.setConsentType(consent.getConsentType());
 
                     return responseBody;
                 })
@@ -321,10 +328,10 @@ public class ProfessionalService {
             String status = (String) obj[3];
 
 
-            Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, radiologistId, "RADIOLOGIST");
-            if (consent == null) {
-                throw new RuntimeException("Consent not found for consultation ID: " + consultationId + " and professional ID: " + radiologistId);
-            }
+//            Consent consent = consentRepository.findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(consultationId, radiologistId, "RADIOLOGIST");
+//            if (consent == null) {
+//                throw new RuntimeException("Consent not found for consultation ID: " + consultationId + " and professional ID: " + radiologistId);
+//            }
 
             // Create ConsultationCardDetailResponseBody instance
             ConsultationCardDetailResponseBody responseBody = new ConsultationCardDetailResponseBody();
@@ -332,9 +339,16 @@ public class ProfessionalService {
             responseBody.setName(name);
             responseBody.setDateCreated(dateCreated);
             responseBody.setStatus(status);
-            responseBody.setConsentType(consent.getConsentType());
-            responseBody.setConsentStatus(String.valueOf(consent.getConsentStatus()));
-            responseBody.setConsentEntityType(consent.getEntityType());
+//            responseBody.setConsentType(consent.getConsentType());
+
+//            LocalDateTime consentExpiry = consent.getConsentExpiry();
+//            if ("NONE".equalsIgnoreCase(String.valueOf(consent.getConsentStatus())) && consentExpiry != null && LocalDateTime.now().isAfter(consentExpiry)) {
+//                responseBody.setConsentStatus("TIMEOUT");
+//            }
+//            else{
+//                responseBody.setConsentStatus(String.valueOf(consent.getConsentStatus()));
+//            }
+//            responseBody.setConsentEntityType(consent.getEntityType());
 
             consultationDetails.add(responseBody);
         }

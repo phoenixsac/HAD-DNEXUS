@@ -19,6 +19,7 @@ function PatientDashboard() {
   const [error, setError] = useState(null);
   const [selectedConsent, setSelectedConsent] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const baseUrl = "http://localhost:8080/";
 
   useEffect(() => {
     if (actorId) {
@@ -38,7 +39,7 @@ function PatientDashboard() {
             throw new Error('User type or token not found.');
           }
 
-          const response = await axios.get(`http://localhost:8080/patient/consultation-list?patientId=${actorIdState}`, {
+          const response = await axios.get(`${baseUrl}patient/consultation-list?patientId=${actorIdState}`, {
             headers: {
               'Authorization': `Bearer ${jwtToken}`
             }

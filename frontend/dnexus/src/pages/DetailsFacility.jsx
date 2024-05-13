@@ -12,6 +12,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 const DetailsFacility = () => {
   const { facilityId } = useParams(); // Get facility ID from URL parameter
   const navigate = useNavigate();
+  const baseUrl = "http://localhost:8080/";
 
   const [facility, setfacility] = useState({});
 

@@ -108,6 +108,18 @@ public class ConsultationController {
         }
     }
 
+    @GetMapping("/{consultationId}/accepted-radiologists")
+    public ResponseEntity<?> getAllAcceptedRadiologistsByConsultationId(@PathVariable Long consultationId) {
+        try {
+            Set<ProfessionalRadiologistResponseBody> radiologists = consultationService.getAllAcceptedRadiologistsByConsultationId(consultationId);
+            return ResponseEntity.ok(radiologists);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consultation with given id does not exist");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving radiologists");
+        }
+    }
+
     @GetMapping("/get-test")
     public ResponseEntity<String> getTestByConsultationId(@RequestParam Long consultationId) {
         try {
