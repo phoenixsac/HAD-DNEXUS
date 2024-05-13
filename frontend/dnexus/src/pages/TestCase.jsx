@@ -300,10 +300,25 @@ import Rad1Details from '../components/TestCase/Rad1Details';
 import Rad2Details from '../components/TestCase/Rad2Details';
 import MessagingPage from "../components/TestCase/MessagingPage";
 import { useParams } from 'react-router-dom';
-
+import { PDFViewer, Document, Page, Text } from '@react-pdf/renderer';
 import Footer from "../components/Footer/Footer";
 import ChatComponent from '../components/TestCase/ChatComponent';
 
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+    <div className="modal-content">
+        <div className="modal-header">
+            <Button className="close-button" onClick={onClose}>✕</Button>
+            <h2>DNexus</h2>
+        </div>
+        <div className="modal-body">{children}</div>
+    </div>
+</div>
+  );
+};
 
 
 function TestCase() {
@@ -352,6 +367,9 @@ function TestCase() {
   const [rad1addshow, setrad1addshow] = useState(true);
   const [rad2addshow, setrad2addshow] = useState(true);
   const [rad2fromrad1, setrad2fromrad1] = useState(false);
+  const [pdfContent, setPdfContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [text, setText] = useState('');
 
 
 
@@ -839,7 +857,29 @@ function TestCase() {
       // Handle error as needed
     }
   };
+ 
 
+  const handleViewReport = async () => {
+    // Make API call
+    const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
+    const response = await fetch(`http://localhost:8085/core/consultation/get-final-report?${idParam}`);
+    const data = await response.text();
+    // Set the PDF content
+    setPdfContent(data);
+    setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  // Close the modal
+  setIsModalOpen(false);
+};
+
+
+const handleInputChange = (event) => {
+  setText(event.target.value);
+  event.target.style.height = 'auto'; // Reset the height
+  event.target.style.height = (event.target.scrollHeight) + 'px'; // Set the new height
+};
 
   const handleCloseThread = async () => {
     try {
@@ -1006,6 +1046,7 @@ function TestCase() {
       {rad1finalShow&&(userType==="doctor"||userType==="radiologist")&&   (<div className='chatting'>
       <h2>Discussion Forum</h2>
       </div>)}
+      
      {(userType==="doctor"||userType==="radiologist")&&   rad1finalShow&&<ChatComponent/>}
       
 
@@ -1016,7 +1057,12 @@ function TestCase() {
     </div>
 
     <div className="report-container">
-      <input type="text" className="report" placeholder="Enter text" /> {/* Text box */}
+    <textarea 
+        className="report" 
+        placeholder="Enter text" 
+        value={text} 
+        onChange={handleInputChange} 
+      /> {/* Text box */}
     </div>
 
     <div className="submit-button-container">
@@ -1035,8 +1081,19 @@ function TestCase() {
       </div>
 
       {(userType==="doctor" || userType==="patient") && submitStatus !== null &&<div className="submit-button-container">
-      <Button onClick={handleSubmit}>VIEW REPORT</Button>
+      <Button onClick={handleViewReport}>VIEW REPORT</Button>
     </div>}
+
+    <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <PDFViewer width="100%" height="500px">
+                    <Document>
+                        <Page size="A4">
+                            <Text style={{ marginTop: 20, marginLeft: 20, textAlign: 'center', fontSize: 20, color: 'blue', fontWeight: 'normal' }}>Final Report</Text>
+                            <Text style={{margin:30}}>{pdfContent}</Text>
+                        </Page>
+                    </Document>
+                </PDFViewer>
+            </Modal>
 
      
      
