@@ -112,7 +112,7 @@ const DocPatientTestDetails = () => {
             <p>{patient?.name}</p>
             <p>{patient?.age} / {patient?.gender}</p>
           </div> */}
-          <div className='create-case-button'>
+          <div className='doctor-create-case-button'>
             <button onClick={handleCreateCase}>Create Case</button>
             {/* <button onClick={handleGoBack}>Go Back</button> */}
           </div>

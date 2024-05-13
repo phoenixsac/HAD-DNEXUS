@@ -30,16 +30,19 @@
   padding: 2px;
 }
 
-.create-case-button button{
+.doctor-create-case-button button{
   /* background-color: #1A76D1; */
   background-color: white;
   color: #1A76D1;
   border: 1px solid #1A76D1;
   border-radius: 2rem;
   min-width: 250px;
+
+  padding: 10px;
+  font-size: 18px;
 }
 
-.create-case-button button:hover{
+.doctor-create-case-button button:hover{
   background: #2C2D3F;
     transition: all 0.3s;
 }

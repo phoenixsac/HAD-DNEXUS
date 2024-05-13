@@ -18,13 +18,14 @@
   margin-left: 38px;
 }
 
-.search-field{
+.doctor-search-field{
   height: 50px;
   width: 500px;
+  margin-left: 70px;
 
 }
 
-.search-field input{
+.doctor-search-field input{
   border-radius: 15;
   height: 32px;
   width: 410px;

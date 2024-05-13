@@ -85,8 +85,8 @@ function PLogin() {
       <div className="form-box">
         <div className="welcome">
           <h2>Welcome Back</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Access your medical records, schedule appointments conveniently, 
+            and communicate with your healthcare team effortlessly.</p>
         </div>
         <div className="form-container">
           <form onSubmit={handleSubmit} className="sign-in-form">

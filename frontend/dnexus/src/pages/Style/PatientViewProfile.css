@@ -1,0 +1,99 @@
+.patient-view-profile-container{
+    padding: 10px;
+    margin: 10px;
+}
+
+.patient-profile{
+    padding: 10px;
+    margin: 20px;
+
+    border: 1px solid rgb(245, 239, 239);
+    border-radius: 1rem;
+    background-color: #c7dcf1;
+    
+
+    width: 50vw;
+    position: relative;
+    left: 25%;
+}
+
+.patient-profile h1{
+    font-weight: 900;
+    color: #063463;
+    padding: 15px;
+}
+
+.patient-profile-section{
+    padding: 15px;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+}
+
+.patient-profile-section p{
+    color: black;
+    padding: 5px;
+    font-size: 18px;
+}
+
+.patient-profile-section-left, .patient-profile-section-right{
+    /* flex: 1; */
+    width: 50%;
+
+    padding: 10px;
+
+}
+
+.patient-profile-section-right{
+    flex: 1;
+    text-align: left;
+}
+
+.patient-profile-section-left{
+    flex: 0 0 40%;
+    text-align: right;
+}
+
+.patient-profile-button{
+    padding: 10px;
+    margin: 10px;
+
+    /* display: flex; */
+    gap: 30px;
+}
+
+.patient-profile-button button{
+    padding: 10px;
+    margin: 10px;
+
+    font-size: 20px;
+}
+
+.patient-profile-edit-btn{
+    background-color: white;
+    color: #1A76D1;
+    border: 1px solid #1A76D1;
+    border-radius: 2rem;
+}
+
+.patient-profile-edit-btn:hover{
+    background: #2C2D3F;
+    transition: all 0.3s;
+}
+
+.patient-profile-delete-btn{
+    color: red;
+    background-color: white;
+    border: 1px solid red;
+    border-radius: 2rem;
+}
+
+.patient-profile-delete-btn:hover{
+    color: red;
+    background-color: rgb(248, 214, 214);
+    border: 1px solid red;
+}
+

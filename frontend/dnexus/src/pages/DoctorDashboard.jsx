@@ -102,7 +102,7 @@ const DoctorDashboard = () => {
 
         <div className='search-back'>
 
-          <div className='search-field'>
+          <div className='doctor-search-field'>
             <input
               type="text"
               placeholder="Search by ID, Name, Gender, or Age"
