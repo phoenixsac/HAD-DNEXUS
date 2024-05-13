@@ -154,6 +154,7 @@ import MessageList from './MessageList';
 import { useParams } from 'react-router-dom';
 import { connectToChat } from './WebSocket'; // Assuming you have a separate file for WebSocket connection
 import './MessagingPage.css'; // Importing the CSS file
+import { fetchOlderMessages } from './WebSocket';
 
 
 function MessagingPage({ selectedRadiologistId }) {
@@ -163,6 +164,8 @@ function MessagingPage({ selectedRadiologistId }) {
   const { consultationId, testId } = useParams(); 
   const [senderId, setSenderId] = useState(null);
   const [receiverId, setReceiverId] = useState(null);
+  const [page, setPage] = useState(0); // Track the current page of messages
+  const [loadingMore, setLoadingMore] = useState(false); // Track whether loading more messages is in progress
   
   
   
@@ -200,9 +203,10 @@ function MessagingPage({ selectedRadiologistId }) {
         }
 
         // Connect to WebSocket
-        connectToChat(sender, receiver, consultationId || testId, handleMessagesReceived, handleMessageSubmit);
+        connectToChat(sender, receiver, consultationId || testId, handleMessagesReceived, handleMessageSubmit,page);
         setSenderId(sender);
         setReceiverId(receiver);
+        setPage(prevPage => prevPage + 1);
       } catch (error) {
         console.error('Error handling connection:', error);
         // Handle error as needed
@@ -213,6 +217,33 @@ function MessagingPage({ selectedRadiologistId }) {
       handleConnect();
     }
   }, [consultationId, testId, selectedRadiologistId]);
+
+  const fetchMessages = async () => {
+    try {
+      setLoadingMore(true);
+      console.log("consulationid in messaging",consultationId || testId);
+      const response = await fetchOlderMessages(senderId, receiverId, consultationId || testId, page); // Adjust size as needed
+      if (response.ok) {
+        const olderMessages = await response.json();
+        setMessages(prevMessages => [...olderMessages, ...prevMessages]);
+        // setMessages(prevMessages => [...prevMessages, ...olderMessages]);
+        setPage(prevPage => prevPage + 1);
+      } else {
+        console.error('Failed to fetch older messages:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching older messages:', error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore) {
+      fetchMessages();
+    }
+  };
+
 
 
   
@@ -235,7 +266,12 @@ function MessagingPage({ selectedRadiologistId }) {
   return (
     <div className="messaging-container">
       {/* <h2>Messaging</h2> */}
-      <MessageList messages={messages} />
+      <MessageList messages={messages} fetchMessages={fetchMessages} />
+      {/* {loadingMore ? (
+        <div>Loading...</div>
+      ) : (
+        <button onClick={handleLoadMore}>Load More</button>
+      )} */}
       <MessageInput
         users={users}
         onSubmit={handleMessageSubmit}

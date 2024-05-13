@@ -62,17 +62,27 @@
 import React, { useState, useEffect } from 'react';
 import "./MessageList.css";
 
-function Message({ senderName, receiverName, content }) {
+function Message({ senderName, receiverName, content,setMessagesLoaded}) {
+
+  useEffect(() => {
+   
+      setMessagesLoaded(true);
+    
+  }, [setMessagesLoaded]);
   return (
+  
+    
     <div className="message">
       <strong>{senderName}: @{receiverName}</strong>: {content}
     </div>
+    
   );
 }
 
-function MessageList({ messages }) {
+function MessageList({ messages,fetchMessages }) {
   const [senders, setSenders] = useState({});
   const [receivers, setReceivers] = useState({});
+  const [messagesLoaded, setMessagesLoaded] = useState(false);
 
   useEffect(() => {
     async function fetchSenderNames() {
@@ -145,16 +155,28 @@ function MessageList({ messages }) {
     fetchReceiverNames();
   }, [messages]); // Run effect whenever messages change
 
+  
+ 
+
+  const handleLoadMoreClick = () => {
+    // Call fetchMessages when "Load More" is clicked
+    fetchMessages();
+  };
 
   return (
     <div className="message-list-container">
+      
+      {messagesLoaded && (<div className="load-more" onClick={handleLoadMoreClick}>Load Previous Messages</div>)}
+      {/* <div className="load-more" onClick={handleLoadMoreClick}>Load Previous More</div> */}
+    
       {messages.map((msg, index) => (
+        
         <Message
           key={index}
           senderName={senders[msg.senderId]}
           receiverName={receivers[msg.receiverId]}
-          
           content={msg.messageContent}
+          setMessagesLoaded={setMessagesLoaded}
         />
       ))}
     </div>

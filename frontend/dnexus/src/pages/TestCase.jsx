@@ -7,7 +7,8 @@ import DoctorDetails from '../components/TestCase/DoctorDetails';
 import LabDetails from '../components/TestCase/LabDetails';
 import Button from '../components/TestCase/Button';
 import LabUpload from '../components/TestCase/LabUpload';
-import RadDetails from '../components/TestCase/RadDetails';
+import Rad1Details from '../components/TestCase/Rad1Details';
+import Rad2Details from '../components/TestCase/Rad2Details';
 import MessagingPage from "../components/TestCase/MessagingPage";
 import { useParams } from 'react-router-dom';
 
@@ -24,12 +25,14 @@ function TestCase() {
   const [selectedRadiologist, setSelectedRadiologist] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [radmessage, setradMessage] = useState("");
+  const [rad1message, setrad1Message] = useState("");
+  const [rad2message, setrad2Message] = useState("");
   const [submitmessage, setsubmitMessage] = useState("");
   const [radiologistAdded, setRadiologistAdded] = useState(false);
   const [reportSubmitted, setReportSubmitted] = useState(false);
   const [labAdded, setLabAdded] = useState(false);
-  const [radAdded, setradAdded] = useState(false);
+  const [rad1Added, setrad1Added] = useState(false);
+  const [rad2Added, setrad2Added] = useState(false);
   const [closeMessage, setCloseMessage] = useState("");
   const [testClosed, settestClosed] = useState(false);
   const { testId, consultationId } = useParams();
@@ -43,7 +46,24 @@ function TestCase() {
   const [labConsentStatusReject, setlabConsentStatusReject] = useState(false);
   const [labConsentMessage, setlabConsentMessage] = useState("");
   const [labShow, setlabShow] = useState(false);
-  
+  const [rad1ConsentStatusAccept, setrad1ConsentStatusAccept] = useState(false);
+  const [rad1ConsentStatusPending, setrad1ConsentStatusPending] = useState(false);
+  const [rad1ConsentStatusReject, setrad1ConsentStatusReject] = useState(false);
+  const [rad1ConsentMessage, setrad1ConsentMessage] = useState("");
+  const [rad1Show, setrad1Show] = useState(false);
+  const [acceptedrad1, setacceptedrad1] = useState(null);
+  const [rad2ConsentStatusAccept, setrad2ConsentStatusAccept] = useState(false);
+  const [rad2ConsentStatusPending, setrad2ConsentStatusPending] = useState(false);
+  const [rad2ConsentStatusReject, setrad2ConsentStatusReject] = useState(false);
+  const [rad2ConsentMessage, setrad2ConsentMessage] = useState("");
+  const [rad2Show, setrad2Show] = useState(false);
+  const [acceptedrad2, setacceptedrad2] = useState(null);
+  const [rad1finalShow, setrad1finalShow] = useState(false);
+  const [rad2finalShow, setrad2finalShow] = useState(false);
+  const [rad1addshow, setrad1addshow] = useState(true);
+  const [rad2addshow, setrad2addshow] = useState(true);
+  const [rad2fromrad1, setrad2fromrad1] = useState(false);
+
 
 
 
@@ -64,7 +84,8 @@ function TestCase() {
               console.log("consent accept",labConsentStatusAccept);
               setlabConsentMessage("Lab Consent is Accepted");
               setlabShow(true);
-
+              
+              
             }
             
             else if (entity.entityType === "LAB" && entity.consentStatus === "NONE") {
@@ -92,6 +113,142 @@ function TestCase() {
 
      fetchLabConsentDetails();
   }, [consultationId]);
+
+  useEffect(() => {
+    async function fetchRad1ConsentDetails() {
+      try {
+        // Fetch consent data
+        const idParam = testId ? testId : consultationId;
+        const response = await fetch(`http://localhost:8085/core/consent/all/${idParam}`);
+        if (response.ok) {
+          const data = await response.json();
+          let firstOrSecondConditionMet = false;
+          for (let i = 0; i < data.length; i++) {
+            const entity = data[i];
+            if (entity.entityType === "RADIOLOGIST" && entity.consentStatus === "ACCEPT") {
+              setrad1ConsentStatusAccept(true); 
+              firstOrSecondConditionMet = true;
+              console.log("consent accept",rad1ConsentStatusAccept);
+              setrad1ConsentMessage("Radiologist 1 Consent is Accepted");
+              setrad1Show(true);
+              setrad1finalShow(true);
+              console.log("entitiy.id rad1", entity.entityId);
+              setacceptedrad1(entity.entityId);
+              console.log("accepedted rad1", acceptedrad1);
+              setrad1addshow(false);
+              setrad2fromrad1(true);
+              break;
+              
+            }
+            
+            else if (entity.entityType === "RADIOLOGIST" && entity.consentStatus === "NONE") {
+              setrad1ConsentStatusPending(true);
+              firstOrSecondConditionMet = true;
+              console.log("consent pending for 1",rad1ConsentStatusPending);
+              setrad1ConsentMessage("Consent is Pending for radiologist 1");
+              setrad1addshow(false);
+             
+            }
+
+            else if (!firstOrSecondConditionMet && entity.entityType === "RADIOLOGIST" && entity.consentStatus === "REJECT") {
+              setrad1ConsentStatusReject(true);
+              console.log("consent reject",rad1ConsentStatusReject);
+              setrad1ConsentMessage("Radiologist 1 Consent is Rejected. Please select another radiologist");
+              setrad1Added(false);
+              setrad1Show(false);
+              setrad1addshow(true);
+            }
+          };
+        } else {
+          console.error('Failed to fetch consent data:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching consent data:', error);
+      }
+    }
+
+     fetchRad1ConsentDetails();
+  }, [consultationId,acceptedrad1]);
+
+  useEffect(() => {
+    async function fetchRad2ConsentDetails() {
+        try {
+            // Fetch consent data
+            let firstOrSecondConditionMet = false;
+            const idParam = testId ? testId : consultationId;
+            const response = await fetch(`http://localhost:8085/core/consent/all/${idParam}`);
+            if (response.ok) {
+                const data = await response.json();
+                let acceptIndex = -1;
+
+                // Find the index of the entity with "ACCEPT" status
+                // data.forEach((entity, index) => {
+                //     if (entity.entityType === "RADIOLOGIST" && entity.consentStatus === "ACCEPT") {
+                //         acceptIndex = index;
+                //         console.log("yahan aya kya");
+                //         setrad2addshow(true);
+                //     }
+                // });
+                    
+
+                for (let index = 0; index < data.length; index++) {
+                  const entity = data[index];
+                  if (entity.entityType === "RADIOLOGIST" && entity.consentStatus === "ACCEPT") {
+                    acceptIndex = index;
+                    console.log("yahan aya kya");
+                    setrad2addshow(true);
+                    break; // If you want to exit the loop after finding the first matching entity
+                  }
+                }
+                // Start the loop from the entity after the one with "ACCEPT" status
+                for (let i = acceptIndex +1; i < data.length; i++) {
+                    const entity = data[i];
+                    if (entity.entityType === "RADIOLOGIST" && entity.consentStatus === "ACCEPT") {
+                      setrad2ConsentStatusAccept(true); 
+                      firstOrSecondConditionMet = true;
+                      console.log("consent accept",rad2ConsentStatusAccept);
+                      setrad2ConsentMessage("Radiologist 2 Consent is Accepted");
+                      setrad2Show(true);
+                      setrad2finalShow(true);
+                      console.log("entitiy.id rad2", entity.entityId);
+                      setacceptedrad2(entity.entityId);
+                       console.log("accepedted rad2", acceptedrad2);
+                       setrad2addshow(false);
+                     
+                      
+                    }
+                    
+                    else if (entity.entityType === "RADIOLOGIST" && entity.consentStatus === "NONE") {
+                      setrad2ConsentStatusPending(true);
+                      firstOrSecondConditionMet = true;
+                      console.log("consent pending for 2",rad2ConsentStatusPending);
+                      setrad2ConsentMessage("Consent is Pending for Radiologist 2");
+                      console.log("yahan aya kya 1?");
+                      console.log("consent pending",rad2ConsentStatusPending);
+                      console.log("rad 2 message",rad2ConsentMessage);
+                      setrad2addshow(false);
+                    }
+        
+                    else if (!firstOrSecondConditionMet && entity.entityType === "RADIOLOGIST" && entity.consentStatus === "REJECT") {
+                      setrad2ConsentStatusReject(true);
+                      console.log("consent reject",rad2ConsentStatusReject);
+                      setrad2ConsentMessage("Consent is Rejected for radiologist 2. Please select another radiologist");
+                      setrad2Added(false);
+                      setrad2Show(false);
+                      setrad2addshow(true);
+                    }
+                }
+            } else {
+                console.error('Failed to fetch consent data:', response.status);
+            }
+        } catch (error) {
+            console.error('Error fetching consent data:', error);
+        }
+    }
+
+    fetchRad2ConsentDetails();
+}, [consultationId]);
+
 
   useEffect(() => {
     async function fetchRadiologistDetails() {
@@ -180,15 +337,39 @@ function TestCase() {
     }
   };
 
+  // const fetchRadiologists = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:8085/core/professional/get-radiologists');
+  //     const data = await response.json();
+  //     setRadiologists(data);
+  //   } catch (error) {
+  //     console.error('Error fetching radiologists:', error);
+  //   }
+  // };
+
   const fetchRadiologists = async () => {
     try {
-      const response = await fetch('http://localhost:8085/core/professional/get-radiologists');
-      const data = await response.json();
-      setRadiologists(data);
+        // Fetch data from the first API
+        
+        const response1 = await fetch('http://localhost:8085/core/professional/get-radiologists');
+        const data1 = await response1.json();
+        const idParam = testId ? testId : consultationId;
+        // Fetch data from the second API
+        const response2 = await fetch(`http://localhost:8085/core/consultation/${idParam}/radiologists`);
+        const data2 = await response2.json();
+        
+        // Filter out items that are common between both arrays
+        const filteredData = data1.filter(item1 => {
+            return !data2.some(item2 => item1.id === item2.id);
+        });
+
+        // Set the filtered data
+        setRadiologists(filteredData);
     } catch (error) {
-      console.error('Error fetching radiologists:', error);
+        console.error('Error fetching radiologists:', error);
     }
-  };
+};
+
 
     const handleAddLab = async () => {
     try {
@@ -232,7 +413,7 @@ function TestCase() {
       // const consultationId = 3;
   
       if (!radiologistId) {
-        setradMessage("Please select a radiologist.");
+        setrad1Message("Please select a radiologist.");
         return;
       }
   
@@ -249,12 +430,51 @@ function TestCase() {
       });
       
       const data = await response.text();
-      setradMessage(data);
+      setrad1Message(data);
       setRadiologistAdded(true);
-      setradAdded(true); // Set flag to indicate radiologist added successfully
+      setrad1Added(true); // Set flag to indicate radiologist added successfully
+      setrad1ConsentMessage("Consent Is Pending");
+      setrad1finalShow(false);
+      setrad1addshow(false);
     } catch (error) {
       console.error('Error adding radiologist:', error);
-      setradMessage("Error adding radiologist. Please try again.");
+      setrad1Message("Error adding radiologist. Please try again.");
+    }
+  };
+
+
+  const handleAddRadiologist2 = async () => {
+    try {
+      const radiologistId = selectedRadiologist;
+      // const consultationId = 3;
+  
+      if (!radiologistId) {
+        setrad2Message("Please select a radiologist.");
+        return;
+      }
+  
+      const url = new URL('http://localhost:8085/core/professional/add-radiologist');
+      url.searchParams.append('consultationId', consultationId || testId);
+      // url.searchParams.append('consultationId', consultationId );
+      url.searchParams.append('proRadiologistId', radiologistId);
+  
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const data = await response.text();
+      setrad2Message(data);
+      setRadiologistAdded(true);
+      setrad2Added(true); // Set flag to indicate radiologist added successfully
+      setrad2ConsentMessage("Consent Is Pending");
+      setrad2finalShow(false);
+      setrad2addshow(false);
+    } catch (error) {
+      console.error('Error adding radiologist:', error);
+      setrad2Message("Error adding radiologist. Please try again.");
     }
   };
 
@@ -395,49 +615,65 @@ function TestCase() {
         </select>
       </div> */}
 
-        {/* {userType==="doctor"&&  labConsentStatusAccept &&(!radDetailsVisible || radiologistAdded ) && (
-        <div className="add-button-container">
-         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
-         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
-            <option value="">Select Radiologist</option>
-            {radiologists.map((radiologist) => (
-              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
-            ))}
-          </select>
-          </div>
-        </div>
-      )} */}
+       
 
-
-        <div className="add-button-container">
-         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
-         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
-            <option value="">Select Radiologist</option>
-            {radiologists.map((radiologist) => (
-              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
-            ))}
-          </select>
-          </div>
-        </div>
-      
-
-      
-          <div className='rad-recommend'>
-    {radmessage && <p>{radmessage}</p>}
+< div className='rad-recommend'>
+       { rad1ConsentMessage && <p>{rad1ConsentMessage}</p>}
       </div>
+      {userType==="doctor"&&  labConsentStatusAccept && rad1addshow  && (
+        <div className="add-button-container">
+         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
+         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+            <option value="">Select Radiologist</option>
+            {radiologists.map((radiologist) => (
+              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+            ))}
+          </select>
+          </div>
+        </div>
+      )}
+      
 
       
-      {userType!=="lab" && (radAdded || radDetailsVisible) && <RadDetails />}
+          {/* <div className='rad-recommend'>
+    {rad1message && <p>{rad1message}</p>}
+      </div> */}
+
+      
+      {userType!=="lab" && rad1finalShow   && <Rad1Details radId={acceptedrad1}/>}
+
+
+      {rad1finalShow&&(<div className='rad-recommend'>
+    {rad2ConsentMessage && <p>{rad2ConsentMessage}</p>}
+      </div>)}
 
       {/* {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />} */}
-      
-      <div className='chatting'>
-      <h2>Messaging</h2>
+      {userType==="doctor"&&  labConsentStatusAccept && rad2fromrad1 && rad2addshow && (
+        <div className="add-button-container">
+         <div className='add-lab'> <Button onClick={handleAddRadiologist2}>ADD RADIOLOGIST 2</Button></div>
+         <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
+            <option value="">Select Radiologist</option>
+            {radiologists.map((radiologist) => (
+              <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
+            ))}
+          </select>
+          </div>
+        </div>
+      )}
+
+        {userType!=="lab" && rad2finalShow  && <Rad2Details radId={acceptedrad2}/>}
+
+        <div className='rad-recommend'>
+    {rad2message && <p>{rad1message}</p>}
       </div>
-      <ChatComponent/>
+
+      {rad1finalShow&&(userType==="doctor"||userType==="radiologist")&&   (<div className='chatting'>
+      <h2>Discussion Forum</h2>
+      </div>)}
+     {(userType==="doctor"||userType==="radiologist")&&   rad1finalShow&&<ChatComponent/>}
       
 
-{userType==="doctor" && submitStatus === null && !reportSubmitted && (radAdded  || radDetailsVisible) && (
+{userType==="doctor" && submitStatus === null && rad1finalShow&&!reportSubmitted && (rad1Added  || radDetailsVisible) && (
   <>
     <div className='rad-recommend'>
       Write Final Report

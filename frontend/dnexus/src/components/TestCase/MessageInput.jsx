@@ -244,7 +244,7 @@ function MessageInput({senderId,receiverId, users, onSubmit, onConnect ,connecte
       {/* Connect button */}
       {/* <button className="connect-button" onClick={handleConnectClick}>Connect</button> */}
       
-     {!connected && <button className="connect-button" onClick={handleConnectClick}>Connect</button>}
+     {/* {!connected && <button className="connect-button" onClick={handleConnectClick}>Connect</button>} */}
 
       </div>
       
