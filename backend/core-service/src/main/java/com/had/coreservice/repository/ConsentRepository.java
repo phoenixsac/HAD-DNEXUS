@@ -19,6 +19,9 @@ public interface ConsentRepository extends JpaRepository<Consent, Long> {
 
     List<Consent> findByConsultationId(Long consultationId);
 
+    Consent findByConsultationIdAndEntityIdAndEntityTypeIgnoreCase(Long consultationId, Long radEntityId, String entityType);
+
+
 //    void findConsentStatusByConsultationIdAndType(Long aLong, String doctorCaseConsent);
 //    Optional<Consent> findFirstByConsentTypeAndConsultationId(String consentType, Long consultationId);
 }
