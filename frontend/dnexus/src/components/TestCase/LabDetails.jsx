@@ -50,11 +50,13 @@ const LabDetails = () => {
 
                 <br />
                 {userType!=="patient" && <span>
+
                     <button className='lab-view-button' onClick={handleClick}>View/Annotate Images</button>
                 </span>}
                 {userType==="patient" && <span>
                     <button className='lab-view-button' onClick={handleViewClick}>View Images</button>
                 </span>}
+
             </div>
             <div className="description">
                 <p>{description}</p> {/* Leave description as dummy data */}

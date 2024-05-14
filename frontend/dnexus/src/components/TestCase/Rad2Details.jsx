@@ -45,6 +45,7 @@ function Rad2Details(radId) {
   };
 
   return (
+
     <div className="rad-info-container">
       <div className="rad-details-header">
       <h4 className="rad-name">{radDetails && radDetails.name ? radDetails.name.toUpperCase() : ''}</h4>
@@ -55,6 +56,7 @@ function Rad2Details(radId) {
         {userType!=="patient" && <span >
           <button className='lab-annotated-button' onClick={handleClick}>View Annotated Images</button>
         </span>}
+
       </div>
 
       {/* <div className="prescription">

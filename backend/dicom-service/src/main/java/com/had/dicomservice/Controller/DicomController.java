@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -299,6 +300,23 @@ public class DicomController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/dicom/all-images")
+    public ResponseEntity<List<String>> getAllImagesInBase64() throws IOException {
+        File folder = new ClassPathResource("images").getFile();
+        File[] listOfFiles = folder.listFiles();
+        List<String> encodedImages = new ArrayList<>();
+
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                byte[] bytes = Files.readAllBytes(file.toPath());
+                String encodedImage = Base64.getEncoder().encodeToString(bytes);
+                encodedImages.add(encodedImage);
+            }
+        }
+
+        return ResponseEntity.ok(encodedImages);
     }
 
 

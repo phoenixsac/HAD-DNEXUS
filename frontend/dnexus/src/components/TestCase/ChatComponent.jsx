@@ -12,6 +12,7 @@ const ChatComponent = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageselected, setimageselected] = useState(false);
   // const [imagePaths, setImagePaths] = useState([]);
+  const [imageThumbnails, setImageThumbnails] = useState([]);
 
   useEffect(() => {
     // Fetch radiologists from API based on user type
@@ -34,6 +35,10 @@ const ChatComponent = () => {
     //   .then(response => response.json())
     //   .then(data => setImagePaths(data))
     //   .catch(error => console.error('Error fetching image paths:', error));
+    fetch('http://localhost:9191/dicom/dicom/all-images')
+      .then(response => response.json())
+      .then(data => setImageThumbnails(data))
+      .catch(error => console.error('Error fetching image thumbnails:', error));
   }, [userType, testId, consultationId, actorId]);
   
   // useEffect(() => {
@@ -65,25 +70,25 @@ const ChatComponent = () => {
   };
 
   // Sample image paths
-  const imagePaths = [
-    process.env.PUBLIC_URL + '/images/2f6fce8f-9ea4-4ae1-b40f-700b30d8f4bf.jpg',
-    process.env.PUBLIC_URL + '/images/3fa24669-25c6-415b-818e-3b654809ce8b.jpg',
-    process.env.PUBLIC_URL + '/images/6c3901c1-0867-4ed8-8914-7c0035c31efa.jpg'
-  ];
+  // const imagePaths = [
+  //   process.env.PUBLIC_URL + '/images/2f6fce8f-9ea4-4ae1-b40f-700b30d8f4bf.jpg',
+  //   process.env.PUBLIC_URL + '/images/3fa24669-25c6-415b-818e-3b654809ce8b.jpg',
+  //   process.env.PUBLIC_URL + '/images/6c3901c1-0867-4ed8-8914-7c0035c31efa.jpg'
+  // ];
 
   return (
     <div className="total-container">
       <div className="image-list">
         {/* <h2>Images</h2> */}
         <div className="image-thumbnails">
-        {imagePaths.map((path, index) => (
-        <img
-         key={index}
-         src={path}
-         alt={`Thumbnail ${index + 1}`}
-         onClick={() => handleImageClick(path)}
-          />
-        ))}
+        {imageThumbnails.map((thumbnail, index) => (
+            <img
+              key={index}
+              src={`data:image/jpeg;base64,${thumbnail}`}
+              alt={`Thumbnail ${index + 1}`}
+              onClick={() => handleImageClick(`data:image/jpeg;base64,${thumbnail}`)}
+            />
+          ))}
         </div>
         </div>
         <div className='chat-container'>
@@ -91,8 +96,12 @@ const ChatComponent = () => {
                 <div className="selected-image">
                 {selectedImage && <img src={selectedImage} alt="Selected item" />}
               </div>)}
+
               { (<div className="radiologist-list">
                 <h3>Chat with</h3>
+              {( userType == "doctor"|| userType=="radiologist")&& (<div className="radiologist-list">
+                <h2>Radiologists</h2>
+
                 <ul>
                   {radiologists.map(radiologist => (
                     <li key={radiologist.id} onClick={() => handleRadiologistClick(radiologist)}>
