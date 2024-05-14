@@ -58,6 +58,7 @@ public class AuthController {
                 Long actorId=getActorId(request.getEmail(), request.getType());
                 String token = this.helper.generateToken(user, user.getType(), user.getEmail(), actorId);
 
+
                 LoginResponse response = LoginResponse.builder()
                         .jwtToken(token)
                         .actorId(actorId)
@@ -70,6 +71,7 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
     private Long getActorId(String email, String type) {
         Long id = 0L;
         if ("patient".equalsIgnoreCase(type)) {

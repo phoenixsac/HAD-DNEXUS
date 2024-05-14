@@ -15,12 +15,14 @@ const AddFacility = () => {
   const [message, setMessage] = useState('');
   const [showResult, setShowResult] = useState(false);
 
+  const baseUrl = "http://localhost:8080/";
+
   const handleVerify = async () => {
     try { 
       // Retrieve JWT token from local storage
       const token = localStorage.getItem('jwtToken');
 
-      const response = await fetch(`http://localhost:8080/admin/add-facility?facilityId=${facilityId}`, {
+      const response = await fetch(`${baseUrl}admin/add-facility?facilityId=${facilityId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Include JWT token in the headers

@@ -10,6 +10,7 @@ function PLogin() {
 
   const navigate = useNavigate();
   const { setIsLoggedIn, setActorId } = useContext(AuthContext); 
+  const baseUrl = "http://localhost:8080/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +43,7 @@ function PLogin() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/issue-jwt",
+        "${baseUrl}auth/issue-jwt",
         {
           email: email,
           password: password,

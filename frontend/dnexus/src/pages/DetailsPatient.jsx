@@ -20,13 +20,14 @@ const DetailsPatient = () => {
 
   const [patient, setPatient] = useState({});
   const [error, setError] = useState(null);
+  const baseUrl = "http://localhost:8080/";
 
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
         const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
   
-        const response = await axios.get(`http://localhost:8080/admin/details-by-id?patientId=${parsedId}`, {
+        const response = await axios.get(`${baseUrl}admin/details-by-id?patientId=${parsedId}`, {
           headers: {
             'Authorization': `Bearer ${token}` // Include JWT token in headers
           }

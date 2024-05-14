@@ -1,11 +1,10 @@
 server:
   port: 8080
-  # ssl:
-  #   enabled: true
-  #   key-store: classpath:keystore.p12
-  #   key-store-password: your_keystore_password
-  #   key-store-type: PKCS12
-  #   key-alias: your_key_alias
+#  ssl:
+#    enabled: true
+#    key-store: classpath:keystore.p12
+#    key-store-password: allowme
+#    key-store-type: PKCS12
 
 spring:
   main:

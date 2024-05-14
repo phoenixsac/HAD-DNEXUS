@@ -16,7 +16,7 @@ public class ConsultationCardDetailResponseBody {
     private LocalDateTime dateCreated;
     private String name;
     private String status;
-    private String consentStatus;
-    private String consentType;
-    private String consentEntityType;
+//    private String consentStatus;
+//    private String consentType;
+//    private String consentEntityType;
 }
