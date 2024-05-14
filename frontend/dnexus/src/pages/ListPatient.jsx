@@ -21,12 +21,13 @@ const ListPatient = () => {
 
   const [filteredpatients, setFilteredpatients] = useState([]);
   const [allpatients, setAllpatients] = useState([]);
+  const baseUrl = "http://localhost:8080/";
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const token = localStorage.getItem('jwtToken'); // Retrieve JWT token from local storage
-        const response = await axios.get('http://localhost:8080/admin/all-patients', {
+        const response = await axios.get('${baseUrl}/admin/all-patients', {
           headers: {
             'Authorization': `Bearer ${token}` // Include JWT token in the request headers
           }

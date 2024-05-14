@@ -12,4 +12,5 @@ public class ProfessionalRadiologistResponseBody {
     private String fullName;
     private String systemOfMedicine;
     private String impression;
+    private String consentStatus;
 }
