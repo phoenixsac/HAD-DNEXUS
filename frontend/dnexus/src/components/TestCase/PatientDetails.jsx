@@ -355,7 +355,8 @@ const PatientDetails = () => {
         
         <div className='patient-div'>    
          <div className="patient-name">
-          <h2>{patientData.name} {patientData.age}/{patientData.gender} </h2>
+          <h2>{patientData.name} </h2>
+          <h3>{patientData.age}/{patientData.gender} </h3>
          </div>
          <div className='patient-bread-details'>
             <p>{patientData.bloodGroup}</p>

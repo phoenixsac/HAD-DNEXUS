@@ -91,6 +91,19 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+  .create-case-form-input label{
+    font-size: 16px;
+    float: left;
+  }
+
+  .create-case-button-container{
+    padding: 15px 10px;
+  }
+
+  .create-case-description input{
+    height: 50px;
+  }
   
  
 
