@@ -50,10 +50,10 @@ function Rad2Details(radId) {
         <span className="rad-name">{radDetails ? radDetails.name : ''}</span>
         <br />
         <span className="specialization">{radDetails ? radDetails.systemOfMedicine : ''}</span>
-        <br />
+        {/* <br />
         {userType!=="patient" && <span >
           <button className='lab-button' onClick={handleClick}>View Annotated Images</button>
-        </span>}
+        </span>} */}
       </div>
 
       {/* <div className="prescription">

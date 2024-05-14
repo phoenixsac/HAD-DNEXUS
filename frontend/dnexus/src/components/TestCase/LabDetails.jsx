@@ -79,11 +79,11 @@ const LabDetails = () => {
                 <span className="lab-name">{labData?.firstName}</span>
                 <br />
                 {userType!=="patient" && <span>
-                    <button className='lab-button' onClick={handleClick}>View/Annotate Images</button>
+                    <button className='lab-button' onClick={handleClick}>Annotate Images</button>
                 </span>}
-                {userType==="patient" && <span>
+                {/* {userType==="patient" && <span>
                     <button className='lab-button' onClick={handleViewClick}>View Images</button>
-                </span>}
+                </span>} */}
             </div>
             <div className="description">
                 <p>{description}</p> {/* Leave description as dummy data */}

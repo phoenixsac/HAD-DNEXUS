@@ -1040,7 +1040,7 @@ const handleInputChange = (event) => {
         {userType!=="lab" && rad2finalShow  && <Rad2Details radId={acceptedrad2}/>}
 
         <div className='rad-recommend'>
-    {rad2message && <p>{rad1message}</p>}
+    {rad2message && <p>{rad2message}</p>}
       </div>
 
       {rad1finalShow&&(userType==="doctor"||userType==="radiologist")&&   (<div className='chatting'>
@@ -1062,7 +1062,7 @@ const handleInputChange = (event) => {
         placeholder="Enter text" 
         value={text} 
         onChange={handleInputChange} 
-      /> {/* Text box */}
+      /> 
     </div>
 
     <div className="submit-button-container">
@@ -1072,6 +1072,9 @@ const handleInputChange = (event) => {
 
   </>
 )}
+
+
+
     
     
     
@@ -1085,7 +1088,7 @@ const handleInputChange = (event) => {
     </div>}
 
     <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <PDFViewer width="100%" height="500px">
+                <PDFViewer width="100%" height="100%">
                     <Document>
                         <Page size="A4">
                             <Text style={{ marginTop: 20, marginLeft: 20, textAlign: 'center', fontSize: 20, color: 'blue', fontWeight: 'normal' }}>Final Report</Text>
