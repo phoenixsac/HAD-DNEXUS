@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./Footer.css"
 
 import { FaCaretRight } from "react-icons/fa";
-import { CiFacebook } from "react-icons/ci";
+import { FaFacebook } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 
 const Footer = () => {
 
@@ -22,11 +23,13 @@ const Footer = () => {
 								<p>Lorem ipsum dolor sit am consectetur adipisicing elit do eiusmod <br/> tempor incididunt ut labore dolore magna.</p>
 								{/* <!-- Social --> */}
 								<ul className="social">
-									<li><a href="#"><i className="icofont-facebook"></i></a></li>
+									{/* <li><a href="#"><i className="icofont-facebook"></i></a></li>
 									<li><a href="#"><i className="icofont-google-plus"></i></a></li>
 									<li><a href="#"><i className="icofont-twitter"></i></a></li>
 									<li><a href="#"><i className="icofont-vimeo"></i></a></li>
-									<li><a href="#"><i className="icofont-pinterest"></i></a></li>
+									<li><a href="#"><i className="icofont-pinterest"></i></a></li> */}
+									<div className="footer-social-icon"><FaGoogle /></div>
+									<div className="footer-social-icon"><FaFacebook /></div>
 								</ul>
 								{/* <!-- End Social --> */}
 							</div>
@@ -37,38 +40,17 @@ const Footer = () => {
 								<div className="links">
 									<div className="footer-row-col"> 
 										<ul>
-											<li><a href="#"><div className="icon-link"><FaCaretRight /> Home</div></a></li>
-											<li><a href="#"><div className="icon-link"><FaCaretRight /> About Us</div></a></li>
+											<li><a href="/"><div className="icon-link"><FaCaretRight /> Home</div></a></li>
+											<li><a href="/about-us"><div className="icon-link"><FaCaretRight /> About Us</div></a></li>
 											{/* <li><a href="#"><i className="fa fa-caret-right" aria-hidden="true"></i>Services</a></li> */}
-											<li><a href="#"><div className="icon-link"><FaCaretRight /> Privacy Policy</div></a></li>
-											<li><a href="#"><div className="icon-link"><FaCaretRight /> Contact Us</div></a></li>	
+											<li><a href="privacy-policy"><div className="icon-link"><FaCaretRight /> Privacy Policy</div></a></li>
+											<li><a href="contact-us"><div className="icon-link"><FaCaretRight /> Contact Us</div></a></li>	
 										</ul>
 									</div>
 								</div>
 							</div>
 						</div>
-						{/* <div className="footer-row-col">
-							<div className="single-footer">
-								<h2>Open Hours</h2>
-								<p>Lorem ipsum dolor sit ame consectetur adipisicing elit do eiusmod tempor incididunt.</p>
-								<ul className="time-sidual">
-									<li className="day">Monday - Fridayp <span>8.00-20.00</span></li>
-									<li className="day">Saturday <span>9.00-18.30</span></li>
-									<li className="day">Monday - Thusday <span>9.00-15.00</span></li>
-								</ul>
-							</div>
-						</div> */}
-						{/* <div className="footer-row-col">
-							<div className="single-footer">
-								<h2>Newsletter</h2>
-								<p>subscribe to our newsletter to get allour news in your inbox.. Lorem ipsum dolor sit amet, consectetur adipisicing elit,</p>
-								<form action="mail/mail.php" method="get" target="_blank" className="newsletter-inner">
-									<input name="email" placeholder="Email Address" className="common-input" onfocus="this.placeholder = ''"
-										onblur="this.placeholder = 'Your email address'" required="" type="email"/>
-									<button className="button"><i className="icofont icofont-paper-plane"></i></button>
-								</form>
-							</div>
-						</div> */}
+						
 					</div>
 				</div>
 			</div>

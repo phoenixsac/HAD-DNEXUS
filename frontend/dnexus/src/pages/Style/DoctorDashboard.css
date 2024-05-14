@@ -6,31 +6,40 @@
   position: relative;
 }
 
-.search-back{
+.doctor-search-back{
   padding: 10px;
 
-  width:80vw;
+  width:90vw;
 
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
-  margin-left: 38px;
+  /* margin-left: 20px; */
 }
 
-.search-field{
+.doctor-search-field{
   height: 50px;
   width: 500px;
+  margin-left: 70px;
 
 }
 
-.search-field input{
+.doctor-search-field input{
   border-radius: 15;
   height: 32px;
   width: 410px;
 }
 
+.doctor-add-new-patient{
+  background-color: white;
+  color: #1A76D1;
+  border: 1px solid #1A76D1;
+  border-radius: 2rem;
+  min-width: 150px;
+  padding: 10px;
+  font-size: 18px;
 
-  
+}
 
   

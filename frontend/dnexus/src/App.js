@@ -34,6 +34,7 @@ import AboutUs from "./pages/AboutUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
 import ConsentPage from "./pages/ConsentPage";
+import PatientViewProfile from "./pages/PatientViewProfile";
 
 
 
@@ -100,8 +101,10 @@ function App() {
             <Route path="/PLogin" element={<PLogin />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="/patient/registration" element={<PatientRegistration />} />
+            <Route path="/patient/dashboard/profile" element={<PatientViewProfile/>} />
             {/* <Route path="/patient/report/:consultationId" element={<PatientReport />} /> */}
             <Route path="/patient/patient-test-details/:testId" element={<TestCase />} />
+
 
 
           </Routes>

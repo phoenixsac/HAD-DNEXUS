@@ -26,11 +26,11 @@ function LandingPage() {
         <div className="hero-slider">
           {/* <!-- Start Single Slider --> */}
           <div className="single-slider" style={{backgroundImage: `url(${require('../components/assets/StockImages/slider3.jpg')})`}}>
-            <div className="container">
+            <div className="landing-container">
               <div className="row">
                 <div className="col-lg-7">
                   <div className="text">
-                    <h1>Bridging <span>Expertise</span> Empowering <span>Healthcare!</span></h1>
+                    <h1>Bridging <span>Expertise</span> <br/> Empowering <span>Healthcare!</span></h1>
                     <p>Empowering Precision Healthcare Through Seamless Collaboration and Data-Driven Insights! </p>
                   </div>
                 </div>

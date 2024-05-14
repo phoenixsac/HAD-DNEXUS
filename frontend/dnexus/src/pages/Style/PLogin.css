@@ -37,10 +37,22 @@
   .welcome h2{
     padding: 10px;
   }
+
+  .welcome h2:hover{
+    color: #05274b;
+  }
   
   .welcome p{
     margin: 5px;
     padding: 10px;
+
+    text-align: center;
+
+    font-size: 16px;
+  }
+
+  .welcome p:hover{
+    color: #05274b;
   }
   
   .form-group {
@@ -77,6 +89,7 @@
     color: white;
     border: none;
     cursor: pointer;
+    font-size: 18px;
   }
   
   .sign-in-form button:hover {

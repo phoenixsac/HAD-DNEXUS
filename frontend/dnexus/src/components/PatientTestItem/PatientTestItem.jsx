@@ -11,18 +11,6 @@ const PatientTestItem = ({ test, onTestClick }) => {
       onTestClick(test.consultationId);
     };
 
-    // const testStatusColor = () => {
-    //   switch (test.status) {
-    //     case 'Completed':
-    //       return '#D6F0E0';
-    //     case 'Ongoing':
-    //       return '#FEFFD6';
-    //     case 'upcoming':
-    //       return '#FFD3D3';
-    //     default:
-    //       return 'white';
-    //   }
-    // };
 
     const testStatusColor = () => {
       switch (test.status.toLowerCase()) {
@@ -45,17 +33,26 @@ const PatientTestItem = ({ test, onTestClick }) => {
   
   
     return (
-      <div className="test-list-item" 
-        onClick={handleClick} 
+      <div className={`test-list-item ${test.consentStatus === 'WITHDRAWN' ? 'disabled' : ''}`} 
+        // onClick={handleClick} 
+        onClick={test.consentStatus !== 'WITHDRAWN' ? handleClick : undefined}
         style={{ backgroundColor: testStatusColor() }} 
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
 
         <div className='div1'>
-          <p>{test.consultationId}</p>
-          <p>{test.dateCreated}</p>
+        <p>{test.consultationId}</p>
+        <div className='consultation-card-consent-status'>
+            <p>Consent: {test.consentStatus}</p>
+            <p>{test.dateCreated}</p>
         </div>
+          
+        </div>
+
+        {/* <div>
+          <p>{test.consentStatus}</p>
+        </div> */}
 
         <div className='div2'>
           <p>{test.name} / {test.status}</p>

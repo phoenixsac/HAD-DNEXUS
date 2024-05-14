@@ -100,15 +100,19 @@ const DoctorDashboard = () => {
 
       <div className='doctor-container'>
 
-        <div className='search-back'>
+        <div className='doctor-search-back'>
 
-          <div className='search-field'>
+          <div className='doctor-search-field'>
             <input
               type="text"
               placeholder="Search by ID, Name, Gender, or Age"
               value={searchTerm}
               onChange={handleSearchChange}
             />
+          </div>
+
+          <div>
+            <button className="doctor-add-new-patient">Add Patient</button>
           </div>
 
         </div>
