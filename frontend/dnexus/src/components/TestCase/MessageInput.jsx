@@ -1,142 +1,9 @@
-// import React, { useState } from 'react';
-
-// function MessageInput({ users, onSubmit }) {
-//   const [message, setMessage] = useState('');
-//   const [receiverId, setReceiverId] = useState('');
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (!message.trim() || !receiverId.trim()) return;
-//     onSubmit({ message, receiverId });
-//     setMessage('');
-//     setReceiverId('');
-//   };
-
-//   return (
-//     <form className="message-input-form" onSubmit={handleSubmit}>
-//       <input
-//         type="text"
-//         placeholder="Type your message here..."
-//         value={message}
-//         onChange={(e) => setMessage(e.target.value)}
-//       />
-//       <select
-//         value={receiverId}
-//         onChange={(e) => setReceiverId(e.target.value)}
-//       >
-//         <option value="">All</option>
-//         {users.map(user => (
-//           <option key={user.id} value={user.id}>{user.name}</option>
-//         ))}
-//       </select>
-//       <button type="submit">Send</button>
-//     </form>
-//   );
-// }
-
-// export default MessageInput;
-
-
-// import React, { useState } from 'react';
-
-// function MessageInput({ users, onSubmit }) {
-//   const [message, setMessage] = useState('');
-//   const [receiverId, setReceiverId] = useState('');
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (!message.trim() || !receiverId.trim()) return;
-//     onSubmit({ message, receiverId });
-//     setMessage(''); // Reset message input field
-//     setReceiverId(''); // Reset receiver select field
-//   };
-
-//   return (
-//     <form className="message-input-form" onSubmit={handleSubmit}>
-//       <input className='message-text'
-//         type="text"
-//         placeholder="Type your message here..."
-//         value={message}
-//         onChange={(e) => setMessage(e.target.value)}
-//       />
-//       <select
-//         value={receiverId}
-//         onChange={(e) => setReceiverId(e.target.value)}
-//       >
-//         <option value="">All</option>
-//         {users.map(user => (
-//           <option key={user.id} value={user.id}>{user.name}</option>
-//         ))}
-//       </select>
-//       <button type="submit">Send</button>
-//     </form>
-//   );
-// }
-
-// export default MessageInput;
-
-
-// import React, { useState } from 'react';
-// import "./MessageInput.css";
-
-// function MessageInput({ users, onSubmit }) {
-//   const [message, setMessage] = useState('');
-//   const [receiverId, setReceiverId] = useState('');
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (!message.trim() || !receiverId.trim()) return;
-//     onSubmit({ message, receiverId });
-//     setMessage(''); // Reset message input field
-//     setReceiverId(''); // Reset receiver select field
-//   };
-
-//   const handleConnect = () => {
-//     // Handle connect button click
-//     // You can implement the functionality here
-//   };
-
-//   return (
-    
-//       <form className="message-input-form" onSubmit={handleSubmit}>
-//     <div className="message-input-container">
-//       <div className='message-input'>
-//       <input 
-//         type="text"
-//         placeholder="Type your message here..."
-//         value={message}
-//         onChange={(e) => setMessage(e.target.value)}
-//       />
-//       </div>
-      
-//       {/* <select
-//         value={receiverId}
-//         onChange={(e) => setReceiverId(e.target.value)}
-//       >
-//         <option value="">All</option>
-//         {users.map(user => (
-//           <option key={user.id} value={user.id}>{user.name}</option>
-//         ))}
-//       </select> */}
-//       <div className='connect-div'>
-//         <button className="connect-button" onClick={handleConnect}>Connect</button>
-//         </div>
-      
-//       <button className='send-button' type="submit">Send</button>
-//     </div>
-//   </form>
-    
-//   );
-// }
-
-// export default MessageInput;
-
-
-
 import React, { useState } from 'react';
 import "./MessageInput.css";
 import { sendPrivateMessage } from './WebSocket'; 
 import { useParams } from 'react-router-dom';
+
+import { IoSend } from "react-icons/io5";
 
 function MessageInput({senderId,receiverId, users, onSubmit, onConnect ,connected}) {
   const [message, setMessage] = useState('');
@@ -176,42 +43,7 @@ function MessageInput({senderId,receiverId, users, onSubmit, onConnect ,connecte
 
   const handleSendClick = async (e) => {
     try {
-      // let senderId;
-      // let receiverId;
-      // // Get userType from sessionStorage
-      // const userType = sessionStorage.getItem('userType');
-  
-      // // If userType is "doctor"
-      // if (userType === "doctor") {
-      //   // Get senderId from local storage
-      //   senderId = localStorage.getItem('actorId');
-  
-      //   // Fetch receiverId from backend using consultationId
-      //   const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
-      //   const response = await fetch(`http://localhost:8085/core/consultation/radiologist-detail-for-consultation?${idParam}`);
-      //   if (!response.ok) {
-      //     throw new Error('Failed to fetch receiverId');
-      //   }
-      //   const data = await response.json();
-      //   receiverId = data.id;
-         
-        
-      // }
-      // else if (userType === "radiologist") {
-      //   senderId = localStorage.getItem('actorId');
-  
-      //   // Fetch receiverId from backend using consultationId
-      //   const idParam = testId ? `consultationId=${testId}` : `consultationId=${consultationId}`;
-      //   const response = await fetch(`http://localhost:8085/core/consultation/doctor-details-by-consultation?${idParam}`);
-      //   if (!response.ok) {
-      //     throw new Error('Failed to fetch receiverId');
-      //   }
-      //   const data = await response.json();
-      //   receiverId = data.id;
-        
-      // } 
-      // Handle other userTypes here
-  
+     
       // Reset message input field
       if (!message.trim()) return;
         // Send private message
@@ -250,7 +82,7 @@ function MessageInput({senderId,receiverId, users, onSubmit, onConnect ,connecte
       
       
       {/* Send button */}
-      <button className="send-button" onClick={handleSendClick}>Send</button>
+      <div className="send-button" onClick={handleSendClick}><IoSend /></div>
       </div>
     </form>
   );

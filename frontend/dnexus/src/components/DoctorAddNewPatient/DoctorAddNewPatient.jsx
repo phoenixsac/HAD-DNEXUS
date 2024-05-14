@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import "./DoctorCreateCaseModal.css";
+import "./DoctorAddNewPatient.css";
 
-function DoctorCreateCaseModal({ onClose }) {
+function DoctorAddNewPatient({ onClose }) {
 
-  const params = useParams();
-  const { patientId } = params;
-  console.log("patientId:", patientId);
+//   const params = useParams();
+//   const { patientId } = params;
+//   console.log("patientId:", patientId);
 
   const [formData, setFormData] = useState({
+    patientId:'',
     consultationName: '',
     test: '',
   });
@@ -24,9 +25,10 @@ function DoctorCreateCaseModal({ onClose }) {
   const handleSubmit = async (event) => {
 
     event.preventDefault();
-    const { consultationName, test } = formData;
+    const { patientId,consultationName, test } = formData;
     const  professionalDocId  = localStorage.getItem('actorId');
     console.log("professionalDocId:",professionalDocId);
+    
 
     console.log("body sent:",professionalDocId,consultationName, test, patientId);
   
@@ -74,8 +76,19 @@ function DoctorCreateCaseModal({ onClose }) {
         <span className="close" onClick={onClose}>&times;</span>
         <h2>Create Case</h2>
         <form className="create-case-modal-form" onSubmit={handleSubmit}>
+            <div className='create-case-form-input'>
+                {/* <label>Patient ID:</label> */}
+                <input
+                type="text"
+                name="patientId"
+                value={formData.PatientId}
+                onChange={handleChange}
+                placeholder='Patient ID'
+                required
+                />
+            </div>
           <div className='create-case-form-input'>
-            <label>Case Name:</label>
+            {/* <label>Case Name:</label> */}
             <input
               type="text"
               name="consultationName"
@@ -86,7 +99,7 @@ function DoctorCreateCaseModal({ onClose }) {
             />
           </div>
           <div className='create-case-form-input create-case-description'>
-            <label>Case Description:</label>
+            {/* <label>Case Description:</label> */}
             <input
           
               type="text"
@@ -107,4 +120,4 @@ function DoctorCreateCaseModal({ onClose }) {
   );
 }
 
-export default DoctorCreateCaseModal;
+export default DoctorAddNewPatient;

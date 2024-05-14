@@ -9,6 +9,7 @@ import "./Style/DoctorDashboard.css"
 import Navbar from '../components/Navbar/ConditionalNavbar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import Footer from '../components/Footer/Footer';
+import DoctorAddNewPatient from '../components/DoctorAddNewPatient/DoctorAddNewPatient';
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const DoctorDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1); // For pagination
   const [patientsPerPage] = useState(6);
+  const [isDoctorCreateCaseModalOpen, setDoctorCreateCaseModalOpen] = useState(false); 
 
   useEffect(() => {
     // Check if actorId is available and not null
@@ -92,6 +94,23 @@ const DoctorDashboard = () => {
   const indexOfFirstPatient = indexOfLastPatient - patientsPerPage;
   const currentPatients = patients.slice(indexOfFirstPatient, indexOfLastPatient);
 
+  const handleCreateCase = () => {
+    // Open the modal when the "Create Case" button is clicked
+    setDoctorCreateCaseModalOpen(true);
+    // Add blur effect to the background
+    console.log("create case clicked");
+    console.log("isDoctorCreateCaseModalOpen:",isDoctorCreateCaseModalOpen);
+    // document.body.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+  };
+
+  const handleModalClose = () => {
+    // Close the modal
+    setDoctorCreateCaseModalOpen(false);
+    // Remove class from body to remove background blur effect
+    document.body.classList.remove('modal-open');
+  };
+
   return (
     <div>
       <Navbar/>
@@ -112,7 +131,7 @@ const DoctorDashboard = () => {
           </div>
 
           <div>
-            <button className="doctor-add-new-patient">Add Patient</button>
+            <button className="doctor-add-new-patient" onClick={handleCreateCase}>Add Patient</button>
           </div>
 
         </div>
@@ -128,6 +147,9 @@ const DoctorDashboard = () => {
             paginate={paginate}
           />
         </div>
+        {isDoctorCreateCaseModalOpen && (
+          <DoctorAddNewPatient onClose={handleModalClose}/>
+        )}
 
       </div>
 

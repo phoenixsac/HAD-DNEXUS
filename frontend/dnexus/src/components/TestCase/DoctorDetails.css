@@ -1,20 +1,26 @@
-.mri-info-container {
+.consultation-info-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 80%;
-    margin: 20px auto 0; 
+    margin: 30px auto; 
+    padding: 10px;
     padding: 1rem;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgb(18 16 16 / 16%);
+    background-color: #f1f3f5;
 }
 
-.header {
+.doctor-details-header {
     display: flex;
-    flex-direction: column;
     align-items: flex-start;
     margin-bottom: 1rem;
+
+    /* justify-content: center; */
+    align-items: center;
 }
+
+
 
 .doctor-name {
     font-weight: bold;
@@ -24,12 +30,19 @@
     font-style: italic;
     font-weight: bold;
     color: #0b438b;
+
+    padding: 10px 5px;
+    /* margin: 0 10px; */
 }
 
 .prescription {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; */
+
+    padding: 10px;
+    text-align: left;
+    color: black;
 }
 
 .prescription p {

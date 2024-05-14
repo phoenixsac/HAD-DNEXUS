@@ -45,14 +45,15 @@ function Rad2Details(radId) {
   };
 
   return (
-    <div className="mri-info-container">
-      <div className="header">
-        <span className="rad-name">{radDetails ? radDetails.name : ''}</span>
-        <br />
-        <span className="specialization">{radDetails ? radDetails.systemOfMedicine : ''}</span>
-        <br />
+    <div className="rad-info-container">
+      <div className="rad-details-header">
+      <h4 className="rad-name">{radDetails && radDetails.name ? radDetails.name.toUpperCase() : ''}</h4>
+
+        
+        <h5 className="specialization">{radDetails ? radDetails.systemOfMedicine : ''}</h5>
+        
         {userType!=="patient" && <span >
-          <button className='lab-button' onClick={handleClick}>View Annotated Images</button>
+          <button className='lab-annotated-button' onClick={handleClick}>View Annotated Images</button>
         </span>}
       </div>
 
