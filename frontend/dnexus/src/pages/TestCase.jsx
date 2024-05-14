@@ -21,9 +21,9 @@ const Modal = ({ isOpen, onClose, children }) => {
   return (
     <div className="modal-overlay">
     <div className="modal-content">
-        <div className="modal-header">
-            <Button className="close-button" onClick={onClose}>✕</Button>
+        <div className="pdf-modal-header">
             <h2>DNexus</h2>
+            <button className="pdf-close-button" onClick={onClose}>✕</button>   
         </div>
         <div className="modal-body">{children}</div>
     </div>
@@ -82,8 +82,34 @@ function TestCase() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [text, setText] = useState('');
 
+  const [patient, setPatient] = useState(null);
+  const patientId = useParams().patientId;
+  console.log("patientId:",patientId);
 
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      try {
 
+        // Make additional API call to fetch patient details from another URL
+        const patientResponse = await fetch(`http://localhost:8085/core/consultation/patient-details-by-patient-id?patientId=${patientId}`);
+        if (!patientResponse.ok) {
+          throw new Error('Failed to fetch patient details from another URL.');
+        }
+        console.log("patientResponse:", patientResponse);
+
+        const patientData = await patientResponse.json();
+        setPatient(patientData);
+
+        console.log("patientData:", patientData);
+
+      } catch (error) {
+        console.error('Error fetching patient data:', error);
+      }
+    };
+    if (patientId) {
+      fetchPatientData();
+    }
+  }, [patientId]);
 
 
   useEffect(() => {
@@ -597,6 +623,11 @@ const handleInputChange = (event) => {
     navigate("/patient/dashboard")
   }
   };
+
+   // Calculate the number of rows based on the number of newlines in the text
+   const calculateRows = () => {
+    return text.split('\n').length;
+  };
   
 
   return (
@@ -615,7 +646,7 @@ const handleInputChange = (event) => {
         <Button onClick={() => setIsPopupOpen(!isPopupOpen)}>Upload Lab Images</Button>
         {isPopupOpen && (
       <div>
-    <LabUpload onClose={() => setIsPopupOpen(false)} />
+      <LabUpload onClose={() => setIsPopupOpen(false)} />
      </div>
      )}
         {/* {isPopupOpen && <LabUpload onClose={() => setIsPopupOpen(false)} />} */}
@@ -625,15 +656,17 @@ const handleInputChange = (event) => {
        { labConsentMessage && <p>{labConsentMessage}</p>}
       </div>
 
-      {userType==="doctor" && !labAdded && !labConsentStatusPending  && !labShow && (<div className="add-button-container">
-        <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
-       <div> <select onChange={(e) => setSelectedLab(e.target.value)}>
-          <option value="">Select Lab</option>
-          {labs.map((lab) => (
-            <option key={lab.id} value={lab.id}>{lab.name}</option>
-          ))}
-        </select>
+      {userType==="doctor" && !labAdded && !labConsentStatusPending  && !labShow && (
+      <div className="add-button-container">
+          {/* <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div> */}
+        <div className='select-lab-dropdown'> <select onChange={(e) => setSelectedLab(e.target.value)}>
+            <option value="">Select Lab</option>
+            {labs.map((lab) => (
+              <option key={lab.id} value={lab.id}>{lab.name}</option>
+            ))}
+          </select>
         </div>
+        <div className='add-lab'><Button onClick={handleAddLab}>ADD LAB</Button></div>
       </div>)
 }
       {/* < div className='rad-recommend'>
@@ -645,24 +678,14 @@ const handleInputChange = (event) => {
       {/* <LabDetails /> */}
       {userType!=="lab" && labConsentStatusAccept  && <LabDetails />}
 
-      {/* <div className="custom-button-container">
-        <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button>
-        <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
-          <option value="">Select Radiologist</option>
-          {radiologists.map((radiologist) => (
-            <option key={radiologist.id} value={radiologist.id}>{radiologist.fullName}</option>
-          ))}
-        </select>
-      </div> */}
-
-       
+     
 
 < div className='rad-recommend'>
        { rad1ConsentMessage && <p>{rad1ConsentMessage}</p>}
       </div>
       {userType==="doctor"&&  labConsentStatusAccept && rad1addshow  && (
         <div className="add-button-container">
-         <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
+         {/* <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div> */}
          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
             <option value="">Select Radiologist</option>
             {radiologists.map((radiologist) => (
@@ -670,6 +693,7 @@ const handleInputChange = (event) => {
             ))}
           </select>
           </div>
+          <div className='add-lab'> <Button onClick={handleAddRadiologist}>ADD RADIOLOGIST</Button></div>
         </div>
       )}
       
@@ -690,7 +714,7 @@ const handleInputChange = (event) => {
       {/* {(userType==="doctor" || userType==="radiologist")&& consultationStatus!== "COMPLETED" && (radAdded || radDetailsVisible) && <MessagingPage />} */}
       {userType==="doctor"&&  labConsentStatusAccept && rad2fromrad1 && rad2addshow && (
         <div className="add-button-container">
-         <div className='add-lab'> <Button onClick={handleAddRadiologist2}>ADD RADIOLOGIST 2</Button></div>
+         {/* <div className='add-lab'> <Button onClick={handleAddRadiologist2}>ADD RADIOLOGIST 2</Button></div> */}
          <div>  <select onChange={(e) => setSelectedRadiologist(e.target.value)}>
             <option value="">Select Radiologist</option>
             {radiologists.map((radiologist) => (
@@ -698,13 +722,18 @@ const handleInputChange = (event) => {
             ))}
           </select>
           </div>
+          <div className='add-lab'> <Button onClick={handleAddRadiologist2}>ADD RADIOLOGIST 2</Button></div>
         </div>
       )}
 
         {userType!=="lab" && rad2finalShow  && <Rad2Details radId={acceptedrad2}/>}
 
         <div className='rad-recommend'>
-    {rad2message && <p>{rad2message}</p>}
+
+          {rad2message && <p>{rad1message}</p>}
+
+   // {rad2message && <p>{rad2message}</p>}
+
       </div>
 
       {rad1finalShow&&(userType==="doctor"||userType==="radiologist")&&   (<div className='chatting'>
@@ -717,21 +746,41 @@ const handleInputChange = (event) => {
 {userType==="doctor" && submitStatus === null && rad1finalShow&&!reportSubmitted && (rad1Added  || radDetailsVisible) && (
   <>
     <div className='rad-recommend'>
-      Write Final Report
+      Final Report
     </div>
 
-    <div className="report-container">
+    {/* <div className="final-report-container">
     <textarea 
-        className="report" 
-        placeholder="Enter text" 
+        className="expanding-textarea"
+        placeholder="Enter Final Report" 
         value={text} 
+        rows={calculateRows()} 
         onChange={handleInputChange} 
       /> 
     </div>
 
     <div className="submit-button-container">
       <Button onClick={handleSubmit}>SUBMIT</Button>
+    </div> */}
+
+    <div className="final-report-container">
+      <div style={{ position: 'relative' }}>
+        <textarea 
+          className="expanding-textarea report"
+          placeholder="Enter Final Report" 
+          value={text} 
+          rows={calculateRows()} 
+          onChange={handleInputChange} 
+        />
+        <button 
+          className="report-send-button" 
+          onClick={handleSubmit} 
+          style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+          SEND
+        </button>
+      </div>
     </div>
+
 
 
   </>
@@ -740,23 +789,35 @@ const handleInputChange = (event) => {
 
 
     
-    
-    
-
-      <div className='rad-recommend'>
+  <div className='rad-recommend'>
     {submitmessage && <p>{submitmessage}</p>}
       </div>
 
-      {(userType==="doctor" || userType==="patient") && submitStatus !== null &&<div className="submit-button-container">
-      <Button onClick={handleViewReport}>VIEW REPORT</Button>
-    </div>}
+    <div className='closing-buttons'>
+      {(userType==="doctor" || userType==="patient") && submitStatus !== null &&
+      <div className="submit-button-container">
+        <Button onClick={handleViewReport}>VIEW REPORT</Button>
+      </div>}
+
+      {userType==="doctor" && consultationStatus!== "COMPLETED" &&!testClosed  &&(
+     <div className="submit-button-container">
+        <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
+      </div>)}
+    </div>
 
     <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <PDFViewer width="100%" height="100%">
                     <Document>
                         <Page size="A4">
-                            <Text style={{ marginTop: 20, marginLeft: 20, textAlign: 'center', fontSize: 20, color: 'blue', fontWeight: 'normal' }}>Final Report</Text>
-                            <Text style={{margin:30}}>{pdfContent}</Text>
+                            <Text style={{ marginTop: 20, marginLeft: 20, textAlign: 'center', fontSize: 22, color: '#1A76D1', fontWeight: '800' }}>DNexus</Text>
+                            <Text style={{ marginTop: 15, marginLeft: 20, textAlign: 'center', fontSize: 18, color: '#1A76D1', fontWeight: 'normal' }}>Final Report</Text>
+                            <Text style={{ marginTop: 15, marginLeft: 20, paddingLeft:10, textAlign: 'left', fontSize: 16, color: '#1A76D1', fontWeight: 'normal' }}>
+                             {/* {patient.name} */}
+                            </Text>
+                            <Text style={{ marginTop: 5, marginLeft: 20, paddingLeft:10,  textAlign: 'left', fontSize: 16, color: '#1A76D1', fontWeight: 'normal' }}>
+                             {/* {patient.age}/{patient.gender} */}
+                            </Text>
+                            <Text style={{margin:30, fontSize: 14}}>{pdfContent}</Text>
                         </Page>
                     </Document>
                 </PDFViewer>
@@ -764,21 +825,22 @@ const handleInputChange = (event) => {
 
      
      
-     {userType==="doctor" && consultationStatus!== "COMPLETED" &&!testClosed  &&(<div className="submit-button-container">
-      <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
-      </div>)}
+     {/* {userType==="doctor" && consultationStatus!== "COMPLETED" &&!testClosed  &&(
+     <div className="submit-button-container">
+        <Button onClick={handleCloseThread}>CLOSE THREAD</Button>
+      </div>)} */}
 
       <div className='rad-recommend'>
-    {closeMessage && <p>{closeMessage}</p>}
+        {closeMessage && <p>{closeMessage}</p>}
       </div>
       {/* <div className="submit-button-container">
         <Button onClick={() => console.log("SUBMIT clicked!")}>CLOSE THREAD</Button>
       </div> */}
-     { (<div className="submit-button-container">
+     {/* { (<div className="submit-button-container">
         <Button onClick={handleGoBack}>GO BACK</Button>
       </div>
      )
-}
+} */}
 
 {/* <Footer/> */}
 

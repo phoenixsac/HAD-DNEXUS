@@ -79,7 +79,7 @@ const ChatComponent = () => {
   return (
     <div className="total-container">
       <div className="image-list">
-        <h2>Images</h2>
+        {/* <h2>Images</h2> */}
         <div className="image-thumbnails">
         {imageThumbnails.map((thumbnail, index) => (
             <img
@@ -96,8 +96,12 @@ const ChatComponent = () => {
                 <div className="selected-image">
                 {selectedImage && <img src={selectedImage} alt="Selected item" />}
               </div>)}
+
+              { (<div className="radiologist-list">
+                <h3>Chat with</h3>
               {( userType == "doctor"|| userType=="radiologist")&& (<div className="radiologist-list">
                 <h2>Radiologists</h2>
+
                 <ul>
                   {radiologists.map(radiologist => (
                     <li key={radiologist.id} onClick={() => handleRadiologistClick(radiologist)}>
@@ -106,7 +110,7 @@ const ChatComponent = () => {
                   ))}
                 </ul>
                 <div className="chat-window">
-                  <h2>Chat</h2>
+                  {/* <h2>Chat</h2> */}
                   <MessagingPage selectedRadiologistId={selectedRadiologistId} /> {/* Pass selected radiologist's ID as prop */}
               </div>
               </div>)}

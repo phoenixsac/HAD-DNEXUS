@@ -177,6 +177,7 @@ function MessageList({ messages,fetchMessages }) {
           receiverName={receivers[msg.receiverId]}
           content={msg.messageContent}
           setMessagesLoaded={setMessagesLoaded}
+          
         />
       ))}
     </div>
