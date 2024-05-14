@@ -132,7 +132,7 @@ const ConsentPage = () => {
 
       <div className='consent-container'>
           {/* <h2>Consent Details</h2> */}
-          <p>{consent.consentMessage}</p>
+          
           {/* {!responded && ( // Display accept and reject buttons if user has not responded
               <div className="consent-buttons">
                   <button onClick={() => handleResponse(true)}>Accept</button>
@@ -146,12 +146,19 @@ const ConsentPage = () => {
               </>
               )} */}
 
-            {!responded && (
+            {consent.consentStatus === "NONE" && !responded && (
+              
                       <div className="consent-buttons">
+                        <p>{consent.consentMessage}</p>
                         <button onClick={() => handleResponse(true)}>Accept</button>
                         <button onClick={() => handleResponse(false)}>Reject</button>
                       </div>
                     )}
+
+                    {consent.consentStatus !== "NONE" && (
+                          <p>You have already responded</p>
+                    )}
+
                     {response && (
                       <>
                         <p>{statusMessage}</p>

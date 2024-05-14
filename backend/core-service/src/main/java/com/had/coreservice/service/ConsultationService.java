@@ -194,10 +194,16 @@ public class ConsultationService {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
 
+        Optional<String> patientEmailOpt=patientRepository.findPatientEmailByPatientId(patientId);
+        String patientEmail=null;
+        if(patientEmailOpt.isPresent())
+            patientEmail=patientEmailOpt.get();
+
         return PatientResponseBodyForConsultation.builder()
                 .id(patient.getId())
                 .name(patient.getUser().getFirstName() + " " + patient.getUser().getLastName())
                 .gender(patient.getGender())
+                .email(patientEmail)
                 .age(patient.getAge())
                 .bloodGroup(patient.getBloodGroup())
                 .contact(patient.getGuardianContact())

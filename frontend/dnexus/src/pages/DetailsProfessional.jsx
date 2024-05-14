@@ -126,13 +126,18 @@ const DetailsProfessional = () => {
           </div>
         </div>
 
-        <div className='buttons'>
+        {/* <div className='buttons'>
           <button className='delete' onClick={handleDelete}><MdDelete /> Delete</button>
-        </div>
+        </div> */}
+        {!showModal && (
+          <div className='buttons'>
+            <button className='delete' onClick={handleDelete}><MdDelete /> Delete</button>
+          </div>
+        )}
 
         {showModal && (
           <ConfirmationModal
-            title="Confirm Delete"
+            // title="Confirm Delete"
             message="Are you sure you want to delete?"
             onConfirm={confirmDelete}
             onClose={closeModal}

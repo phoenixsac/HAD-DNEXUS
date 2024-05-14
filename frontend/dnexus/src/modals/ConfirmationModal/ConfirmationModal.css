@@ -1,0 +1,38 @@
+.user-delete-confirmation-modal{
+    padding: 10px;
+    margin: 10px;
+}
+
+.user-delete-modal-content{
+    padding: 5px;
+}
+
+
+.user-delete-modal-content p{
+    font-size: 20px;
+    padding: 8px;
+}
+
+.user-delete-modal-button-container{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-delete-confirm,.user-delete-cancel{
+    padding: 10px;
+    font-size: 20px;
+
+    color: red;
+    background-color: white;
+    border: 1px solid red;
+}
+
+.user-delete-confirm:hover,.user-delete-cancel:hover{
+    color: red;
+    background-color: rgb(248, 214, 214);
+    border: 1px solid red;
+
+}

@@ -53,7 +53,7 @@
 }
 
 .buttons button:hover{
-    fcolor: red;
+    color: red;
     background-color: rgb(248, 214, 214);
     border: 1px solid red;
 }

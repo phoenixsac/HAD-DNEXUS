@@ -154,20 +154,20 @@ function PatientRegistration() {
                         <div className='directionContainer'>
 
                             <div className='inputLeft'>
-                                <label htmlFor="first_name">First Name</label>
-                                <input type="text" id="first_name" name="first_name" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="first_name">First Name</label> */}
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" onChange={handleChange} required/>
 
-                                <label htmlFor="last_name">Last Name</label>
-                                <input type="text" id="last_name" name="last_name" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="last_name">Last Name</label> */}
+                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" onChange={handleChange} required/>
 
-                                <label htmlFor="address">Address</label>
-                                <input type="text" id="address" name="address" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="address">Address</label> */}
+                                <input type="text" id="address" name="address" placeholder="Address" onChange={handleChange} required/>
 
-                                <label htmlFor="contact">Contact No.</label>
-                                <input type="tel" id="contact" name="contact" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="contact">Contact No.</label> */}
+                                <input type="tel" id="contact" name="contact" placeholder="Contact No." onChange={handleChange} required/>
 
-                                <label htmlFor="email">Email ID</label>
-                                <input type="email" id="email" name="email" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="email">Email ID</label> */}
+                                <input type="email" id="email" name="email" placeholder="Email ID" onChange={handleChange} required/>
 
 
                             {!otpVerified && showSendButton && (
@@ -205,17 +205,17 @@ function PatientRegistration() {
                                     </div>
                                 </div>
                                 <div className='bloodgroup'>
-                                    <label htmlFor="blood_grp">Blood Group</label>
-                                    <input type="text" id="blood_grp" name="blood_grp" placeholder="" onChange={handleChange} required/>
+                                    {/* <label htmlFor="blood_grp">Blood Group</label> */}
+                                    <input type="text" id="blood_grp" name="blood_grp" placeholder="Blood Group" onChange={handleChange} required/>
                                 </div>
-                                <label htmlFor="guardian_first_name">Guardian First Name</label>
-                                <input type="text" id="guardian_first_name" name="guardian_first_name" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="guardian_first_name">Guardian First Name</label> */}
+                                <input type="text" id="guardian_first_name" name="guardian_first_name" placeholder="Guardian First Name" onChange={handleChange} required/>
 
-                                <label htmlFor="guardian_last_name">Guardian Last Name</label>
-                                <input type="text" id="guardian_last_name" name="guardian_last_name" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="guardian_last_name">Guardian Last Name</label> */}
+                                <input type="text" id="guardian_last_name" name="guardian_last_name" placeholder="Guardian Last Name" onChange={handleChange} required/>
 
-                                <label htmlFor="guardian_contact">Guardian Contact</label>
-                                <input type="tel" id="guardian_contact" name="guardian_contact" placeholder="" onChange={handleChange} required/>
+                                {/* <label htmlFor="guardian_contact">Guardian Contact</label> */}
+                                <input type="tel" id="guardian_contact" name="guardian_contact" placeholder="Guardian Contact No." onChange={handleChange} required/>
 
                             </div>
                         </div>

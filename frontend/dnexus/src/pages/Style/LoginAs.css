@@ -21,8 +21,8 @@
   position: relative;
   width: 200px;
 
-  padding: 30px;
-  margin: 30px;
+  padding: 15px;
+  margin: 15px;
 
   display: flex;
   flex-direction: column;
@@ -42,16 +42,10 @@
   text-align: center;
   top: 212px;
   width: 200px;
-  margin-top: 10px;
-  padding-top: 20px;
+  padding-top: 5px;
 }
 
-.login-card .rectangle {
-  background-color: #d9d9d9;
-  height: 200px;
-  position: absolute;
-  width: 200px;
-}
+
 
 .persona-buttons {
   /* Style the button group */
@@ -90,5 +84,23 @@
 
 .section{
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+}
+
+.user-login-icon{
+  
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-size: 110px;
+
+  padding-left: 10px;
+  margin-left: 10px;
+
+  color: #558abe;
+}
+
+.user-login-icon:hover{
+
+  color: #8eaece;
 }
